@@ -1,4 +1,4 @@
-<p>Welcome</p>
-<a href="/server">Server</a>
-<a href="/stats">Stats</a>
-<a href="/static">Static</a>
+<div class="p-4">
+	<h1 class="font-bold text-3xl">florian</h1>
+	<h1 class="font-bold text-3xl pl-8">marending</h1>
+</div>
