@@ -3,6 +3,19 @@
 	import '../inter.css';
 </script>
 
+<div class="flex flex-row justify-between">
+	<div class="flex flex-col">
+		<a href="/" class="p-4">
+			<h1 class="font-bold text-2xl md:text-3xl w-fit">florian</h1>
+			<h1 class="font-bold text-2xl md:text-3xl pl-8 -m-3 w-fit">marending</h1>
+		</a>
+	</div>
+	<div class="flex flex-row gap-6 pr-6 pt-5 md:pt-6">
+		<a class="text-sm md:text-md font-semibold" href="/about">about</a>
+		<a class="text-sm md:text-md font-semibold" href="/metrics">metrics</a>
+	</div>
+</div>
+
 <slot />
 
 <style global>
