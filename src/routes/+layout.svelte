@@ -11,8 +11,8 @@
 		</a>
 	</div>
 	<div class="flex flex-row gap-6 pr-6 pt-5 md:pt-6">
-		<a class="text-sm md:text-md font-semibold" href="/about">about</a>
-		<a class="text-sm md:text-md font-semibold" href="/metrics">metrics</a>
+		<a class="text-sm md:text-md font-semibold h-fit" href="/about">about</a>
+		<a class="text-sm md:text-md font-semibold h-fit" href="/metrics">metrics</a>
 	</div>
 </div>
 
