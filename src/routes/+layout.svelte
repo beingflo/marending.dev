@@ -16,7 +16,9 @@
 	</div>
 </div>
 
-<slot />
+<main>
+	<slot />
+</main>
 
 <style global>
 	body {
