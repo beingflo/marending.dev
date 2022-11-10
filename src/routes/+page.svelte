@@ -3,7 +3,7 @@
 </script>
 
 <div
-	class="grid grid-cols-1 md:grid-cols-3 pt-8 md:pt-24 gap-8 md:gap-12 px-4 md:justify-items-center"
+	class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 pt-8 md:pt-24 gap-8 md:gap-12 px-4 md:justify-items-center"
 >
 	<NoteSummary
 		title="A study of lines"
