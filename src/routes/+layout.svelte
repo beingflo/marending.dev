@@ -3,7 +3,7 @@
 	import '../inter.css';
 </script>
 
-<header class="flex flex-row justify-between">
+<header class="flex flex-row justify-between max-w-screen-2xl mx-auto">
 	<div class="flex flex-col">
 		<a href="/" class="p-4">
 			<h1 class="font-bold text-2xl md:text-3xl w-fit tracking-tight">florian</h1>
@@ -16,7 +16,7 @@
 	</nav>
 </header>
 
-<main>
+<main class="max-w-screen-2xl mx-auto">
 	<slot />
 </main>
 
