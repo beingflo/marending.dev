@@ -23,4 +23,10 @@
 		date="04/09/2022"
 		link="/foosball"
 	/>
+	<NoteSummary
+		title="A hasslefree server setup for personal projects"
+		summary="Don't spend more time on infra than on your projects"
+		date="10/11/2022"
+		link="/server"
+	/>
 </div>
