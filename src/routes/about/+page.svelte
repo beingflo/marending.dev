@@ -26,5 +26,5 @@
 			</a>
 		</div>
 	</div>
-	<img src="/portrait.jpeg" alt="portrait" />
+	<img class="w-60 h-60 mx-auto" alt="face" src="/face.svg" />
 </main>
