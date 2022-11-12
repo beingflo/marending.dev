@@ -8,15 +8,15 @@
 	const toggleFeedback = () => (showFeedback = !showFeedback);
 </script>
 
-<header class="flex flex-row justify-between max-w-screen-2xl mx-auto">
-	<a href="/" class="flex flex-row gap-3 m-4">
-		<img alt="icon" src="/icon.svg" />
-		<div class="flex flex-col">
+<header class="flex flex-row justify-between h-fit max-w-screen-2xl mx-auto">
+	<a href="/" class="flex flex-row gap-3 m-4 h-fit">
+		<img alt="icon" class="w-12 h-12 md:w-16 md:h-16" src="/icon.svg" />
+		<div class="flex flex-col h-fit">
 			<h1 class="font-normal text-2xl md:text-3xl w-fit tracking-tight">florian</h1>
 			<h1 class="font-thin text-2xl md:text-3xl ml-5 -mt-3 w-fit tracking-tight">marending</h1>
 		</div>
 	</a>
-	<nav class="flex flex-row gap-6 pr-6 pt-5 md:pt-6">
+	<nav class="flex flex-row gap-6 pr-6 pt-5 md:pt-6 h-fit">
 		<a class="text-sm md:text-md h-fit" href="/metrics">metrics</a>
 		<a class="text-sm md:text-md h-fit" href="/about">about</a>
 	</nav>
