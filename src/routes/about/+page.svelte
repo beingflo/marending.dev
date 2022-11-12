@@ -6,6 +6,7 @@
 		<p class="pt-8">
 			You can reach me at
 			<a class="underline" href="mailto:florian@marending.dev">florian@marending.dev</a>
+			or via the feedback box at the bottom right of the page.
 		</p>
 
 		<div class="flex flex-row gap-2 pt-4">

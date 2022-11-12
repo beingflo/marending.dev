@@ -15,7 +15,7 @@
 		title="Technical internals of this website"
 		summary="There are many like it, but this one is mine"
 		date="12/10/2022"
-		link="/self"
+		link="/website"
 	/>
 	<NoteSummary
 		title="Building a foosball ranking application"
