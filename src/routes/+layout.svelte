@@ -25,7 +25,9 @@
 </main>
 
 <footer>
-	<button on:click={toggleFeedback} class="fixed bottom-1 right-3 text-xs text-gray-400"
+	<button
+		on:click={toggleFeedback}
+		class="fixed bottom-7 -right-3 text-xs font-light text-gray-400 transform -rotate-90"
 		>feedback</button
 	>
 </footer>
