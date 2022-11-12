@@ -1,4 +1,5 @@
 <script>
+	import Feedback from '$lib/components/Feedback.svelte';
 	import '../app.css';
 	import '../inter.css';
 
@@ -22,13 +23,15 @@
 
 <main class="max-w-screen-2xl mx-auto">
 	<slot />
+	{#if showFeedback}
+		<Feedback />
+	{/if}
 </main>
 
 <footer>
 	<button
 		on:click={toggleFeedback}
-		class="fixed bottom-8 -right-3 text-xs font-light text-gray-400 transform -rotate-90"
-		>feedback</button
+		class="fixed p-2 bottom-0 right-2 text-xs font-light text-gray-400">feedback</button
 	>
 </footer>
 
