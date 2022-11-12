@@ -9,12 +9,13 @@
 </script>
 
 <header class="flex flex-row justify-between max-w-screen-2xl mx-auto">
-	<div class="flex flex-col">
-		<a href="/" class="m-4">
+	<a href="/" class="flex flex-row gap-3 m-4">
+		<img alt="icon" src="/icon.svg" />
+		<div class="flex flex-col">
 			<h1 class="font-normal text-2xl md:text-3xl w-fit tracking-tight">florian</h1>
 			<h1 class="font-thin text-2xl md:text-3xl ml-5 -mt-3 w-fit tracking-tight">marending</h1>
-		</a>
-	</div>
+		</div>
+	</a>
 	<nav class="flex flex-row gap-6 pr-6 pt-5 md:pt-6">
 		<a class="text-sm md:text-md h-fit" href="/metrics">metrics</a>
 		<a class="text-sm md:text-md h-fit" href="/about">about</a>
