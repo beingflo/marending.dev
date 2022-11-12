@@ -1,6 +1,10 @@
 <script>
 	import '../app.css';
 	import '../inter.css';
+
+	let showFeedback = false;
+
+	const toggleFeedback = () => (showFeedback = !showFeedback);
 </script>
 
 <header class="flex flex-row justify-between max-w-screen-2xl mx-auto">
@@ -19,6 +23,12 @@
 <main class="max-w-screen-2xl mx-auto">
 	<slot />
 </main>
+
+<footer>
+	<button on:click={toggleFeedback} class="fixed bottom-1 right-3 text-xs text-gray-400"
+		>feedback</button
+	>
+</footer>
 
 <style global>
 	body {
