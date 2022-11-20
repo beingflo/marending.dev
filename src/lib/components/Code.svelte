@@ -16,6 +16,6 @@
 
 <style>
 	div {
-		box-shadow: 6px 6px 0 lightgray;
+		box-shadow: 6px 6px 0 #00000020;
 	}
 </style>

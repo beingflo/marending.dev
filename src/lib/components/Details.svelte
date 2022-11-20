@@ -2,7 +2,7 @@
 	export let title: string;
 </script>
 
-<details class="mb-3 border border-black bg-gray-50 lg:-mx-4">
+<details class="mb-3 border border-black lg:-mx-4">
 	<summary class="cursor-pointer p-2">
 		{title}
 	</summary>
@@ -10,3 +10,9 @@
 		<slot />
 	</div>
 </details>
+
+<style>
+	details {
+		box-shadow: 6px 6px 0 #00000020;
+	}
+</style>
