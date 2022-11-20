@@ -4,21 +4,16 @@
 	let email: string;
 	let content: string;
 
-	let sending = false;
 	let notification = '';
 
 	const submit = async () => {
-		sending = true;
 		const response = await fetch('/api/feedback', {
 			method: 'POST',
 			body: JSON.stringify({ email, content }),
 		}).catch((error) => {
 			notification = 'failure';
-			sending = false;
 			throw error;
 		});
-
-		sending = false;
 
 		if (response.status === 200) {
 			email = '';
@@ -60,14 +55,12 @@
 	</label>
 	<div class="flex flex-row justify-end gap-2 items-center">
 		{#if notification === 'success'}
-			<p>Thanks!</p>
+			<p class="text-green-800">Thanks!</p>
 		{/if}
 		{#if notification === 'failure'}
-			<p>Something went wrong :(</p>
+			<p class="text-rose-800">Something went wrong :(</p>
 		{/if}
-		<button class="border border-black py-1 px-2" on:click|preventDefault={submit}>
-			{sending ? 'Sending' : 'Send'}
-		</button>
+		<button class="border border-black py-1 px-2" on:click|preventDefault={submit}> Send </button>
 	</div>
 </form>
 
