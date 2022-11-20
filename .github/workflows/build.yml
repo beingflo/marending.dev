@@ -28,5 +28,5 @@ jobs:
         with:
           host: ${{ secrets.OMNI_HOST }}
           username: ${{ secrets.OMNI_USER }}
-          key: ${{ secrets.OMNI_KEY }}
-          script: whoami
+          key: ${{ secrets.OMNI_GH_KEY }}
+          script: cd marending.dev && docker-compose pull && docker-compose up -d
