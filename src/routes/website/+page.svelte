@@ -1,4 +1,5 @@
 <script>
+	import Code from '$lib/components/Code.svelte';
 	import Date from '$lib/components/Date.svelte';
 	import Details from '$lib/components/Details.svelte';
 	import Hint from '$lib/components/Hint.svelte';
@@ -19,6 +20,29 @@
 		accumsan sapien, vitae condimentum ex lectus vitae nunc. Interdum et malesuada fames ac ante
 		ipsum primis in faucibus. Donec et laoreet dolor. Morbi porttitor nec ipsum a vulputate.
 	</P>
+	<Code
+		value={`use crate::{error::AppError, shares::get_share_expiration, shares::KeyJson};
+
+pub async fn access_share_handler(
+    Path(token): Path<String>,
+    db: Extension<PgPool>,
+) -> Result<Response, AppError> {
+    let expires_at = get_share_expiration(&token, &db).await?;
+
+    let now = Utc::now();
+
+    if let Some(expires) = expires_at {
+        if expires < now {
+            return Err(AppError::Unauthorized);
+        }
+    }
+
+    let note = access_share(&token, &db).await?;
+
+    Ok(Json(&note).into_response())
+}
+`}
+	/>
 	<Hint>
 		This is a hint Lorem ipsum dolor sit amet, consectetur adipiscing elit. In luctus ac massa id
 		sem. Duis et tristique ex, et vehicula nisi. Morbi vitae auctor risus. Proin sit amet nunc
