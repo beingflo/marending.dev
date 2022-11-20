@@ -4,8 +4,30 @@
 	let email: string;
 	let content: string;
 
-	const submit = () => {
-		fetch('/api/feedback', { method: 'POST', body: JSON.stringify({ email, content }) });
+	let sending = false;
+	let notification = '';
+
+	const submit = async () => {
+		sending = true;
+		const response = await fetch('/api/feedback', {
+			method: 'POST',
+			body: JSON.stringify({ email, content }),
+		}).catch((error) => {
+			notification = 'failure';
+			sending = false;
+			throw error;
+		});
+
+		sending = false;
+
+		if (response.status === 200) {
+			email = '';
+			content = '';
+
+			notification = 'success';
+		} else {
+			notification = 'failure';
+		}
 	};
 </script>
 
@@ -36,9 +58,17 @@
 			class="block resize w-full h-24 border border-gray-900 p-0.5"
 		/>
 	</label>
-	<button class="w-fit self-end border border-black py-1 px-2" on:click|preventDefault={submit}
-		>Send</button
-	>
+	<div class="flex flex-row justify-end gap-2 items-center">
+		{#if notification === 'success'}
+			<p>Thanks!</p>
+		{/if}
+		{#if notification === 'failure'}
+			<p>Something went wrong :(</p>
+		{/if}
+		<button class="border border-black py-1 px-2" on:click|preventDefault={submit}>
+			{sending ? 'Sending' : 'Send'}
+		</button>
+	</div>
 </form>
 
 <style>
