@@ -1,5 +1,6 @@
 <script>
 	import Feedback from '$lib/components/Feedback.svelte';
+	import { page } from '$app/stores';
 	import '../app.css';
 	import '../inter.css';
 
@@ -17,10 +18,21 @@
 		</div>
 	</a>
 	<nav class="flex flex-row gap-3 lg:gap-6 pr-6 pt-5 md:pt-6 h-fit">
-		<a class="text-sm md:text-md h-fit" href="/">notes</a>
-		<a class="text-sm md:text-md h-fit" href="/images">images</a>
-		<a class="text-sm md:text-md h-fit" href="/metrics">metrics</a>
-		<a class="text-sm md:text-md h-fit" href="/about">about</a>
+		<a class="text-sm md:text-md h-fit {$page.url.pathname === '/' && 'underline'}" href="/"
+			>notes</a
+		>
+		<a
+			class="text-sm md:text-md h-fit {$page.url.pathname === '/images' && 'underline'}"
+			href="/images">images</a
+		>
+		<a
+			class="text-sm md:text-md h-fit {$page.url.pathname === '/metrics' && 'underline'}"
+			href="/metrics">metrics</a
+		>
+		<a
+			class="text-sm md:text-md h-fit {$page.url.pathname === '/about' && 'underline'}"
+			href="/about">about</a
+		>
 	</nav>
 </header>
 
