@@ -6,7 +6,7 @@
 	<summary class="cursor-pointer p-2">
 		{title}
 	</summary>
-	<div class="p-2">
+	<div class="p-2 pt-0">
 		<slot />
 	</div>
 </details>
