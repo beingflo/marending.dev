@@ -1,5 +1,6 @@
 <script>
 	import Date from '$lib/components/Date.svelte';
+	import Details from '$lib/components/Details.svelte';
 	import Hint from '$lib/components/Hint.svelte';
 	import Info from '$lib/components/Info.svelte';
 	import Note from '$lib/components/Note.svelte';
@@ -25,6 +26,17 @@
 		mollis mauris. Ut id mollis libero. Sed rhoncus justo a tortor scelerisque, sed molestie metus
 		cursus. Interdum et malesuada fames ac ante ipsum primis in faucibus.
 	</Hint>
+	<P>
+		accumsan sapien, vitae condimentum ex lectus vitae nunc. Interdum et malesuada fames ac ante
+		ipsum primis in faucibus. Donec et laoreet dolor. Morbi porttitor nec ipsum a vulputate.
+	</P>
+	<Details title="Read more about this">
+		This is a hint Lorem ipsum dolor sit amet, consectetur adipiscing elit. In luctus ac massa id
+		sem. Duis et tristique ex, et vehicula nisi. Morbi vitae auctor risus. Proin sit amet nunc
+		ornare, dapibus tellus ac, pulvinar massa. Quisque vitae risus laoreet, tristique diam ac,
+		mollis mauris. Ut id mollis libero. Sed rhoncus justo a tortor scelerisque, sed molestie metus
+		cursus. Interdum et malesuada fames ac ante ipsum primis in faucibus.
+	</Details>
 	<P>
 		This is a hint Lorem ipsum dolor sit amet, consectetur adipiscing elit. In luctus ac massa id
 		viverra. Quisque vel elit ex. Suspendisse finibus, metus sed sollicitudin ullamcorper, leo nunc
