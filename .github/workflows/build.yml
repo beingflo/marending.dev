@@ -23,3 +23,10 @@ jobs:
         run: docker tag marending.dev:latest ghcr.io/${{ github.actor }}/marending.dev:latest
       - name: Push image to GitHub Container Registry
         run: docker push ghcr.io/${{ github.actor }}/marending.dev:latest
+      - name: Pull new image on server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.OMNI_HOST }}
+          username: ${{ secrets.OMNI_USER }}
+          key: ${{ secrets.OMNI_KEY }}
+          script: whoami
