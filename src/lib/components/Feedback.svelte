@@ -5,7 +5,7 @@
 	let content: string;
 
 	const submit = () => {
-		console.log(email, content);
+		fetch('/api/feedback', { method: 'POST', body: JSON.stringify({ email, content }) });
 	};
 </script>
 
@@ -14,7 +14,7 @@
 	use:enhance
 >
 	<span class="mb-2 font-semibold">Feedback</span>
-	<p class="mb-2 text-gray-800">
+	<p class="mb-2 text-gray-600 text-sm">
 		Found a typo or want to let me know something?<br />Shoot me a quick message, it's much
 		appreciated!
 	</p>
