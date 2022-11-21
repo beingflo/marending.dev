@@ -7,7 +7,7 @@
 
 <Note>
 	{#await feedbacks}
-		Loading
+		Loading...
 	{:then feedbacks}
 		<div class="p-2 flex flex-col gap-12">
 			{#each feedbacks as feedback}
