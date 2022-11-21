@@ -16,17 +16,16 @@
 			<h1 class="font-thin text-2xl md:text-3xl ml-5 -mt-3 w-fit tracking-tight">marending</h1>
 		</div>
 	</a>
-	<nav class="grid grid-cols-2 sm:grid-cols-4 gap-2 gap-x-6 sm:gap-6 pr-6 pt-5 md:pt-6 h-fit">
-		<a class="text-sm md:text-md h-fit {$page.url.pathname === '/' && 'underline'}" href="/"
-			>notes</a
-		>
+	<nav class="flex flex-row gap-3 sm:gap-6 pr-6 pt-5 md:pt-6 h-fit">
+		<a class="text-sm md:text-md {$page.url.pathname === '/' && 'underline'}" href="/">notes</a>
 		<a
-			class="text-sm md:text-md h-fit {$page.url.pathname === '/metrics' && 'underline'}"
-			href="/metrics">metrics</a
+			class="text-sm md:text-md {$page.url.pathname === '/metrics' && 'underline'}"
+			href="/metrics"
 		>
-		<a
-			class="text-sm md:text-md h-fit {$page.url.pathname === '/about' && 'underline'}"
-			href="/about">about</a
+			metrics</a
+		>
+		<a class="text-sm md:text-md {$page.url.pathname === '/about' && 'underline'}" href="/about">
+			about</a
 		>
 	</nav>
 </header>
