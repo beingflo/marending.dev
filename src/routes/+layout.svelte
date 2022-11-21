@@ -21,10 +21,6 @@
 			>notes</a
 		>
 		<a
-			class="text-sm md:text-md h-fit {$page.url.pathname === '/images' && 'underline'}"
-			href="/images">images</a
-		>
-		<a
 			class="text-sm md:text-md h-fit {$page.url.pathname === '/metrics' && 'underline'}"
 			href="/metrics">metrics</a
 		>
