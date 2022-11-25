@@ -6,6 +6,14 @@ const config: UserConfig = {
 	optimizeDeps: {
 		include: ['highlight.js', 'highlight.js/lib/core'],
 	},
+	server: {
+		port: 3000,
+		strictPort: false,
+	},
+	preview: {
+		port: 4000,
+		strictPort: false,
+	},
 };
 
 export default config;
