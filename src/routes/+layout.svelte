@@ -20,13 +20,10 @@
 		<a class="text-sm md:text-md {$page.url.pathname === '/' && 'underline'}" href="/">notes</a>
 		<a
 			class="text-sm md:text-md {$page.url.pathname === '/metrics' && 'underline'}"
-			href="/metrics"
-		>
-			metrics</a
-		>
+			href="/metrics">
+			metrics</a>
 		<a class="text-sm md:text-md {$page.url.pathname === '/about' && 'underline'}" href="/about">
-			about</a
-		>
+			about</a>
 	</nav>
 </header>
 
@@ -40,8 +37,7 @@
 <footer>
 	<button
 		on:click={toggleFeedback}
-		class="fixed p-2 bottom-0 right-2 text-xs font-light text-gray-400">feedback</button
-	>
+		class="fixed p-2 bottom-0 right-2 text-xs font-light text-gray-400">feedback</button>
 </footer>
 
 <style global>
