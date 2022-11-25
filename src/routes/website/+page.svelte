@@ -3,7 +3,6 @@
 	import Date from '$lib/components/Date.svelte';
 	import Details from '$lib/components/Details.svelte';
 	import Hint from '$lib/components/Hint.svelte';
-	import Image from '$lib/components/Image.svelte';
 	import Info from '$lib/components/Info.svelte';
 	import Note from '$lib/components/Note.svelte';
 	import P from '$lib/components/P.svelte';
@@ -61,14 +60,12 @@ pub async fn access_share_handler(
 		accumsan sapien, vitae condimentum ex lectus vitae nunc. Interdum et malesuada fames ac ante
 		ipsum primis in faucibus. Donec et laoreet dolor. Morbi porttitor nec ipsum a vulputate.
 	</P>
-	<Image src="/dune.jpg" alt="dune" />
 	<P>
 		This is a hint Lorem ipsum dolor sit amet, consectetur adipiscing elit. In luctus ac massa id
 		accumsan sapien, vitae condimentum ex lectus vitae nunc. Interdum et malesuada fames ac ante
 		sem. Duis et tristique ex, et vehicula nisi. Morbi vitae auctor risus. Proin sit amet nunc ipsum
 		primis in faucibus. Donec et laoreet dolor. Morbi porttitor nec ipsum a vulputate.
 	</P>
-	<Image src="/ocean.jpg" alt="ocean" />
 	<P>
 		This is a hint Lorem ipsum dolor sit amet, consectetur adipiscing elit. In luctus ac massa id
 		accumsan sapien, vitae condimentum ex lectus vitae nunc. Interdum et malesuada fames ac ante
