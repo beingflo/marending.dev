@@ -11,7 +11,7 @@ const config: UserConfig = {
 		strictPort: false,
 	},
 	preview: {
-		port: 4000,
+		port: 3000,
 		strictPort: false,
 	},
 };
