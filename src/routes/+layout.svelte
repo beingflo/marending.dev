@@ -12,8 +12,10 @@
 <header class="flex flex-row justify-between h-fit max-w-screen-2xl mx-auto">
 	<a href="/" class="flex flex-row gap-3 m-4 h-fit">
 		<div class="flex flex-col h-fit">
-			<h1 class="font-normal text-2xl md:text-3xl w-fit tracking-tight">florian</h1>
-			<h1 class="font-thin text-2xl md:text-3xl ml-5 -mt-3 w-fit tracking-tight">marending</h1>
+			<h1 class="font-semibold lato-light text-2xl md:text-3xl w-fit tracking-tight">florian</h1>
+			<h1 class="font-normal lato-light sp text-2xl md:text-3xl ml-5 -mt-3 w-fit tracking-tight">
+				marending
+			</h1>
 		</div>
 	</a>
 	<nav class="flex flex-row gap-3 sm:gap-6 pr-6 pt-5 md:pt-6 h-fit">
@@ -42,6 +44,12 @@
 
 <style global>
 	body {
-		font-family: 'Libre Baskerville', serif;
+		font-family: 'LatoLatinWeb', serif;
+	}
+	.lato-light {
+		font-family: 'LatoLatinWebLight', sans-serif;
+	}
+	.lato {
+		font-family: 'LatoLatinWeb', sans-serif;
 	}
 </style>
