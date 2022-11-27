@@ -41,7 +41,7 @@
 		published without to much regard for proof-reading and editing. If you find a typo or other
 		issue, I'd love to hear about it via the feedback box on the bottom right of every page.
 	</P>
-	<H2>Techical setup</H2>
+	<H2>Technical setup</H2>
 	<P
 		>When contemplating the architecture of this site, the obvious (and probably sensible) choice
 		was using a static site generator. Static site generators take text files containing notes,
