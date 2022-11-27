@@ -18,6 +18,10 @@
 </script>
 
 <Note>
-	<h1 class="text-lg ml-8">Page views</h1>
-	<Chart data={chartData} type="line" lineOptions={{ spline: 1, hideDots: 1, regionFill: 1 }} />
+	<h1 class="text-lg">Page views</h1>
+	<Chart
+		data={chartData}
+		type="line"
+		lineOptions={{ spline: 1, hideDots: 1, regionFill: 1 }}
+		axisOptions={{ yAxisMode: 'tick', xAxisMode: 'tick', xIsSeries: 1 }} />
 </Note>
