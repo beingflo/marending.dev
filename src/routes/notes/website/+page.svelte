@@ -61,11 +61,16 @@
 </article>`} />
 	<P
 		>These three lines define the markup and styling of a container with responsive padding and
-		max-width behaviour.</P>
+		max-width behaviour. The following snippet shows the code that generates the above snippet (hold
+		on to your seat, we're going meta):
+	</P>
+	<Code
+		value={`<Code value={\`<article class="p-4 py-8 md:py-12 max-w-4xl mx-auto"><slot /></article>\`} />`} />
 	<H3>Deployment</H3>
 	<P
 		>The sveltekit application is built using the node adapter and baked into a docker container.
-		Lastly, said container is deployed to my small hetzner server.
+		Lastly, said container is deployed to my small hetzner server alongside other side projects that
+		I will hopefully get around to writing about one of these days.
 	</P>
 	<Hint>This post will get amended as I think of more info to add.</Hint>
 </Note>
