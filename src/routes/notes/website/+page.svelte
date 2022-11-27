@@ -1,19 +1,16 @@
 <script>
 	import Code from '$lib/components/Code.svelte';
-	import Date from '$lib/components/Date.svelte';
 	import Details from '$lib/components/Details.svelte';
 	import Hint from '$lib/components/Hint.svelte';
 	import Info from '$lib/components/Info.svelte';
 	import Note from '$lib/components/Note.svelte';
 	import P from '$lib/components/P.svelte';
-	import Subtitle from '$lib/components/Subtitle.svelte';
 	import Title from '$lib/components/Title.svelte';
 </script>
 
 <Note>
-	<Date>12/11/2022</Date>
-	<Title>About this website</Title>
-	<Subtitle>There are many like it, but this one is mine</Subtitle>
+	<Title date="27 November 2022" subtitle="There are many like it, but this one is mine"
+		>About this website</Title>
 	<P>
 		This is a hint Lorem ipsum dolor sit amet, consectetur adipiscing elit. In luctus ac massa id
 		viverra. Quisque vel elit ex. Suspendisse finibus, metus sed sollicitudin ullamcorper, leo nunc
@@ -41,8 +38,7 @@ pub async fn access_share_handler(
 
     Ok(Json(&note).into_response())
 }
-`}
-	/>
+`} />
 	<P>
 		This is a hint Lorem ipsum dolor sit amet, consectetur adipiscing elit. In luctus ac massa id
 		accumsan sapien, vitae condimentum ex lectus vitae nunc. Interdum et malesuada fames ac ante
