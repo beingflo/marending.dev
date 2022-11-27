@@ -18,7 +18,7 @@
 			</h1>
 		</div>
 	</a>
-	<nav class="flex flex-row gap-3 sm:gap-6 pr-6 pt-5 md:pt-6 h-fit">
+	<nav class="flex flex-row gap-3 sm:gap-6 pr-6 pt-5 md:pt-6 h-fit decoration-1">
 		<a class="text-sm md:text-md {$page.url.pathname === '/' && 'underline'}" href="/">notes</a>
 		<a
 			class="text-sm md:text-md {$page.url.pathname === '/metrics' && 'underline'}"
@@ -45,6 +45,7 @@
 <style global>
 	body {
 		font-family: 'LatoLatinWeb', serif;
+		line-height: 170%;
 	}
 	.lato-light {
 		font-family: 'LatoLatinWebLight', sans-serif;
