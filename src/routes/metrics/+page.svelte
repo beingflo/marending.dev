@@ -1,23 +1,23 @@
 <script>
+	// @ts-nocheck
 	import Note from '$lib/components/Note.svelte';
+	import Chart from 'svelte-frappe-charts';
 
 	export let data;
+
 	const { pageViews } = data;
+
+	const chartData = {
+		labels: pageViews.map((view) => view.day),
+		datasets: [
+			{
+				values: pageViews.map((view) => view.count),
+			},
+		],
+	};
 </script>
 
 <Note>
-	{#await pageViews}
-		Loading...
-	{:then pageViews}
-		<div class="p-2 flex flex-col gap-1">
-			{#each pageViews as pageView}
-				<div class="flex flex-row gap-12">
-					<p class="font-mono">{pageView.timestamp}</p>
-					<p class="font-mono">{pageView.page}</p>
-				</div>
-			{/each}
-		</div>
-	{:catch someError}
-		System error: {someError.message}.
-	{/await}
+	<h1 class="text-lg ml-8">Page views</h1>
+	<Chart data={chartData} type="line" lineOptions={{ spline: 1, hideDots: 1, regionFill: 1 }} />
 </Note>

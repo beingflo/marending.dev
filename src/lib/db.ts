@@ -22,7 +22,9 @@ const addFeedbackStmt = feedbackDB.prepare(
 const getFeedbackStmt = feedbackDB.prepare('SELECT * FROM feedback;');
 
 const addPageViewStmt = metricsDB.prepare('INSERT INTO metrics (page) VALUES (@page);');
-const getPageViewsStmt = metricsDB.prepare('SELECT *  FROM metrics;');
+const getDailyPageViewsStmt = metricsDB.prepare(
+	"SELECT COUNT(*) as count, strftime('%Y-%m-%d', timestamp) day FROM metrics GROUP BY day;"
+);
 
 export const addFeedback = (content: string, email?: string) => {
 	addFeedbackStmt.run({ content, email });
@@ -39,5 +41,5 @@ export const getFeedback = async (): Promise<
 };
 
 export const getPageViews = async (): Promise<Array<{ page: string; imestamp: string }>> => {
-	return getPageViewsStmt.all();
+	return getDailyPageViewsStmt.all();
 };
