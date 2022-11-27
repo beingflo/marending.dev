@@ -5,9 +5,9 @@
 
 	export let data;
 
-	const { pageViews } = data;
+	const { pageViews, mostViewed } = data;
 
-	const chartData = {
+	const lineChart = {
 		labels: pageViews.map((view) => view.day),
 		datasets: [
 			{
@@ -15,13 +15,26 @@
 			},
 		],
 	};
+
+	const pieChart = {
+		labels: mostViewed.map((page) => page.page),
+		datasets: [
+			{
+				values: mostViewed.map((page) => page.count),
+			},
+		],
+	};
 </script>
 
 <Note>
 	<h1 class="text-lg">Page views</h1>
-	<Chart
-		data={chartData}
-		type="line"
-		lineOptions={{ spline: 1, hideDots: 1, regionFill: 1 }}
-		axisOptions={{ yAxisMode: 'tick', xAxisMode: 'tick', xIsSeries: 1 }} />
+	<div class="">
+		<Chart
+			data={lineChart}
+			type="line"
+			lineOptions={{ spline: 1, hideDots: 1, regionFill: 1 }}
+			axisOptions={{ yAxisMode: 'tick', xAxisMode: 'tick', xIsSeries: 1 }} />
+	</div>
+	<h1 class="text-lg pt-16">Most viewed</h1>
+	<Chart data={pieChart} type="pie" maxSlices={8} />
 </Note>
