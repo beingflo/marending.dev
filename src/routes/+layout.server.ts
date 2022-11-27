@@ -1,5 +1,10 @@
 import { addPageView } from '$lib/db';
 
 export const load = ({ url }: { url: { pathname: string } }) => {
-	addPageView(url.pathname);
+	if (
+		url.pathname.startsWith('/notes/') ||
+		['/', '/about', '/metrics'].indexOf(url.pathname) > -1
+	) {
+		addPageView(url.pathname);
+	}
 };
