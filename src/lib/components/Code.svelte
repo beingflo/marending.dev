@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Highlight from 'svelte-highlight';
-	import rust from 'svelte-highlight/languages/rust';
+	import javascript from 'svelte-highlight/languages/javascript';
 	import theme from 'svelte-highlight/styles/stackoverflow-light';
 
 	export let value: string;
@@ -11,7 +11,7 @@
 </svelte:head>
 
 <div class="border border-black mb-6 lg:-mx-4">
-	<Highlight language={rust} code={value} />
+	<Highlight language={javascript} code={value} />
 </div>
 
 <style>

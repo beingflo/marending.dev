@@ -7,6 +7,6 @@
 	<NoteSummary
 		title="About this website"
 		summary="There are many like it, but this one is mine"
-		date="12/11/2022"
+		date="27 November 2022"
 		link="/notes/website" />
 </div>
