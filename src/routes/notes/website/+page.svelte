@@ -77,5 +77,17 @@
 		Lastly, said container is deployed to my small hetzner server alongside other side projects that
 		I will hopefully get around to writing about one of these days.
 	</P>
+	<H2>Why the metric section?</H2>
+	<P
+		>I'm always curious to know what kind of traffic patterns websites see. That's why I built a <em
+			>very</em> rudimentary analytics feature into this site. Don't worry, no tracking cookie is sent
+		to your browser, this is collected server side only with no identifying information on the visitor
+		whatsoever. Now that I can see the traffic for my website, I might as well share it with you too.
+	</P>
+	<P>
+		Just know that at least for now, the majority of views are coming either from myself, or the
+		friendly crawlers and bots that want to pay me a visit. The ones trying to access <C
+			>/wp-content/themes/seotheme/db.php</C> and similar are not welcome though.
+	</P>
 	<Hint>This post will get amended as I think of more info to add.</Hint>
 </Note>
