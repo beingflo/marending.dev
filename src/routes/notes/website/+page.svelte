@@ -77,7 +77,7 @@
 		Lastly, said container is deployed to my small hetzner server alongside other side projects that
 		I will hopefully get around to writing about one of these days.
 	</P>
-	<H2>Why the metric section?</H2>
+	<H2>Why the metrics section?</H2>
 	<P
 		>I'm always curious to know what kind of traffic patterns websites see. That's why I built a <em
 			>very</em> rudimentary analytics feature into this site. Don't worry, no tracking cookie is sent
