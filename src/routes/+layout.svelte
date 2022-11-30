@@ -45,7 +45,8 @@
 <style global>
 	body {
 		font-family: 'LatoLatinWeb', serif;
-		line-height: 170%;
+		line-height: 2;
+		color: #333;
 	}
 	.lato-light {
 		font-family: 'LatoLatinWebLight', sans-serif;
