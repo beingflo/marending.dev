@@ -1,10 +1,11 @@
 import { addPageView } from '$lib/db';
 
-export const load = ({ url }: { url: { pathname: string } }) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const load = (params: any) => {
 	if (
-		url.pathname.startsWith('/notes/') ||
-		['/', '/about', '/metrics'].indexOf(url.pathname) > -1
+		params.url.pathname.startsWith('/notes/') ||
+		['/', '/about', '/metrics'].indexOf(params.url.pathname) > -1
 	) {
-		addPageView(url.pathname);
+		addPageView(params.url.pathname, params.request.headers.get('referer'));
 	}
 };
