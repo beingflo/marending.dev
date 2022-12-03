@@ -31,7 +31,7 @@ const addFeedbackStmt = feedbackDB.prepare(
 	'INSERT INTO feedback (content, email) VALUES (@content, @email);'
 );
 
-const getFeedbackStmt = feedbackDB.prepare('SELECT * FROM feedback;');
+const getFeedbackStmt = feedbackDB.prepare('SELECT * FROM feedback ORDER BY timestamp DESC;');
 
 const addPageViewStmt = metricsDB.prepare(
 	'INSERT INTO metrics (page, referrer) VALUES (@page, @referrer);'
