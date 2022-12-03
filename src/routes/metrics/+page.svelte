@@ -1,6 +1,5 @@
 <script>
 	// @ts-nocheck
-	import Note from '$lib/components/Note.svelte';
 	import Chart from 'svelte-frappe-charts';
 
 	export let data;
