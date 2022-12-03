@@ -5,6 +5,7 @@
 	import A from '$lib/components/A.svelte';
 	import Details from '$lib/components/Details.svelte';
 	import C from '$lib/components/C.svelte';
+	import Circle from '$lib/components/lines/Circle.svelte';
 </script>
 
 <Note>
@@ -46,4 +47,5 @@
 		<A href="https://svgjs.dev/docs/3.0/">SVG.js</A>.
 	</Details>
 	<P>So without further ado, let's draw some lines!</P>
+	<Circle />
 </Note>
