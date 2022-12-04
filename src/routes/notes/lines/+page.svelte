@@ -28,7 +28,7 @@
 	<P>
 		On this page I want to systematically explore techniques and patterns to generate interesting
 		structures. To prevent myself from getting lost in the endless possibilities, I will restrict
-		myself to <span class="hover:line-through decoration-1 font-bold">lines</span>.
+		myself to <span class="hover:line-through decoration-1 font-bold">straight lines</span>.
 	</P>
 	<Details title="How do I go about generating my lines?">
 		Initially I had two programming languages in mind: <C>Rust</C> or <C>Typescript</C>. <C>Rust</C>
@@ -44,8 +44,8 @@
 		these libraries. Animation, physics and geometry utilities are nice-to-haves but unlikely to see
 		any use in my use-case. Instead, all I really need is a way to programatically draw lines,
 		ideally in a way that I can get a high-resolution image out of it somehow for print. And what
-		better way to do this than with our good friend, the <C>SVG</C>. So I just directly construct <C
-			>SVGs</C> in my <C>Svelte</C> components.
+		better way to do this than with our good old friend, the <C>SVG</C>. So I just directly
+		construct <C>SVGs</C> in my <C>Svelte</C> components.
 	</Details>
 	<P>So without further ado, let's draw some lines!</P>
 	<Circle />
