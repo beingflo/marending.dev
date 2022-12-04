@@ -67,12 +67,12 @@
 		to try a bit harder. Let's try to bring some repetition into the mix, and while we're at it,
 		some <span class="hover:rotate-45 transition inline-block">randomness</span>.
 	</P>
-	<Chaos />
-	<P>Now we're getting somewhere! It's no masterpiece, but I don't hate it.</P>
 	<Info>
 		Note that all the pieces on this page that contain randomness are uniquely generated for each
 		page view. Consider yourself special!
 	</Info>
+	<Chaos />
+	<P>Now we're getting somewhere! It's no masterpiece, but I don't hate it.</P>
 	<Details title="Excursion into wrong transforms">
 		<P>
 			Before I arrived at the above piece, my makeshift <C>SVG</C> rendering blessed me with this abomination:
