@@ -8,6 +8,8 @@
 	import Circle from '$lib/components/lines/Circle.svelte';
 	import Hint from '$lib/components/Hint.svelte';
 	import SimpleLine from '$lib/components/lines/SimpleLine.svelte';
+	import Chaos from '$lib/components/lines/Chaos.svelte';
+	import Info from '$lib/components/Info.svelte';
 </script>
 
 <Note>
@@ -57,4 +59,16 @@
 		would retort.
 	</P>
 	<SimpleLine />
+	<P
+		>Much better, we're checking all the boxes. Well, the one. If I was a famous artist already, I
+		would hang this on the wall and have critics say clever sounding things about it. Alas, I need
+		to try a bit harder. Let's try to bring some repetition into the mix, and while we're at it,
+		some <span class="hover:rotate-45 transition inline-block">randomness</span>.
+	</P>
+	<Chaos />
+	<P>Now we're getting somewhere! It's no masterpiece, but I don't hate it</P>
+	<Info>
+		Note that all the pieces on this page that contain randomness are uniquely generated for each
+		request.
+	</Info>
 </Note>
