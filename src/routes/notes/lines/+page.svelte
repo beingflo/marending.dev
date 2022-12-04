@@ -33,9 +33,9 @@
 	<Details title="How do I go about generating my lines?">
 		Initially I had two programming languages in mind: <C>Rust</C> or <C>Typescript</C>. <C>Rust</C>
 		being my favorite language was an obvious choice. However, the dynamic nature of <C>TS</C> lends
-		itself for a problem like this. No sense in fighting <C>Rusts</C> borrow-checker for interactive
-		code like this, and the upsides you get in turn don't really come into play here. What further seals
-		the deal for me is that <C>TS</C>-based code can be natively embedded right here, on this page.
+		itself to a problem like this. No sense in fighting <C>Rusts</C> borrow-checker for interactive code,
+		and the upsides you get in turn don't really come into play here. What further seals the deal for
+		me is that <C>TS</C>-based code can be natively embedded right here, on this page.
 		<br /><br />
 		Next, I was exploring libraries that would make the whole ordeal easier. Top contenders include
 		<A href="https://p5js.org/">p5js</A>, <A href="https://ptsjs.org/">Pts.js</A> and <A
