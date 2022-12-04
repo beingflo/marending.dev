@@ -13,6 +13,7 @@
 <Note>
 	<Title date="27 November 2022" subtitle="There are many like it, but this one is mine"
 		>About this website</Title>
+	<Hint>This note is a work in progress!</Hint>
 	<P>
 		Some time ago I decided to build a personal website to write about technical things I'm up to.
 		If you're reading this, suprisingly, I followed through. Now, I'm under no delusion that the
@@ -89,5 +90,4 @@
 		friendly crawlers and bots that want to pay me a visit. The ones trying to access <C
 			>/wp-content/themes/seotheme/db.php</C> and similar are not welcome though.
 	</P>
-	<Hint>This post will get amended as I think of more info to add.</Hint>
 </Note>

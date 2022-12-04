@@ -6,12 +6,14 @@
 	import Details from '$lib/components/Details.svelte';
 	import C from '$lib/components/C.svelte';
 	import Circle from '$lib/components/lines/Circle.svelte';
+	import Hint from '$lib/components/Hint.svelte';
 </script>
 
 <Note>
 	<Title date="03 December 2022" subtitle="Some schmuck tries his hands at generative art">
 		A study of lines
 	</Title>
+	<Hint>This note is a work in progress!</Hint>
 	<P>
 		After moving into a bigger apartement, I've found the walls of our office to be a bit naked.
 		While I'm a hobby photographer and would like to get more into printing my work, for this space
