@@ -49,4 +49,10 @@
 	</Details>
 	<P>So without further ado, let's draw some lines!</P>
 	<Circle />
+	<P
+		>Wait, that's not a straight line! I just wanted to make sure you're paying attention. <q
+			>Many infinitesimally small straight lines can approximate a curve</q
+		>, you might say. <q>That violates the spirit of the exercise, stop raining on my parade!</q>, I
+		would retort.
+	</P>
 </Note>
