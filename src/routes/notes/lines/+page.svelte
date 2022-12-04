@@ -7,6 +7,7 @@
 	import C from '$lib/components/C.svelte';
 	import Circle from '$lib/components/lines/Circle.svelte';
 	import Hint from '$lib/components/Hint.svelte';
+	import SimpleLine from '$lib/components/lines/SimpleLine.svelte';
 </script>
 
 <Note>
@@ -55,4 +56,5 @@
 		>, you might say. <q>That violates the spirit of the exercise, stop raining on my parade!</q>, I
 		would retort.
 	</P>
+	<SimpleLine />
 </Note>
