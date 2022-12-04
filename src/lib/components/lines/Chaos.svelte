@@ -17,7 +17,7 @@
 	};
 </script>
 
-<Figure>
+<Figure caption="Fig 3. {num} lines randomly arranged">
 	<svg {width} {height} xmlns="http://www.w3.org/2000/svg">
 		{#each Array(num) as _}
 			<line

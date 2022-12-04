@@ -66,7 +66,7 @@
 		some <span class="hover:rotate-45 transition inline-block">randomness</span>.
 	</P>
 	<Chaos />
-	<P>Now we're getting somewhere! It's no masterpiece, but I don't hate it</P>
+	<P>Now we're getting somewhere! It's no masterpiece, but I don't hate it.</P>
 	<Info>
 		Note that all the pieces on this page that contain randomness are uniquely generated for each
 		request.
