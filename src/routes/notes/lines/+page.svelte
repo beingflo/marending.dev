@@ -10,6 +10,8 @@
 	import SimpleLine from '$lib/components/lines/SimpleLine.svelte';
 	import Chaos from '$lib/components/lines/Chaos.svelte';
 	import Info from '$lib/components/Info.svelte';
+	import ChaosWrong from '$lib/components/lines/ChaosWrong.svelte';
+	import Code from '$lib/components/Code.svelte';
 </script>
 
 <Note>
@@ -69,6 +71,46 @@
 	<P>Now we're getting somewhere! It's no masterpiece, but I don't hate it.</P>
 	<Info>
 		Note that all the pieces on this page that contain randomness are uniquely generated for each
-		request.
+		page view. Consider yourself special!
 	</Info>
+	<Details title="Excursion into wrong transforms">
+		<P>
+			Before I arrived at the above piece, my makeshift <C>SVG</C> rendering blessed me with this abomination:
+		</P>
+		<ChaosWrong />
+		<P>
+			The problem here is the the origin of the rotational transform. You see, drawing a line that
+			is not horizontal in an <C>SVG</C> could be accomplished by providing the start and endpoint (which
+			do not have the same <C>y</C> coordinate) explicitly. When generating lots of randomly rotated
+			lines of the same length, we have to do some trigonometry to figure out one of those points. And
+			I for one don't have time to use my brain like that.
+		</P>
+		<P>
+			Instead, I want to draw my line horizontally, and then rotate it using the <C>rotate</C> transform
+			that <C>SVG</C> provides.
+		</P>
+		<Code
+			respectMargin
+			value={`<svg width="600" height="400" xmlns="http://www.w3.org/2000/svg">
+	<line x1={x} y1={y} x2={x + 50} y2={y} transform="rotate(rand())" stroke="black" />
+</svg>`} />
+		<P>
+			This way I don't have to do any math, just generate random numbers for the rotation. As it
+			turns out, this doesn't work correctly as we have seen above. The lines are rotated about the
+			<C>(0, 0)</C> origin instead of the center point of the line. To fix it, we either set the <C
+				>transform-origin</C> property on the <C>SVG</C> correctly, or we get fancy:
+		</P>
+		<Code
+			respectMargin
+			value={`<svg width="600" height="400" xmlns="http://www.w3.org/2000/svg">
+	<line x1="-25" y1="0" x2="25" y2="0" 
+		transform="rotate(rand()), translate(rand(), rand())" stroke="black" />
+</svg>`} />
+		<P>
+			We draw lines with center points on the origin and use the <C>transform</C> both for rotation
+			<em>and for translation</em>. This way we don't have to set the origin of transformation. Note
+			the order of the transforms: They are applied from right to left. If we first translated, we
+			would have the wrong transform origin again.
+		</P>
+	</Details>
 </Note>

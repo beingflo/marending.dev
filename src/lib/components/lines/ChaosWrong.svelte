@@ -8,16 +8,16 @@
 	const length = 50;
 
 	const getRandomTransformation = () => {
-		const rotation = Math.random() * 180;
+		const rotation = Math.random() * 45;
 		const xTranslate = Math.random() * width;
 		const yTranslate = Math.random() * height;
 		return {
-			transform: `translate(${xTranslate}, ${yTranslate}) rotate(${rotation})`,
+			transform: `rotate(${rotation}), translate(${xTranslate}, ${yTranslate})`,
 		};
 	};
 </script>
 
-<Figure caption="Fig 3. {num} randomly translated and rotated lines">
+<Figure>
 	<svg {width} {height} xmlns="http://www.w3.org/2000/svg">
 		{#each Array(num) as _}
 			<line
