@@ -18,15 +18,17 @@
 </script>
 
 <Figure caption="Fig 3. {num} randomly translated and rotated lines">
-	<svg {width} {height} xmlns="http://www.w3.org/2000/svg">
-		{#each Array(num) as _}
-			<line
-				{...getRandomTransformation()}
-				x1={-length / 2}
-				y1="0"
-				x2={length / 2}
-				y2="0"
-				stroke="black" />
-		{/each}
-	</svg>
+	<div style="width: {width}px; height: {height}px;">
+		<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+			{#each Array(num) as _}
+				<line
+					{...getRandomTransformation()}
+					x1={-length / 2}
+					y1="0"
+					x2={length / 2}
+					y2="0"
+					stroke="black" />
+			{/each}
+		</svg>
+	</div>
 </Figure>
