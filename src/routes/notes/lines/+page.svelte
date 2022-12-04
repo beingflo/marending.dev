@@ -44,9 +44,8 @@
 		these libraries. Animation, physics and geometry utilities are nice-to-haves but unlikely to see
 		any use in my use-case. Instead, all I really need is a way to programatically draw lines,
 		ideally in a way that I can get a high-resolution image out of it somehow for print. And what
-		better way to do this than with our good friend, the <C>SVG</C>. To get a slightly nicer
-		interface I use
-		<A href="https://svgjs.dev/docs/3.0/">SVG.js</A>.
+		better way to do this than with our good friend, the <C>SVG</C>. So I just directly construct <C
+			>SVGs</C> in my <C>Svelte</C> components.
 	</Details>
 	<P>So without further ado, let's draw some lines!</P>
 	<Circle />
