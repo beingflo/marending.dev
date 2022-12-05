@@ -27,7 +27,8 @@
 	<P>
 		It started with finding out about <em>generative art</em> via
 		<A href="https://tylerxhobbs.com/fidenza">Tyler Hobbs' Fidenza</A>. I found the look of this
-		type of art very appealing. Maybe because I lack creativity, I like the idea of <em>guiding</em>
+		type of art very appealing. Maybe because I lack artistic talent, I like the idea of
+		<em>guiding</em>
 		randomness towards aestethic order, rather than <em>create</em> from scratch.
 	</P>
 	<P>
@@ -113,4 +114,11 @@
 			would have the wrong transform origin again.
 		</P>
 	</Details>
+	<Info
+		>Fun fact: At this point in writing this note, the <C>/notes/lines</C> page you're currently viewing
+		can be server-side rendered approximately 80 times per second. Compared that to 300 times per second
+		for the landing page. All that <C>SVG</C> generation already takes its toll on that server. Looks
+		like I will have to either split this note up into multiple parts or turn off server-side rendering
+		for this page alltogether.
+	</Info>
 </Note>
