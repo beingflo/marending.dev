@@ -6,7 +6,7 @@
 
 	export let data;
 
-	const { pageViews, mostViewed } = data;
+	const { pageViews } = data;
 
 	onMount(() => {
 		bb.generate({
