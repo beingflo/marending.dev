@@ -15,6 +15,7 @@
 	import ChaosAngles from '$lib/components/lines/ChaosAngles.svelte';
 	import ChaosAngles90 from '$lib/components/lines/ChaosAngles90.svelte';
 	import CircularDisturbance from '$lib/components/lines/CircularDisturbance.svelte';
+	import FeatheredEpicenter from '$lib/components/lines/FeatheredEpicenter.svelte';
 </script>
 
 <Note>
@@ -141,4 +142,11 @@
 		80 and 100 degrees. We expect to see some area of <em>disturbance</em> around our chosen point.
 	</P>
 	<CircularDisturbance />
+	<P
+		>That's quite nice! But that sharp transition between horizontal and vertical lines is almost
+		screaming for a nicely feathered approach. What if we use the distance between the center point
+		of a line and our <C>epicenter</C> to tune the rotation of the line? Say, the closer the line, the
+		more upright, i.e. 90 degrees, the line is.
+	</P>
+	<FeatheredEpicenter />
 </Note>
