@@ -18,15 +18,17 @@
 </script>
 
 <Figure>
-	<svg {width} {height} xmlns="http://www.w3.org/2000/svg">
-		{#each Array(num) as _}
-			<line
-				{...getRandomTransformation()}
-				x1={-length / 2}
-				y1="0"
-				x2={length / 2}
-				y2="0"
-				stroke="black" />
-		{/each}
-	</svg>
+	<div class="w-full sm:w-[600px]">
+		<svg width="100%" {height} xmlns="http://www.w3.org/2000/svg">
+			{#each Array(num) as _}
+				<line
+					{...getRandomTransformation()}
+					x1={-length / 2}
+					y1="0"
+					x2={length / 2}
+					y2="0"
+					stroke="black" />
+			{/each}
+		</svg>
+	</div>
 </Figure>
