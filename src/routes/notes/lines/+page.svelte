@@ -14,6 +14,7 @@
 	import Code from '$lib/components/Code.svelte';
 	import ChaosAngles from '$lib/components/lines/ChaosAngles.svelte';
 	import ChaosAngles90 from '$lib/components/lines/ChaosAngles90.svelte';
+	import CircularDisturbance from '$lib/components/lines/CircularDisturbance.svelte';
 </script>
 
 <Note>
@@ -134,5 +135,10 @@
 	<ChaosAngles90 />
 	<P
 		>Adding more, smaller lines and rotating them around by 90 degrees makes this look a bit like
-		rain.</P>
+		rain. What if we try segmenting our piece into multiple regions with distinct handling of
+		rotations? Let's say we keep all the angles at exactly 0 degrees, unless the midpoints of the
+		lines are within a given distance of some random point. At that point we generate rotations
+		between 80 and 90 degrees. We expect to see some area of <em>disturbance</em> around our chosen point.
+	</P>
+	<CircularDisturbance />
 </Note>
