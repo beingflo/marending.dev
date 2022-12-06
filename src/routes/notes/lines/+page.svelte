@@ -133,6 +133,6 @@
 	</P>
 	<ChaosAngles90 />
 	<P
-		>Adding more smaller lines and rotating the lines around by 90 degrees makes this look a bit
-		like rain.</P>
+		>Adding more, smaller lines and rotating them around by 90 degrees makes this look a bit like
+		rain.</P>
 </Note>
