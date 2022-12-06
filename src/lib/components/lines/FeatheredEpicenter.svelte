@@ -28,7 +28,7 @@
 </script>
 
 <Figure
-	caption="Fig 7. Lines turn more upright the close they get to the epicenter. Circle represents epicenter.">
+	caption="Fig 7. Lines turn more upright the closer they get to the epicenter. Circle represents epicenter.">
 	<div class="w-full sm:w-[600px]">
 		<svg width="100%" {height} xmlns="http://www.w3.org/2000/svg">
 			{#each Array(num) as _}

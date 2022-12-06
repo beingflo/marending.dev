@@ -130,8 +130,8 @@
 	</P>
 	<ChaosAngles />
 	<P>
-		At this point I'm not sure if there is an optical illusion with a all these
-		specs-of-dust-looking things between the lines or my monitor is dirty. We will never know.
+		At this point I'm not sure if there is an optical illusion with all these specs-of-dust-looking
+		things between the lines or my monitor is dirty. We will never know.
 	</P>
 	<ChaosAngles90 />
 	<P
