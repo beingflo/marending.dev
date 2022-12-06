@@ -2,7 +2,6 @@
 	import Feedback from '$lib/components/Feedback.svelte';
 	import { page } from '$app/stores';
 	import '../app.css';
-	//import '../font.css';
 
 	let showFeedback = false;
 
