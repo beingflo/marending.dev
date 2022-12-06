@@ -12,6 +12,8 @@
 	import Info from '$lib/components/Info.svelte';
 	import ChaosWrong from '$lib/components/lines/ChaosWrong.svelte';
 	import Code from '$lib/components/Code.svelte';
+	import ChaosAngles from '$lib/components/lines/ChaosAngles.svelte';
+	import ChaosAngles90 from '$lib/components/lines/ChaosAngles90.svelte';
 </script>
 
 <Note>
@@ -116,9 +118,21 @@
 	</Details>
 	<Info
 		>Fun fact: At this point in writing this note, the <C>/notes/lines</C> page you're currently viewing
-		can be server-side rendered approximately 80 times per second. Compared that to 300 times per second
-		for the landing page. All that <C>SVG</C> generation already takes its toll on that server. Looks
-		like I will have to either split this note up into multiple parts or turn off server-side rendering
-		for this page alltogether.
+		can be server-side rendered approximately 80 times per second. Compare that to 300 times per second
+		for the landing page. All that <C>SVG</C> generation already takes its toll on that server.
 	</Info>
+	<P>
+		While the above piece starts to look interesting, we have a bad case of <em
+			>untamed randomness</em
+		>. We might get more visually appealing structures by restricting e.g. the angle of the lines.
+	</P>
+	<ChaosAngles />
+	<P>
+		At this point I'm not sure if there is an optical illusion with a all these
+		specs-of-dust-looking things between the lines or my monitor is dirty. We will never know.
+	</P>
+	<ChaosAngles90 />
+	<P
+		>Adding more smaller lines and rotating the lines around by 90 degrees makes this look a bit
+		like rain.</P>
 </Note>
