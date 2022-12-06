@@ -1,8 +1,8 @@
 <script>
 	import Figure from '$lib/components/lines/Figure.svelte';
 
-	export const width = 600;
-	export const height = 400;
+	const width = 600;
+	const height = 400;
 
 	const num = 200;
 	const length = 50;
@@ -18,8 +18,8 @@
 </script>
 
 <Figure caption="Fig 3. {num} randomly translated and rotated lines">
-	<div style="width: {width}px; height: {height}px;">
-		<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+	<div class="w-full sm:w-[600px]">
+		<svg width="100%" {height} xmlns="http://www.w3.org/2000/svg">
 			{#each Array(num) as _}
 				<line
 					{...getRandomTransformation()}
