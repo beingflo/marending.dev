@@ -12,7 +12,7 @@
 	<a href="/" class="flex flex-row gap-3 m-4 h-fit">
 		<div class="flex flex-col h-fit">
 			<h1 class="font-light text-2xl md:text-3xl w-fit">florian</h1>
-			<h1 class="font-thin md:text-3xl ml-5 -mt-3 w-fit">marending</h1>
+			<h1 class="font-thin text-2xl md:text-3xl ml-4 md:ml-5 -mt-3 w-fit">marending</h1>
 		</div>
 	</a>
 	<nav class="flex flex-row gap-3 sm:gap-6 pr-6 pt-5 md:pt-6 h-fit decoration-1">
