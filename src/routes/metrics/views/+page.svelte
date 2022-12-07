@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Note from '$lib/components/Note.svelte';
 	import { onMount } from 'svelte';
 	import { bb, areaSpline } from 'billboard.js';
 	import 'billboard.js/dist/theme/insight.css';
@@ -41,9 +40,5 @@
 	});
 </script>
 
-<Note>
-	<div class="pt-12">
-		<h1 class="text-lg pb-8">Page views</h1>
-		<div id="chart" />
-	</div>
-</Note>
+<h1 class="text-lg pb-8">Page views</h1>
+<div id="chart" />

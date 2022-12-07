@@ -18,8 +18,8 @@
 	<nav class="flex flex-row gap-3 sm:gap-6 pr-6 pt-5 md:pt-6 h-fit decoration-1">
 		<a class="text-sm md:text-md {$page.url.pathname === '/' && 'underline'}" href="/">notes</a>
 		<a
-			class="text-sm md:text-md {$page.url.pathname === '/metrics' && 'underline'}"
-			href="/metrics">
+			class="text-sm md:text-md {$page.url.pathname.startsWith('/metrics') && 'underline'}"
+			href="/metrics/views">
 			metrics</a>
 		<a class="text-sm md:text-md {$page.url.pathname === '/about' && 'underline'}" href="/about">
 			about</a>
