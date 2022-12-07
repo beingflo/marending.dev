@@ -149,4 +149,11 @@
 		more upright, i.e. 90 degrees, the line is.
 	</P>
 	<FeatheredEpicenter />
+	<P
+		>Alright, that turned out less interesting than expected. Maybe we're overdoing it with the
+		randomness a bit. Currently there is nothing really of interest to see, everything is kind of
+		the same, <em>arbitrary</em>. When we look at other works of generative art, we can often see
+		artist driven <q>macro features</q>. Only the details are left to chance. They feel a lot more
+		deliberate than what I've been pumping out here. So let's give that a shot instead.
+	</P>
 </Note>
