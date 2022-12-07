@@ -1,5 +1,4 @@
-<script>
-	import Circle from '$lib/components/lines/Circle.svelte';
+<script lang="ts">
 	import Figure from '$lib/components/lines/Figure.svelte';
 
 	const width = 600;
@@ -11,15 +10,16 @@
 	// Point of disturbance
 	const PoD = [Math.random() * width, Math.random() * height];
 
-	const maxDistance = (width * width + height * height) / 2;
+	const maxDistance = 100 * 100;
 
 	const getRandomTransformation = () => {
 		const translate = [Math.random() * width, Math.random() * height];
 		const dX = Math.abs(PoD[0] - translate[0]);
 		const dY = Math.abs(PoD[1] - translate[1]);
+
 		const distance2 = dX * dX + dY * dY;
 
-		let rotation = (1 - distance2 / maxDistance) * 90;
+		let rotation = Math.max((maxDistance - distance2) / maxDistance, 0) * 90;
 
 		return {
 			transform: `translate(${translate[0]}, ${translate[1]}) rotate(${rotation})`,
@@ -40,7 +40,6 @@
 					y2="0"
 					stroke="black" />
 			{/each}
-			<circle cx={PoD[0]} cy={PoD[1]} r="20" fill-opacity="0" stroke="black" />
 		</svg>
 	</div>
 </Figure>
