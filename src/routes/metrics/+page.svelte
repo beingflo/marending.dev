@@ -29,7 +29,7 @@
 				},
 			},
 			tooltip: {
-				show: false,
+				show: true,
 			},
 			point: {
 				show: false,
