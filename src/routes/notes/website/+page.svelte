@@ -11,8 +11,7 @@
 </script>
 
 <Note>
-	<Title date="27 November 2022" subtitle="There are many like it, but this one is mine"
-		>About this website</Title>
+	<Title subtitle="There are many like it, but this one is mine">About this website</Title>
 	<P>
 		Some time ago I decided to build a personal website to write about technical things I'm up to.
 		If you're reading this, suprisingly, I followed through. Now, I'm under no delusion that the

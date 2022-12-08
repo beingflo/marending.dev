@@ -19,9 +19,7 @@
 </script>
 
 <Note>
-	<Title date="03 December 2022" subtitle="Some schmuck tries his hands at generative art">
-		A study of lines
-	</Title>
+	<Title subtitle="Some schmuck tries his hands at generative art">A study of lines</Title>
 	<Hint>This note is a living document!</Hint>
 	<P>
 		After moving into a bigger apartment, I've found the walls of our office to be a bit naked.
