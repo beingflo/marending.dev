@@ -38,13 +38,13 @@
 		>When contemplating the architecture of this site, the obvious (and probably sensible) choice
 		was to use a static site generator. Static site generators take text files containing notes,
 		typically in markdown format, and generate a static site that can easily be deployed. This
-		approach has many advantages and a lot of tools ready to go. However, it also limits the freedom
-		to create custom design or functionality.
+		approach has many advantages and a lot of tooling ready to go. However, it also limits the
+		freedom to create custom design or functionality.
 	</P>
 	<P
-		>Instead, I went with a custom application built on sveltekit. Every page on this site is built
-		from the ground up and can thus be customized completely. To have some consistency , I hope to
-		build up a collection of reusable components that I can put to use in any note. Take for
+		>Instead, I went with a custom application built with sveltekit. Every page on this site is
+		built from the ground up and can thus be customized completely. To have some consistency , I
+		hope to build up a collection of reusable components that I can put to use in any note. Take for
 		instance the component I wrap every note with:
 	</P>
 	<Code
