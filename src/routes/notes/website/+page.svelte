@@ -28,14 +28,6 @@
 		even if they are not finished yet. In this spirit, you could call this space a
 		<em>digital garden</em>.
 	</P>
-	<Details title="What's a digital garden?">
-		A website could be a perfectly polished place for a companies content marketing. Or, it could be
-		a space for the organic growth of ideas. Just like a garden, that might be a clinical
-		environment for industrial-scale food production, or a personal plot of nature that occasionally
-		overgrows with weeds. <br />
-		To consider my website a digital garden makes it explicit that it's a perpetual work in progress.
-		Things are growing here, and might not be ready to win any prices just yet.
-	</Details>
 	<P
 		>As such, notes on this website should never be considered finished. I will amend them if I see
 		fit, rephrase if necessary or even delete them if proven not to stand the test of time. They are
