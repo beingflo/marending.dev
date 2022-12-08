@@ -39,7 +39,7 @@ const addPageViewStmt = metricsDB.prepare(
 const getDailyPageViewsStmt = metricsDB.prepare(
 	"SELECT COUNT(*) AS count, strftime('%Y-%m-%d', timestamp) day FROM metrics GROUP BY day;"
 );
-const getMostViewedPageStmt = metricsDB.prepare(
+const getMostVisitedStmt = metricsDB.prepare(
 	'SELECT page, count(*) AS count FROM metrics GROUP BY page ORDER BY count DESC;'
 );
 
@@ -61,6 +61,6 @@ export const getDailyPageViews = async (): Promise<Array<{ page: string; imestam
 	return getDailyPageViewsStmt.all();
 };
 
-export const getMostViewedPage = async (): Promise<Array<{ page: string; imestamp: string }>> => {
-	return getMostViewedPageStmt.all();
+export const getMostVisited = async (): Promise<Array<{ page: string; imestamp: string }>> => {
+	return getMostVisitedStmt.all();
 };

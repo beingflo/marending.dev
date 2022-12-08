@@ -1,5 +1,5 @@
-import { getDailyPageViews, getMostViewedPage } from '$lib/db';
+import { getDailyPageViews } from '$lib/db';
 
 export const load = () => {
-	return { pageViews: getDailyPageViews(), mostViewed: getMostViewedPage() };
+	return { pageViews: getDailyPageViews() };
 };
