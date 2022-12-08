@@ -16,11 +16,10 @@
 	<P>
 		Some time ago I decided to build a personal website to write about technical things I'm up to.
 		If you're reading this, suprisingly, I followed through. Now, I'm under no delusion that the
-		things I have to share will not be mind blowing to many people out there. Instead, I primarily
-		want to write about projects to motivate myself, force a more rigorous thought process and
-		document stuff for future reference. If the occasional internet user who happens to find their
-		way to my little corner of the internet learns something, <em>anything</em>, that's just the
-		cherry on top.
+		things I have to share will not be world shattering. Instead, I primarily want to write about
+		projects to motivate myself, force a more rigorous thought process and document stuff for future
+		reference. If the occasional internet user who happens to find their way to my little corner of
+		the internet learns something, <em>anything</em>, that's just the cherry on top.
 	</P>
 	<P>
 		I'm generally bad at putting stuff out there due to a case of perfectionism induced
