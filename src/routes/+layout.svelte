@@ -2,6 +2,7 @@
 	import Feedback from '$lib/components/Feedback.svelte';
 	import { page } from '$app/stores';
 	import '../app.css';
+	import { clickOutside } from '$lib/components/utils';
 
 	let showFeedback = false;
 
@@ -33,7 +34,9 @@
 <main class="max-w-screen-2xl mx-auto">
 	<slot />
 	{#if showFeedback}
-		<Feedback />
+		<div use:clickOutside on:click_outside={() => (showFeedback = false)}>
+			<Feedback />
+		</div>
 	{/if}
 </main>
 
