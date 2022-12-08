@@ -21,5 +21,4 @@
 	});
 </script>
 
-<h1 class="text-lg pb-8">Most visited</h1>
 <div id="chart" />

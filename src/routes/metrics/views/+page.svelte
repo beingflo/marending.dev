@@ -40,5 +40,4 @@
 	});
 </script>
 
-<h1 class="text-lg pb-8">Page views</h1>
 <div id="chart" />

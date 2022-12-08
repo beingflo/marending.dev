@@ -42,6 +42,9 @@ const getDailyPageViewsStmt = metricsDB.prepare(
 const getMostVisitedStmt = metricsDB.prepare(
 	'SELECT page, count(*) AS count FROM metrics GROUP BY page ORDER BY count DESC;'
 );
+const getReferersStmt = metricsDB.prepare(
+	'SELECT referrer, count(*) AS count FROM metrics GROUP BY referrer ORDER BY count DESC;'
+);
 
 export const addFeedback = (content: string, email?: string) => {
 	addFeedbackStmt.run({ content, email });
@@ -57,10 +60,14 @@ export const getFeedback = async (): Promise<
 	return getFeedbackStmt.all();
 };
 
-export const getDailyPageViews = async (): Promise<Array<{ page: string; imestamp: string }>> => {
+export const getDailyPageViews = async (): Promise<Array<{ page: string; timestamp: string }>> => {
 	return getDailyPageViewsStmt.all();
 };
 
-export const getMostVisited = async (): Promise<Array<{ page: string; imestamp: string }>> => {
+export const getMostVisited = async (): Promise<Array<{ page: string; count: string }>> => {
 	return getMostVisitedStmt.all();
+};
+
+export const getReferers = async (): Promise<Array<{ referrer: string; count: number }>> => {
+	return getReferersStmt.all();
 };
