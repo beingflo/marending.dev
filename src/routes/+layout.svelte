@@ -9,14 +9,14 @@
 	const toggleFeedback = () => (showFeedback = !showFeedback);
 </script>
 
-<header class="flex flex-row justify-between h-fit max-w-screen-2xl mx-auto">
-	<a href="/" class="flex flex-row gap-3 m-4 h-fit">
-		<div class="flex flex-col h-fit">
-			<h1 class="font-light text-2xl md:text-3xl w-fit">florian</h1>
-			<h1 class="font-thin text-2xl md:text-3xl ml-4 md:ml-5 -mt-3 w-fit">marending</h1>
+<header class="flex flex-row justify-between h-fit max-w-screen-2xl mx-auto mt-4">
+	<a href="/" class="flex flex-row gap-3 ml-4 h-fit">
+		<div class="flex flex-col w-fit">
+			<span class="text-sm">florian</span>
+			<span class="text-sm -mt-2">marending</span>
 		</div>
 	</a>
-	<nav class="flex flex-row gap-3 sm:gap-6 pr-6 pt-5 md:pt-6 h-fit decoration-1">
+	<nav class="flex flex-row gap-3 sm:gap-6 pr-6 h-fit decoration-1">
 		<a
 			class="text-sm md:text-md {($page.url.pathname.startsWith('/notes') ||
 				$page.url.pathname === '/') &&
