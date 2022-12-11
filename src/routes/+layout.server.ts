@@ -4,7 +4,8 @@ import { addPageView } from '$lib/db';
 export const load = (params: any) => {
 	if (
 		params.url.pathname.startsWith('/notes/') ||
-		['/', '/about', '/metrics'].indexOf(params.url.pathname) > -1
+		params.url.pathname.startsWith('/metrics/') ||
+		['/', '/about'].indexOf(params.url.pathname) > -1
 	) {
 		addPageView(params.url.pathname, params.request.headers.get('referer'));
 	}
