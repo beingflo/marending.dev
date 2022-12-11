@@ -12,8 +12,8 @@
 <header class="flex flex-row justify-between h-fit max-w-screen-2xl mx-auto mt-4">
 	<a href="/" class="flex flex-row gap-3 ml-4 h-fit">
 		<div class="flex flex-col w-fit">
-			<span class="text-lg">florian</span>
-			<span class="text-lg -mt-3">marending</span>
+			<span>florian</span>
+			<span class="-mt-3">marending</span>
 		</div>
 	</a>
 	<nav class="flex flex-row gap-3 sm:gap-6 pr-6 h-fit decoration-1">
