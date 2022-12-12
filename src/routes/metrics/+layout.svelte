@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Note from '$lib/components/Note.svelte';
 	import { page } from '$app/stores';
+	import Page from '$lib/components/Page.svelte';
 </script>
 
 <div class="flex flex-row gap-4 pr-6 justify-end">
@@ -13,8 +13,8 @@
 		href="/metrics/referers"
 		class="text-sm  {$page.url.pathname === '/metrics/referers' && 'underline'}">referers</a>
 </div>
-<Note>
-	<div class="pt-12">
+<Page>
+	<div>
 		<slot />
 	</div>
-</Note>
+</Page>
