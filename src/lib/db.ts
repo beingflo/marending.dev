@@ -40,10 +40,10 @@ const getDailyPageViewsStmt = metricsDB.prepare(
 	"SELECT COUNT(*) AS count, strftime('%Y-%m-%d', timestamp) day FROM metrics GROUP BY day;"
 );
 const getMostVisitedStmt = metricsDB.prepare(
-	'SELECT page, count(*) AS count FROM metrics GROUP BY page ORDER BY count DESC;'
+	`SELECT page, count(*) AS count FROM metrics WHERE timestamp > datetime('now','-1 month') GROUP BY page ORDER BY count DESC;`
 );
 const getReferersStmt = metricsDB.prepare(
-	'SELECT referrer, count(*) AS count FROM metrics GROUP BY referrer ORDER BY count DESC;'
+	`SELECT referrer, count(*) AS count FROM metrics WHERE timestamp > datetime('now','-1 month') GROUP BY referrer ORDER BY count DESC;`
 );
 
 export const addFeedback = (content: string, email?: string) => {
