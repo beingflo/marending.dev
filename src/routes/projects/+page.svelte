@@ -16,7 +16,7 @@
 			A minimal and opinionated todo web application. The user interface is designed to remove
 			friction when adding projects or tasks. The state is primarily stored locally in the browser.
 			Optionally, the user can supply object storage credentials to synchronize the state across
-			multiple browsers. The application is implemented using SolidJS to keep the bundle size lean.
+			multiple browsers. The application is implemented using SolidJS to keep the bundle size small.
 		</span>
 		<A href="https://write.fieldnotes.land">fieldnotes.land</A>
 		<span class="col-span-2 mb-8 md:mb-0">
