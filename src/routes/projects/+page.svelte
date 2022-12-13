@@ -6,10 +6,10 @@
 <Page>
 	<div class="grid grid-cols-1 md:grid-cols-3 gap-y-2 md:gap-y-24">
 		<A href="https://marending.dev">marending.dev</A>
-		<span class="col-span-2 mb-8 md:mb-0"
-			>My personal website. Custom designed and built with Sveltekit. It features a metrics
-			dashboard that displays page views, referers and commonly accessed routes. Deployed on a small
-			VPS using Caddy as a reverse proxy.
+		<span class="col-span-2 mb-8 md:mb-0">
+			My personal website. Custom designed and built with Sveltekit. It features a metrics dashboard
+			that displays page views, referers and commonly accessed routes. Deployed on a small VPS using
+			Caddy as a reverse proxy.
 		</span>
 		<A href="https://rest.quest">rest.quest</A>
 		<span class="col-span-2 mb-8 md:mb-0">
