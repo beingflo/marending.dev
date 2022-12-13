@@ -9,7 +9,7 @@
 	const toggleFeedback = () => (showFeedback = !showFeedback);
 </script>
 
-<header class="flex flex-row justify-between h-fit max-w-screen-2xl mx-auto mt-4">
+<header class="flex flex-row justify-between h-fit mx-auto mt-4">
 	<a href="/" class="flex flex-row gap-3 ml-4 h-fit">
 		<div class="flex flex-col w-fit">
 			<span>florian</span>
@@ -22,6 +22,10 @@
 				$page.url.pathname === '/') &&
 				'underline'}"
 			href="/">notes</a>
+		<a
+			class="text-sm md:text-md {$page.url.pathname === '/projects' && 'underline'}"
+			href="/projects">
+			projects</a>
 		<a
 			class="text-sm md:text-md {$page.url.pathname.startsWith('/metrics') && 'underline'}"
 			href="/metrics/views">
