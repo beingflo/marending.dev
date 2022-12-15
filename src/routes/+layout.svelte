@@ -35,7 +35,7 @@
 	</nav>
 </header>
 
-<main class="max-w-screen-2xl mx-auto">
+<main>
 	<slot />
 	{#if showFeedback}
 		<div use:clickOutside on:click_outside={() => (showFeedback = false)}>
