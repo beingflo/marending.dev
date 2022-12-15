@@ -6,7 +6,7 @@
 </script>
 
 <a class="w-fit" href={link}>
-	<p class="text-sm text-gray-600">{date}</p>
+	<p class="text-sm text-gray-600 dark:text-gray-200">{date}</p>
 	<h3 class="font-semibold">{title}</h3>
 	<p class="text-sm font-light">{summary}</p>
 </a>

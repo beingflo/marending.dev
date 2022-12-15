@@ -38,7 +38,7 @@
 					y1="0"
 					x2={length / 2}
 					y2="0"
-					stroke="black" />
+					stroke="currentColor" />
 			{/each}
 		</svg>
 	</div>

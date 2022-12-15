@@ -2,7 +2,7 @@
 	export let title: string;
 </script>
 
-<details class="mb-3 border border-black lg:-mx-4">
+<details class="mb-3 border border-black dark:border-white lg:-mx-4">
 	<summary class="cursor-pointer p-2">
 		{title}
 	</summary>
