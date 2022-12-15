@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
-
 	let email: string;
 	let content: string;
 
@@ -27,8 +25,7 @@
 </script>
 
 <form
-	class="fixed bottom-8 right-2 border border-black bg-white p-2 flex flex-col gap-2 left-2 md:left-auto"
-	use:enhance>
+	class="fixed bottom-8 right-2 border border-black bg-white p-2 flex flex-col gap-2 left-2 md:left-auto">
 	<span class="mb-2 font-semibold">Feedback</span>
 	<p class="mb-2 text-gray-600 text-sm">
 		Found a typo or want to let me know something?<br />Shoot me a quick message, it's much
@@ -57,7 +54,7 @@
 		{#if notification === 'failure'}
 			<p class="text-rose-800">Something went wrong :(</p>
 		{/if}
-		<button class="border border-black py-1 px-2" on:click|preventDefault={submit}> Send </button>
+		<button class="border border-black py-1 px-2" on:click|preventDefault={submit}>Send</button>
 	</div>
 </form>
 
