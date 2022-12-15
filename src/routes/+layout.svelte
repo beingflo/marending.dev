@@ -5,8 +5,6 @@
 	import { clickOutside } from '$lib/components/utils';
 
 	let showFeedback = false;
-
-	const toggleFeedback = () => (showFeedback = !showFeedback);
 </script>
 
 <header class="flex flex-row justify-between h-fit mx-auto mt-4">
@@ -46,7 +44,7 @@
 
 <footer>
 	<button
-		on:click={toggleFeedback}
+		on:click={() => (showFeedback = true)}
 		class="fixed p-2 bottom-0 right-2 text-xs font-light text-gray-400">feedback</button>
 </footer>
 
