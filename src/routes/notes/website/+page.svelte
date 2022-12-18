@@ -62,10 +62,10 @@
 		to unpack here.
 	</P>
 	<H3>Deployment</H3>
-	<P
-		>The sveltekit application is built using the node adapter and baked into a docker container.
-		Lastly, said container is deployed to my small hetzner server alongside other side projects that
-		I will hopefully get around to writing about one of these days.
+	<P>
+		The Sveltekit application is deployed as a docker container on my small hetzner server alongside
+		my other sideprojects. I have caddy running as a reverse proxy to route the requests to the
+		appropriate application.
 	</P>
 	<H2>Why the metrics section?</H2>
 	<P
