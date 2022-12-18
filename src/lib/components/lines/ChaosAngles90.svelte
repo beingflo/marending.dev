@@ -1,5 +1,4 @@
 <script>
-	import { browser } from '$app/environment';
 	import Figure from '$lib/components/lines/Figure.svelte';
 
 	const width = 600;
@@ -21,18 +20,16 @@
 <Figure
 	caption="Fig 5. More and shorter randomly placed lines with angles between 85 and 95 degrees.">
 	<div class="w-full sm:w-[600px]">
-		{#if browser}
-			<svg width="100%" {height} xmlns="http://www.w3.org/2000/svg">
-				{#each Array(num) as _}
-					<line
-						{...getRandomTransformation()}
-						x1={-length / 2}
-						y1="0"
-						x2={length / 2}
-						y2="0"
-						stroke="currentColor" />
-				{/each}
-			</svg>
-		{/if}
+		<svg width="100%" {height} xmlns="http://www.w3.org/2000/svg">
+			{#each Array(num) as _}
+				<line
+					{...getRandomTransformation()}
+					x1={-length / 2}
+					y1="0"
+					x2={length / 2}
+					y2="0"
+					stroke="currentColor" />
+			{/each}
+		</svg>
 	</div>
 </Figure>
