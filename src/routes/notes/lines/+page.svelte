@@ -116,11 +116,6 @@
 			would have the wrong transform origin again.
 		</P>
 	</Details>
-	<Info
-		>Fun fact: At this point in writing this note, the <C>/notes/lines</C> page you're currently viewing
-		can be server-side rendered approximately 80 times per second. Compare that to 300 times per second
-		for the landing page. All that <C>SVG</C> generation already takes its toll on that server.
-	</Info>
 	<P>
 		While the above piece starts to look interesting, we have a bad case of <em
 			>untamed randomness</em
@@ -147,6 +142,12 @@
 		more upright, i.e. 90 degrees, the line is.
 	</P>
 	<FeatheredEpicenter />
+	<Info
+		>Fun fact: At this point in writing this note, the <C>/notes/lines</C> page you're currently viewing
+		can be server-side rendered approximately 60 times per second. Compare that to 200-300 times per
+		second for the landing page. All that <C>SVG</C> generation already takes its toll on my little server.
+		I'll have your browser do all the work instead.
+	</Info>
 	<P
 		>Alright, that turned out less interesting than expected. Maybe we're overdoing it with the
 		randomness a bit. Currently there is nothing really of interest to see, everything is kind of
