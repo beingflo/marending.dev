@@ -8,7 +8,10 @@
 		<div>
 			<h1 class="text-2xl pb-4">Hi</h1>
 			<p>My name is Florian Marending, I'm a software engineer.</p>
-			<p>Currently, my interests include lean web development and robust backends.</p>
+			<p>
+				Currently, my interests include lean web development using Svelte and robust backends
+				written in Rust.
+			</p>
 			<p class="pt-8">
 				You can reach me at
 				<a class="underline" href="mailto:florian@marending.dev">florian@marending.dev</a>
