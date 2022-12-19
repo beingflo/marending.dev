@@ -144,9 +144,10 @@
 	<FeatheredEpicenter />
 	<Info
 		>Fun fact: At this point in writing this note, the <C>/notes/lines</C> page you're currently viewing
-		can be server-side rendered approximately 60 times per second. Compare that to 200-300 times per
-		second for the landing page. All that <C>SVG</C> generation already takes its toll on my little server.
-		I'll have your browser do all the work instead.
+		can be server-side rendered approximately 40 times per second. Compare that to 1000 times per second
+		for the landing page! All that <C>SVG</C> generation already takes its toll on my little server.
+		I think I'll have your browser do all the work instead and turn off server-side rendering for this
+		page.
 	</Info>
 	<P
 		>Alright, that turned out less interesting than expected. Maybe we're overdoing it with the
