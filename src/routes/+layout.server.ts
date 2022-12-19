@@ -15,3 +15,5 @@ export const load = (params: any) => {
 		addPageView(params.url.pathname, params.request.headers.get('referer'));
 	}
 };
+
+export const prerender = true;
