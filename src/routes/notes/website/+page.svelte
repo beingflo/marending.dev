@@ -39,7 +39,7 @@
 		freedom to create custom design or functionality.
 	</P>
 	<P
-		>Instead, I went with a custom application built with sveltekit. Every page on this site is
+		>Instead, I went with a custom application built with SvelteKit. Every page on this site is
 		built from the ground up and can thus be customized completely. To have some consistency , I
 		hope to build up a collection of reusable components that I can put to use in any note. Take for
 		instance the component I wrap every note with:
@@ -61,7 +61,7 @@
 	</P>
 	<H3>Deployment</H3>
 	<P>
-		The Sveltekit application is deployed as a docker container on my small hetzner server alongside
+		The SvelteKit application is deployed as a docker container on my small hetzner server alongside
 		my other sideprojects. I have caddy running as a reverse proxy to route the requests to the
 		appropriate application.
 	</P>
