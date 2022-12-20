@@ -17,7 +17,9 @@
 	};
 </script>
 
-<Figure caption="Fig 4. Randomly placed lines with angles between -5 and 5 degrees.">
+<Figure
+	caption="Fig 4. Randomly placed lines with angles between -5 and 5 degrees."
+	minHeight={height}>
 	<div class="w-full sm:w-[600px]">
 		<svg viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg">
 			{#each Array(num) as _}

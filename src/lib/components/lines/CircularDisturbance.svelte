@@ -25,7 +25,9 @@
 	};
 </script>
 
-<Figure caption="Fig 6. Horizontal lines with vertical region around random point">
+<Figure
+	caption="Fig 6. Horizontal lines with vertical region around random point"
+	minHeight={height}>
 	<div class="w-full sm:w-[600px]">
 		<svg viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg">
 			{#each Array(num) as _}

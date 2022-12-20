@@ -17,7 +17,7 @@
 	};
 </script>
 
-<Figure>
+<Figure minHeight={height}>
 	<div class="w-full sm:w-[600px]">
 		<svg viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg">
 			{#each Array(num) as _}
