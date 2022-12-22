@@ -1,10 +1,11 @@
 <script>
+	import { browser } from '$app/environment';
 	import Figure from '$lib/components/lines/Figure.svelte';
 
 	const width = 600;
 	const height = 400;
 
-	const num = 200;
+	const num = browser ? 200 : 0;
 	const length = 50;
 
 	const getRandomTransformation = () => {
@@ -17,9 +18,7 @@
 	};
 </script>
 
-<Figure
-	caption="Fig 4. Randomly placed lines with angles between -5 and 5 degrees."
-	minHeight={height}>
+<Figure caption="Fig 4. Randomly placed lines with angles between -5 and 5 degrees.">
 	<div class="w-full sm:w-[600px]">
 		<svg viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg">
 			{#each Array(num) as _}

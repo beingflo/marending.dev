@@ -6,7 +6,6 @@
 	import Details from '$lib/components/Details.svelte';
 	import C from '$lib/components/C.svelte';
 	import Circle from '$lib/components/lines/Circle.svelte';
-	import Hint from '$lib/components/Hint.svelte';
 	import SimpleLine from '$lib/components/lines/SimpleLine.svelte';
 	import Chaos from '$lib/components/lines/Chaos.svelte';
 	import Info from '$lib/components/Info.svelte';

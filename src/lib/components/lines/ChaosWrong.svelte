@@ -1,10 +1,11 @@
 <script>
+	import { browser } from '$app/environment';
 	import Figure from '$lib/components/lines/Figure.svelte';
 
 	export const width = 600;
 	export const height = 400;
 
-	const num = 200;
+	const num = browser ? 200 : 0;
 	const length = 50;
 
 	const getRandomTransformation = () => {
@@ -17,7 +18,7 @@
 	};
 </script>
 
-<Figure minHeight={height}>
+<Figure>
 	<div class="w-full sm:w-[600px]">
 		<svg viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg">
 			{#each Array(num) as _}

@@ -1,10 +1,11 @@
 <script>
+	import { browser } from '$app/environment';
 	import Figure from '$lib/components/lines/Figure.svelte';
 
 	const width = 600;
 	const height = 400;
 
-	const num = 500;
+	const num = browser ? 500 : 0;
 	const length = 30;
 
 	// Point of disturbance
@@ -25,9 +26,7 @@
 	};
 </script>
 
-<Figure
-	caption="Fig 6. Horizontal lines with vertical region around random point"
-	minHeight={height}>
+<Figure caption="Fig 6. Horizontal lines with vertical region around random point">
 	<div class="w-full sm:w-[600px]">
 		<svg viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg">
 			{#each Array(num) as _}

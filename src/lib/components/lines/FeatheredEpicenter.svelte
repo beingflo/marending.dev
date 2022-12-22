@@ -1,10 +1,11 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import Figure from '$lib/components/lines/Figure.svelte';
 
 	const width = 600;
 	const height = 400;
 
-	const num = 500;
+	const num = browser ? 500 : 0;
 	const length = 30;
 
 	// Point of disturbance
@@ -28,8 +29,7 @@
 </script>
 
 <Figure
-	caption="Fig 7. Lines turn more upright the closer they get to the epicenter. Circle represents epicenter."
-	minHeight={height}>
+	caption="Fig 7. Lines turn more upright the closer they get to the epicenter. Circle represents epicenter.">
 	<div class="w-full sm:w-[600px]">
 		<svg viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg">
 			{#each Array(num) as _}
