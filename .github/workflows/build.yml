@@ -17,16 +17,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/checkout@v3
-      - name: Build image
-        run: docker build . --tag marending.dev
-      - name: Tag image
-        run: docker tag marending.dev:latest ghcr.io/${{ github.actor }}/marending.dev:latest
-      - name: Push image to GitHub Container Registry
-        run: docker push ghcr.io/${{ github.actor }}/marending.dev:latest
-      - name: Pull new image on server
-        uses: appleboy/ssh-action@master
+      - uses: actions/setup-node@v3
         with:
-          host: ${{ secrets.OMNI_HOST }}
-          username: ${{ secrets.OMNI_USER }}
-          key: ${{ secrets.OMNI_GH_KEY }}
-          script: cd marending.dev && docker-compose pull && docker-compose up -d
+          node-version: 18
+      - run: npm ci
+      - run: npm run build
+      - name: Deploy to prod server
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.OMNI_GH_KEY }}
+          SOURCE: 'build/'
+          REMOTE_HOST: ${{ secrets.OMNI_HOST }}
+          REMOTE_USER: ${{ secrets.OMNI_USER }}
+          TARGET: '~/caddy/site/marending.dev/'
+          EXCLUDE: '/dist/, /node_modules/'
