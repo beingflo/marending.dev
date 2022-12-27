@@ -1,6 +1,9 @@
 <script>
 	import A from '$lib/components/A.svelte';
+	import C from '$lib/components/C.svelte';
+	import Code from '$lib/components/Code.svelte';
 	import H2 from '$lib/components/H2.svelte';
+	import Hint from '$lib/components/Hint.svelte';
 	import Info from '$lib/components/Info.svelte';
 	import Note from '$lib/components/Note.svelte';
 	import P from '$lib/components/P.svelte';
@@ -63,8 +66,29 @@
 		>Finally, SSG is similar to SSR with the difference that the pages are not rendered on demand
 		for every request, but instead up front during the build step. This is useful if the page is
 		static anyway and doesn't change depending on the request.</P>
-	<P>Choosing the right one</P>
 	<H2>Benchmarking marending.dev</H2>
-	<P>wrk benchmarks</P>
+	<P
+		>Before any optimizations, I'm running SvelteKit in the default configuration with the
+		node-adapter. That means CSR as well as SSR are employed, while no pages are prerendered at
+		build-time. In the case of <A href="/notes/lines">A study of lines</A> the server-side rendering
+		for every request is particularly noticeable because there are thousands of elements rendered into
+		<C>SVGs</C>, which apparently takes its toll.
+	</P>
+	<P
+		>To have faster turnaround when benchmarking I'm running the preview server of SvelteKit
+		locally. So any numbers presented here are not to be compared with performance numbers from the
+		production deployment on a much weaker VPS. They just serve to compare with other approaches on
+		the same machine.
+	</P>
+	<P
+		>To get a realistic end-to-end view of how the server performs, I'm running benchmarks at the <C
+			>HTTP</C> level using <C>wrk</C>.
+	</P>
+	<Code
+		value={`wrk -c 100 -d 30s -t 6 -H "no-track: true" --latency http://localhost:3000/notes/lines`} />
+	<P
+		>The purpose of the <C>no-track</C> header is to make sure the server doesn't record the page views
+		for the <A href="/metrics/views">metrics</A> section.
+	</P>
 	<P>Slow SSG / Caddy reverse_proxy vs. file_server</P>
 </Note>
