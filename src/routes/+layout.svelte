@@ -21,14 +21,14 @@
 				'underline'}"
 			href="/">notes</a>
 		<a
-			class="text-sm md:text-md {$page.url.pathname === '/projects' && 'underline'}"
+			class="text-sm md:text-md {$page.url.pathname === '/projects/' && 'underline'}"
 			href="/projects">
 			projects</a>
 		<a
 			class="text-sm md:text-md {$page.url.pathname.startsWith('/metrics') && 'underline'}"
 			href="/metrics/views">
 			metrics</a>
-		<a class="text-sm md:text-md {$page.url.pathname === '/about' && 'underline'}" href="/about">
+		<a class="text-sm md:text-md {$page.url.pathname === '/about/' && 'underline'}" href="/about">
 			about</a>
 	</nav>
 </header>
