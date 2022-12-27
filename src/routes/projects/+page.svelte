@@ -9,7 +9,7 @@
 			<A href="https://marending.dev">marending.dev</A>
 		</div>
 		<span class="col-span-2 mb-8 md:mb-0">
-			My personal website. Custom designed and built with Sveltekit. It features a metrics dashboard
+			My personal website. Custom designed and built with SvelteKit. It features a metrics dashboard
 			that displays page views, referers and commonly accessed routes. Deployed on a small VPS using
 			Caddy as a reverse proxy.
 		</span>
