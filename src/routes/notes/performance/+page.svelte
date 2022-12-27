@@ -12,8 +12,8 @@
 		>Performance tuning a specific SvelteKit application</Title>
 	<Info>Work in progress!</Info>
 	<P
-		>During my studies, I put an emphasis on high-performance computing. My interest in this field
-		culimnated in my (only mildly interesting) <A
+		>During my studies, I focused on high-performance computing. My interest in this field
+		culminated in my (only mildly interesting) <A
 			href="https://ieeexplore.ieee.org/abstract/document/7967093">bachelor thesis</A
 		>. What's left of my passing passion is <em class="line-through">the need for speed</em> a distain
 		for slow software.
@@ -22,18 +22,20 @@
 		>Due to this conditioning, I always find myself curious about performance characteristics of my
 		own applications. I wouldn't want to just deploy something for the world to see without knowing
 		how it would behave under load. While the web applications and backend systems I tend to spend
-		my time with nowadays are a far cry from the number-crunching algorithms screaming along on a <A
+		my time with nowadays are a far cry from the number-crunching code screaming along on a <A
 			href="https://www.cscs.ch/">super computer</A> from back in the day, they are still worthwile to
 		worry about.
 	</P>
 	<P
 		>While writing / building the <A href="/notes/lines">A study of lines</A> note, I noticed that SvelteKit
 		does not perform as well as I would like. In particular, load testing the site yielded a capacity
-		of about 40 requests per second. While that's a load that will never organically occur here, it's
-		a point of pride to make it faster. There is no way such a simple site should be served at such a
-		mediocre rate.
+		for about 40 requests per second on my small VPS. While that's a load that will never organically
+		occur here, it's a point of pride to make it faster. There is no reason such a simple site should
+		be served at such a mediocre rate.
 	</P>
-	<P>What follows is a a highly unscientific and subjectiv exploration.</P>
+	<P
+		>What follows is a a highly unscientific and subjectiv exploration into improving the
+		performance of this website.</P>
 	<H2>Background on SvelteKits rendering modes (CSR, SSR, SSG)</H2>
 	<P
 		>This site is my first project using SvelteKit, so my knowledge is limited. However, from
@@ -55,7 +57,7 @@
 		from both options. Fast initial page load as well as full js-driven interactivity.</P>
 	<P
 		>Additionaly, if CSR is enabled SvelteKit serves code that takes over navigation in the client.
-		E.g. instead of doing full page loads when clicking on a link to a subpage, only the strictly
+		That means instead of doing full page loads when clicking a link to a subpage, only the strictly
 		necessary code and data are loaded.</P>
 	<P
 		>Finally, SSG is similar to SSR with the difference that the pages are not rendered on demand
