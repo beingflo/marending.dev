@@ -6,6 +6,11 @@
 <Page>
 	<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 md:gap-12">
 		<NoteSummary
+			title="Performance tuning a specific SvelteKit application"
+			summary="Making sure my website can handle all those page views it isn't getting"
+			date="19 December 2022"
+			link="/notes/performance" />
+		<NoteSummary
 			title="A study of lines"
 			summary="Some schmuck tries his hands at generative art"
 			date="03 December 2022"
