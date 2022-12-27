@@ -3,7 +3,7 @@
 	import C from '$lib/components/C.svelte';
 	import Code from '$lib/components/Code.svelte';
 	import H2 from '$lib/components/H2.svelte';
-	import Hint from '$lib/components/Hint.svelte';
+	import H3 from '$lib/components/H3.svelte';
 	import Info from '$lib/components/Info.svelte';
 	import Note from '$lib/components/Note.svelte';
 	import P from '$lib/components/P.svelte';
@@ -66,6 +66,20 @@
 		>Finally, SSG is similar to SSR with the difference that the pages are not rendered on demand
 		for every request, but instead up front during the build step. This is useful if the page is
 		static anyway and doesn't change depending on the request.</P>
+	<H3>Current config for marending.dev</H3>
+	<P
+		>While this is primarily a static site, there is one piece of functionality that makes use of
+		the dynamic server-side rendering. The metrics section counts page views by writing to a sqlite
+		database on every request. If we prerender the pages at build-time and serving them from a
+		webserver, there is no code running server-side to keep track of views.
+	</P>
+	<P
+		>However, in the process of thinking about this I had an idea to be able to statically prerender
+		all pages while still collecting statistics: Instead of building the collection into a node
+		server, I can configure the reverse proxy (in my case Caddy) to emit logs. Then, in a classic
+		display of over-engineering, I consume said logs in a separate service, which offers aggregated
+		statistics to the site via API call.
+	</P>
 	<H2>Benchmarking marending.dev</H2>
 	<P
 		>Before any optimizations, I'm running SvelteKit in the default configuration with the
@@ -82,7 +96,7 @@
 	</P>
 	<P
 		>To get a realistic end-to-end view of how the server performs, I'm running benchmarks at the <C
-			>HTTP</C> level using <C>wrk</C>.
+			>HTTP</C> level using <C>wrk</C> approximately like so:
 	</P>
 	<Code
 		value={`wrk -c 100 -d 30s -t 6 -H "no-track: true" --latency http://localhost:3000/notes/lines`} />
@@ -90,5 +104,7 @@
 		>The purpose of the <C>no-track</C> header is to make sure the server doesn't record the page views
 		for the <A href="/metrics/views">metrics</A> section.
 	</P>
+	<P>Table</P>
+	<P>Table</P>
 	<P>Slow SSG / Caddy reverse_proxy vs. file_server</P>
 </Note>
