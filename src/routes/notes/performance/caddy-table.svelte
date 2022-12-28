@@ -1,6 +1,6 @@
-<div class="shadow mt-4 border border-black p-4 lg:-mx-4">
+<div class="shadow mt-4 border border-black dark:border-white p-4 lg:-mx-4">
 	<table class="w-full">
-		<tr class="border-b border-black">
+		<tr class="border-b border-black dark:border-white">
 			<th align="left">Page</th>
 			<th align="right">Requests / second</th>
 			<th align="right">Avg. latency</th>

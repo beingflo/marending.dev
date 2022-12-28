@@ -141,7 +141,7 @@
 		>When switching Caddy from reverse proxying requests to directly serving the static assets, make
 		sure to set the <C>trailingSlash</C>
 		<A href="https://github.com/sveltejs/kit/tree/master/packages/adapter-static">appropriately</A>.
-		Otherwise reloading a subpage doesn't work.
+		Otherwise reloading a subpage doesn't work. Don't ask me how I know.
 	</Hint>
 	<CaddyStatic />
 	<Details title="Validating measurements is a pretty good idea!">
