@@ -14,6 +14,7 @@
 	import Caddy from './caddy-table.svelte';
 	import CaddyStatic from './caddy-static-table.svelte';
 	import { bash } from 'svelte-highlight/languages';
+	import Details from '$lib/components/Details.svelte';
 </script>
 
 <Note>
@@ -137,7 +138,24 @@
 		Caddy serve them. We would expect that to be faster at the very least because we don't need to
 		proxy the requests anymore, but also, Caddy being written in Go is likely to be faster at
 		serving requests than node.</P>
+	<Hint
+		>When switching Caddy from reverse proxying requests to directly serving the static assets, make
+		sure to set the <C>trailingSlash</C>
+		<A href="https://github.com/sveltejs/kit/tree/master/packages/adapter-static">appropriately</A>.
+		Otherwise reloading a subpage doesn't work.
+	</Hint>
 	<CaddyStatic />
-	<!-- <Hint>Don't forget <C>trailingSlashes: always</C></Hint>
-	<P>Slow SSG / Caddy reverse_proxy vs. file_server</P> -->
+	<Details title="Validating measurements is a pretty good idea!">
+		<P>
+			At first I was actually measuring around 62'000 requests per second for the <C
+				>/notes/lines</C> page. This was surprising since it's a larger page than <C>/</C>, so if
+			anything, it should be slower. My first thought was that I mistyped the URL and was hitting
+			the <C>404</C> page, but visiting it in the browser worked just fine.
+		</P>
+		<P
+			>Only when <C>curl</C>ing the page from the command line did I notice that I was getting a
+			redirect response due to the trailing slash case mentioned above: <C>/notes/lines</C> is redirected
+			to <C>/notes/lines/</C>. Load testing that URL directly yields the above numbers.
+		</P>
+	</Details>
 </Note>
