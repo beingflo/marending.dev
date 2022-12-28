@@ -21,7 +21,7 @@
 	</table>
 </div>
 <div class="pt-4 pb-6 text-center text-gray-800 dark:text-gray-100 text-sm italic font-serif">
-	Tab. 2: Performance characteristics of a SvelteKit node server with built-time prerendering
+	Table 2: Performance characteristics of a SvelteKit node server with built-time prerendering
 	enabled.
 </div>
 

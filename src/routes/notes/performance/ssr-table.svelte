@@ -21,7 +21,8 @@
 	</table>
 </div>
 <div class="pt-4 pb-6 text-center text-gray-800 dark:text-gray-100 text-sm italic font-serif">
-	Tab. 1: Performance characteristics of a SvelteKit node server with server-side rendering enabled.
+	Table 1: Performance characteristics of a SvelteKit node server with server-side rendering
+	enabled.
 </div>
 
 <style>
