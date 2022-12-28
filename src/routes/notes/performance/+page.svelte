@@ -9,6 +9,7 @@
 	import Note from '$lib/components/Note.svelte';
 	import P from '$lib/components/P.svelte';
 	import Title from '$lib/components/Title.svelte';
+	import SSR from './ssr-table.svelte';
 	import { bash } from 'svelte-highlight/languages';
 </script>
 
@@ -109,8 +110,7 @@
 		for every request is particularly noticeable because there are thousands of elements rendered into
 		<C>SVGs</C>, which apparently takes its toll.
 	</P>
-	<Hint>Don't forget <C>trailingSlashes: always</C></Hint>
-	<P>Table</P>
-	<P>Table</P>
-	<P>Slow SSG / Caddy reverse_proxy vs. file_server</P>
+	<SSR />
+	<!-- <Hint>Don't forget <C>trailingSlashes: always</C></Hint>
+	<P>Slow SSG / Caddy reverse_proxy vs. file_server</P> -->
 </Note>
