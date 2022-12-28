@@ -8,13 +8,13 @@
 		</tr>
 		<tr>
 			<td align="left">/</td>
-			<td align="right">9589 rps</td>
+			<td align="right">9'589 rps</td>
 			<td align="right">9 ms</td>
 			<td align="right">15 ms</td>
 		</tr>
 		<tr>
 			<td align="left">/notes/lines</td>
-			<td align="right">7888 rps</td>
+			<td align="right">7'888 rps</td>
 			<td align="right">12 ms</td>
 			<td align="right">25 ms</td>
 		</tr>

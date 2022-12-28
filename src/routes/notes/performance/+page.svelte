@@ -11,6 +11,8 @@
 	import Title from '$lib/components/Title.svelte';
 	import SSR from './ssr-table.svelte';
 	import SSG from './ssg-table.svelte';
+	import Caddy from './caddy-table.svelte';
+	import CaddyStatic from './caddy-static-table.svelte';
 	import { bash } from 'svelte-highlight/languages';
 </script>
 
@@ -121,6 +123,21 @@
 		>The impact is immediately noticable for both pages. Now the difference between <C>/</C> and <C
 			>/notes/lines</C> is probably down to the size of the pages as no additional effort is required
 		per request for either.</P>
+	<P
+		>Obviously SSG is going to be faster than SSR, nothing unexpected here. However, that's not the
+		end of it. In the production deployment, the site sits behind <A href="https://caddyserver.com/"
+			>Caddy</A
+		>, which acts as a reverse proxy to the SvelteKit node server. Before we go further, we should
+		establish if we incur a performance penality for this.
+	</P>
+	<Caddy />
+	<P
+		>Indeed we do, and it's suprising to me how much throughput we lose. But this scenario begs the
+		question if we even need the node server: If we just have static assets, we might as well let
+		Caddy serve them. We would expect that to be faster at the very least because we don't need to
+		proxy the requests anymore, but also, Caddy being written in Go is likely to be faster at
+		serving requests than node.</P>
+	<CaddyStatic />
 	<!-- <Hint>Don't forget <C>trailingSlashes: always</C></Hint>
 	<P>Slow SSG / Caddy reverse_proxy vs. file_server</P> -->
 </Note>
