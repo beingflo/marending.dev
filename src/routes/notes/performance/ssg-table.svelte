@@ -8,20 +8,21 @@
 		</tr>
 		<tr>
 			<td align="left">/</td>
-			<td align="right">2095 rps</td>
-			<td align="right">44 ms</td>
-			<td align="right">88 ms</td>
+			<td align="right">9589 rps</td>
+			<td align="right">9 ms</td>
+			<td align="right">15 ms</td>
 		</tr>
 		<tr>
 			<td align="left">/notes/lines</td>
-			<td align="right">455 rps</td>
-			<td align="right">207 ms</td>
-			<td align="right">268 ms</td>
+			<td align="right">7888 rps</td>
+			<td align="right">12 ms</td>
+			<td align="right">25 ms</td>
 		</tr>
 	</table>
 </div>
 <div class="pt-4 pb-6 text-center text-gray-800 dark:text-gray-100 text-sm italic font-serif">
-	Tab. 1: Performance characteristics of a SvelteKit node server with server-side rendering enabled.
+	Tab. 2: Performance characteristics of a SvelteKit node server with built-time prerendering
+	enabled.
 </div>
 
 <style>

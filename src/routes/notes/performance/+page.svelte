@@ -10,6 +10,7 @@
 	import P from '$lib/components/P.svelte';
 	import Title from '$lib/components/Title.svelte';
 	import SSR from './ssr-table.svelte';
+	import SSG from './ssg-table.svelte';
 	import { bash } from 'svelte-highlight/languages';
 </script>
 
@@ -106,11 +107,20 @@
 	<P
 		>Before any optimizations, I'm running SvelteKit in the default configuration with the
 		node-adapter. That means CSR as well as SSR are employed, while no pages are prerendered at
-		build-time. In the case of <A href="/notes/lines">A study of lines</A> the server-side rendering
-		for every request is particularly noticeable because there are thousands of elements rendered into
-		<C>SVGs</C>, which apparently takes its toll.
+		build-time.
 	</P>
 	<SSR />
+	<P>
+		For the <C>/notes/lines</C> page there is a noticable degredation because there are thousands of
+		elements rendered into <C>SVGs</C>, which has the server do some work. The whole page is also
+		significantly larger, which is also going to have some impact.
+	</P>
+	<P>Next, we are going to turn on prerendering (or SSG) while keeping everything else the same.</P>
+	<SSG />
+	<P
+		>The impact is immediately noticable for both pages. Now the difference between <C>/</C> and <C
+			>/notes/lines</C> is probably down to the size of the pages as no additional effort is required
+		per request for either.</P>
 	<!-- <Hint>Don't forget <C>trailingSlashes: always</C></Hint>
 	<P>Slow SSG / Caddy reverse_proxy vs. file_server</P> -->
 </Note>
