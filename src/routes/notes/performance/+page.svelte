@@ -20,7 +20,6 @@
 <Note>
 	<Title subtitle="Making sure my website can handle all those page views it isn't getting"
 		>Performance tuning a specific SvelteKit application</Title>
-	<Info>Work in progress!</Info>
 	<P
 		>During my studies, I focused on high-performance computing. My interest in this field
 		culminated in my (only mildly interesting) <A
@@ -158,4 +157,14 @@
 			to <C>/notes/lines/</C>. Load testing that URL directly yields the above numbers.
 		</P>
 	</Details>
+	<P
+		>Much better! Now we are approaching throughput numbers that have me sleeping soundly at night.
+		The switch from dynamically rendering pages on demand to prerendering them was actually a good
+		thing. I had to come up with another way to collect statistics, which turned out to be more
+		reusable. Hop on over to <A href="/notes/website/">this note</A> to learn more.</P>
+	<P>
+		Throughout this note, we have looked at locally hosted servers and proxies as representative of
+		the real deployment. I'll leave you with the throughput of serving <C>/notes/lines/</C> as measured
+		against my tiny VPS: <b>791 requests per second</b> versus the 40 that triggered this whole excursion.
+	</P>
 </Note>

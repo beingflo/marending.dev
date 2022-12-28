@@ -15,11 +15,12 @@
 	import ChaosAngles90 from '$lib/components/lines/ChaosAngles90.svelte';
 	import CircularDisturbance from '$lib/components/lines/CircularDisturbance.svelte';
 	import FeatheredEpicenter from '$lib/components/lines/FeatheredEpicenter.svelte';
+	import Hint from '$lib/components/Hint.svelte';
 </script>
 
 <Note>
 	<Title subtitle="Some schmuck tries his hands at generative art">A study of lines</Title>
-	<Info>Work in progress!</Info>
+	<Hint>Perpetual note ...</Hint>
 	<P>
 		After moving into a bigger apartment, I've found the walls of our office to be a bit naked.
 		While I'm a hobby photographer and would like to get more into printing my work, for this space
