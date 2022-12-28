@@ -3,6 +3,7 @@
 	import Code from '$lib/components/Code.svelte';
 	import H2 from '$lib/components/H2.svelte';
 	import H3 from '$lib/components/H3.svelte';
+	import Info from '$lib/components/Info.svelte';
 	import Note from '$lib/components/Note.svelte';
 	import P from '$lib/components/P.svelte';
 	import Title from '$lib/components/Title.svelte';
@@ -61,6 +62,7 @@
 		to unpack here.
 	</P>
 	<H3>Deployment</H3>
+	<Info>Outdated info, will get updated any day now *elevator music*</Info>
 	<P>
 		The SvelteKit application is deployed as a docker container on my small hetzner server alongside
 		my other sideprojects. I have caddy running as a reverse proxy to route the requests to the

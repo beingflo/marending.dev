@@ -8,7 +8,7 @@
 		<NoteSummary
 			title="Performance tuning a specific SvelteKit application"
 			summary="Making sure my website can handle all those page views it isn't getting"
-			date="19 December 2022"
+			date="29 December 2022"
 			link="/notes/performance" />
 		<NoteSummary
 			title="A study of lines"
