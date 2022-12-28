@@ -4,10 +4,12 @@
 	import Code from '$lib/components/Code.svelte';
 	import H2 from '$lib/components/H2.svelte';
 	import H3 from '$lib/components/H3.svelte';
+	import Hint from '$lib/components/Hint.svelte';
 	import Info from '$lib/components/Info.svelte';
 	import Note from '$lib/components/Note.svelte';
 	import P from '$lib/components/P.svelte';
 	import Title from '$lib/components/Title.svelte';
+	import { bash } from 'svelte-highlight/languages';
 </script>
 
 <Note>
@@ -59,7 +61,7 @@
 		called <em>hydration</em> the browser renders the page again. This is supposed to give us benefits
 		from both options. Fast initial page load as well as full js-driven interactivity.</P>
 	<P
-		>Additionaly, if CSR is enabled SvelteKit serves code that takes over navigation in the client.
+		>Additionally, if CSR is enabled SvelteKit serves code that takes over navigation in the client.
 		That means instead of doing full page loads when clicking a link to a subpage, only the strictly
 		necessary code and data are loaded.</P>
 	<P
@@ -75,12 +77,31 @@
 	</P>
 	<P
 		>However, in the process of thinking about this I had an idea to be able to statically prerender
-		all pages while still collecting statistics: Instead of building the collection into a node
-		server, I can configure the reverse proxy (in my case Caddy) to emit logs. Then, in a classic
-		display of over-engineering, I consume said logs in a separate service, which offers aggregated
-		statistics to the site via API call.
+		all pages while still collecting statistics: Instead of building the collection into the node
+		server serving the site, I can configure the reverse proxy (in my case Caddy) to emit logs.
+		Then, in a classic display of over-engineering, I consume said logs in a separate service, which
+		offers aggregated statistics to the site via API call. So for the purposes of improving
+		performance of the website, I can ignore the need for dynamic behaviour on the server side for
+		now.
 	</P>
 	<H2>Benchmarking marending.dev</H2>
+	<P
+		>To get a realistic end-to-end view of how the server performs, I'm running benchmarks at the <C
+			>HTTP</C> level using <C>wrk</C> approximately like so:
+	</P>
+	<Code
+		language={bash}
+		value={`wrk -c 100 -d 30s -t 6 -H "no-track: true" --latency http://localhost:3000/notes/lines`} />
+	<P
+		>The purpose of the <C>no-track</C> header is to make sure the server doesn't record the page views
+		for the <A href="/metrics/views">metrics</A> section.
+	</P>
+	<P
+		>For faster turnaround when benchmarking I'm running the preview server of SvelteKit locally. So
+		any numbers presented here are not to be compared with performance numbers from the production
+		deployment on a much weaker VPS. They just serve to compare with other approaches on the same
+		machine.
+	</P>
 	<P
 		>Before any optimizations, I'm running SvelteKit in the default configuration with the
 		node-adapter. That means CSR as well as SSR are employed, while no pages are prerendered at
@@ -88,22 +109,7 @@
 		for every request is particularly noticeable because there are thousands of elements rendered into
 		<C>SVGs</C>, which apparently takes its toll.
 	</P>
-	<P
-		>To have faster turnaround when benchmarking I'm running the preview server of SvelteKit
-		locally. So any numbers presented here are not to be compared with performance numbers from the
-		production deployment on a much weaker VPS. They just serve to compare with other approaches on
-		the same machine.
-	</P>
-	<P
-		>To get a realistic end-to-end view of how the server performs, I'm running benchmarks at the <C
-			>HTTP</C> level using <C>wrk</C> approximately like so:
-	</P>
-	<Code
-		value={`wrk -c 100 -d 30s -t 6 -H "no-track: true" --latency http://localhost:3000/notes/lines`} />
-	<P
-		>The purpose of the <C>no-track</C> header is to make sure the server doesn't record the page views
-		for the <A href="/metrics/views">metrics</A> section.
-	</P>
+	<Hint>Don't forget <C>trailingSlashes: always</C></Hint>
 	<P>Table</P>
 	<P>Table</P>
 	<P>Slow SSG / Caddy reverse_proxy vs. file_server</P>
