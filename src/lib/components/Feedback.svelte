@@ -42,7 +42,6 @@
 	<label class="block">
 		<span class="text-sm text-gray-700 dark:text-gray-200 mb-1">Message</span>
 		<textarea
-			type="text"
 			name="content"
 			bind:value={content}
 			class="block resize w-full h-24 border border-gray-900 dark:border-gray-200 dark:bg-black p-0.5" />

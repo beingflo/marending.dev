@@ -6,3 +6,7 @@
 	<slot />
 </h1>
 <h2 class="text-lg md:text-xl mb-16 md:mb-24">{subtitle}</h2>
+
+<svelte:head>
+	<meta name="description" content={subtitle} />
+</svelte:head>
