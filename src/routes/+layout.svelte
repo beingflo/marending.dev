@@ -45,7 +45,7 @@
 <footer>
 	<button
 		on:click={() => (showFeedback = true)}
-		class="fixed p-2 bottom-0 right-2 text-xs font-light text-gray-400">feedback</button>
+		class="fixed p-2 bottom-0 right-2 text-xs font-light text-gray-600">feedback</button>
 </footer>
 
 <style global>
