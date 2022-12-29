@@ -32,8 +32,8 @@
 		own applications. I wouldn't want to just deploy something for the world to see without knowing
 		how it would behave under load. While the web applications and backend systems I tend to spend
 		my time with nowadays are a far cry from the number-crunching code screaming along on a <A
-			href="https://www.cscs.ch/">super computer</A> from back in the day, they are still worthwile to
-		worry about.
+			href="https://www.cscs.ch/">super computer</A> from back in the day, they are still worthwhile
+		to worry about.
 	</P>
 	<P
 		>While writing / building the <A href="/notes/lines">A study of lines</A> note, I noticed that SvelteKit
@@ -75,16 +75,16 @@
 	<H3>Current config for marending.dev</H3>
 	<P
 		>While this is primarily a static site, there is one piece of functionality that makes use of
-		the dynamic server-side rendering. The metrics section counts page views by writing to a sqlite
-		database on every request. If we prerender the pages at build-time and serving them from a
+		the dynamic server-side rendering. The metrics section counts page views by writing to a SQLite
+		database on every request. If we pre-render the pages at build-time and serving them from a
 		webserver, there is no code running server-side to keep track of views.
 	</P>
 	<P
-		>However, in the process of thinking about this I had an idea to be able to statically prerender
-		all pages while still collecting statistics: Instead of building the collection into the node
-		server serving the site, I can configure the reverse proxy (in my case Caddy) to emit logs.
-		Then, in a classic display of over-engineering, I consume said logs in a separate service, which
-		offers aggregated statistics to the site via API call. So for the purposes of improving
+		>However, in the process of thinking about this I had an idea to be able to statically
+		pre-render all pages while still collecting statistics: Instead of building the collection into
+		the node server serving the site, I can configure the reverse proxy (in my case Caddy) to emit
+		logs. Then, in a classic display of over-engineering, I consume said logs in a separate service,
+		which offers aggregated statistics to the site via API call. So for the purposes of improving
 		performance of the website, I can ignore the need for dynamic behaviour on the server side for
 		now.
 	</P>
@@ -107,8 +107,8 @@
 		machine.
 	</P>
 	<P
-		>Before any optimizations, I'm running SvelteKit in the default configuration with the
-		node-adapter. That means CSR as well as SSR are employed, while no pages are prerendered at
+		>Before any optimizations, I'm running SvelteKit in the default configuration with the node
+		adapter. That means CSR as well as SSR are employed, while no pages are pre-rendered at
 		build-time.
 	</P>
 	<SSR />
@@ -117,7 +117,8 @@
 		elements rendered into <C>SVGs</C>, which has the server do some work. The whole page is also
 		significantly larger, which is also going to have some impact.
 	</P>
-	<P>Next, we are going to turn on prerendering (or SSG) while keeping everything else the same.</P>
+	<P
+		>Next, we are going to turn on pre-rendering (or SSG) while keeping everything else the same.</P>
 	<SSG />
 	<P
 		>The impact is immediately noticable for both pages. Now the difference between <C>/</C> and <C
@@ -158,13 +159,14 @@
 		</P>
 	</Details>
 	<P
-		>Much better! Now we are approaching throughput numbers that have me sleeping soundly at night.
-		The switch from dynamically rendering pages on demand to prerendering them was actually a good
-		thing. I had to come up with another way to collect statistics, which turned out to be more
-		reusable. Hop on over to <A href="/notes/website/">this note</A> to learn more.</P>
+		>Much better! The switch from dynamically rendering pages on demand to pre-rendering them was
+		actually a good thing. I had to come up with another way to collect statistics, which turned out
+		to be more reusable. Hop on over to <A href="/notes/website/">this note</A> to learn more.</P>
 	<P>
 		Throughout this note, we have looked at locally hosted servers and proxies as representative of
 		the real deployment. I'll leave you with the throughput of serving <C>/notes/lines/</C> as measured
 		against my tiny VPS: <b>791 requests per second</b> versus the 40 that triggered this whole excursion.
+		This is still much lower than the numbers we got from local testing. That's probably explained by
+		TLS handshakes, network latency and bandwidth and other shenanigans. For now it'll do.
 	</P>
 </Note>
