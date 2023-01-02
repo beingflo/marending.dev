@@ -62,22 +62,9 @@
 		to unpack here.
 	</P>
 	<H3>Deployment</H3>
-	<Info>Outdated info, will get updated any day now *elevator music*</Info>
 	<P>
-		The SvelteKit application is deployed as a docker container on my small hetzner server alongside
-		my other sideprojects. I have caddy running as a reverse proxy to route the requests to the
-		appropriate application.
-	</P>
-	<H2>Why the metrics section?</H2>
-	<P
-		>I'm always curious to know what kind of traffic patterns websites see. That's why I built a <em
-			>very</em> rudimentary analytics feature into this site. Don't worry, no tracking cookie is sent
-		to your browser, this is collected server side only with no identifying information on the visitor
-		whatsoever. Now that I can see the traffic for my website, I might as well share it with you too.
-	</P>
-	<P>
-		Just know that at least for now, the majority of views are coming either from myself, or the
-		friendly crawlers and bots that want to pay me a visit. The ones trying to access <C
-			>/wp-content/themes/seotheme/db.php</C> and similar are not welcome though.
+		The SvelteKit application is built with the static adapter. This outputs only static assets that
+		I'm serving directly from my webserver. I use caddy as the webserver as well as a reverse proxy
+		to route the requests to the other applications I have running.
 	</P>
 </Note>
