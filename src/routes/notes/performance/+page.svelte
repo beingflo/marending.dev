@@ -5,7 +5,6 @@
 	import H2 from '$lib/components/H2.svelte';
 	import H3 from '$lib/components/H3.svelte';
 	import Hint from '$lib/components/Hint.svelte';
-	import Info from '$lib/components/Info.svelte';
 	import Note from '$lib/components/Note.svelte';
 	import P from '$lib/components/P.svelte';
 	import Title from '$lib/components/Title.svelte';
@@ -45,7 +44,7 @@
 	<P
 		>What follows is a a highly unscientific and subjectiv exploration into improving the
 		performance of this website.</P>
-	<H2>Background on SvelteKits rendering modes (CSR, SSR, SSG)</H2>
+	<H2 id="background">Background on SvelteKits rendering modes (CSR, SSR, SSG)</H2>
 	<P
 		>This site is my first project using SvelteKit, so my knowledge is limited. However, from
 		glancing at the docs and some quick experimentation we can learn that there are three rendering
@@ -88,7 +87,7 @@
 		performance of the website, I can ignore the need for dynamic behaviour on the server side for
 		now.
 	</P>
-	<H2>Benchmarking marending.dev</H2>
+	<H2 id="benchmark">Benchmarking marending.dev</H2>
 	<P
 		>To get a realistic end-to-end view of how the server performs, I'm running benchmarks at the <C
 			>HTTP</C> level using <C>wrk</C> approximately like so:
