@@ -17,7 +17,7 @@
 			link="/notes/lines" />
 		<NoteSummary
 			title="About this website"
-			summary="Or how to maximally overengineer serving static content"
+			summary="There are many like it, but this one is mine"
 			date="27 November 2022"
 			link="/notes/website" />
 	</div>
