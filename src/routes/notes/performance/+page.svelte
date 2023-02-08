@@ -42,7 +42,7 @@
 		be served at such a mediocre rate.
 	</P>
 	<P
-		>What follows is a a highly unscientific and subjectiv exploration into improving the
+		>What follows is a a highly unscientific and subjective exploration into improving the
 		performance of this website.</P>
 	<H2 id="background">Background on SvelteKits rendering modes (CSR, SSR, SSG)</H2>
 	<P
