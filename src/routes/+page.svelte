@@ -6,6 +6,11 @@
 <Page>
 	<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 md:gap-12">
 		<NoteSummary
+			title="Measuring power consumption of an ESP32 development board"
+			summary="First forays into embedded devices"
+			date="25 February 2023"
+			link="/notes/esp-power" />
+		<NoteSummary
 			title="Performance tuning a specific SvelteKit application"
 			summary="Making sure my website can handle all those page views it isn't getting"
 			date="29 December 2022"
