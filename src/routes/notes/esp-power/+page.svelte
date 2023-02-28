@@ -28,7 +28,18 @@
 		>Until now, I've used Raspberry Pis and similar devices as low power home servers. They are
 		great as fully fledged file or web servers. For this endeavor however, they are clearly too
 		power hungry. I'm envisioning months if not years of battery life, not just days. So I started
-		playing with the idea of venturing into embedded devices. For simplicity I chose a well trodden
-		path: ESP32.
+		playing with the idea of venturing into embedded devices. Since I have no idea what I'm doing, I
+		chose a well trodden path: ESP32.
+	</P>
+	<P>
+		As usual when I pick up a new topic of interest, I buy all kinds of stuff I probably don't need.
+		In this case I got a range of dev boards, dozens of sensors, breadboards, cables, a ridiculous
+		number of resistors and even a multimeter. You might think it's stupid to just buy a ton of
+		stuff hoping it will keep an interest going, but think again: It sometimes works.
+	</P>
+	<P
+		>For starters, I want to understand what kind of power envelopes I'm dealing with on these
+		devices. So I run a couple of dev boards in different states: Normal operation without Wifi,
+		normal operation with Wifi, light sleep and deep sleep.
 	</P>
 </Note>
