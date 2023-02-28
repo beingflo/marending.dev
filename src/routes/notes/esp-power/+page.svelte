@@ -42,4 +42,15 @@
 		devices. So I run a couple of dev boards in different states: Normal operation without Wifi,
 		normal operation with Wifi, light sleep and deep sleep.
 	</P>
+	<H2>Methodology</H2>
+	<P
+		>Thanks to my multimeter, measuring the power consumption of the devices is not too hard. I just
+		needed a power source I can connect in series with the multimeter, so I can take the
+		measurements. The battery pack I have has a JST-PH2 connector which I don't want to cut off to
+		get access to the wires. So instead, I wired together a bootleg battery by connecting three AA
+		batteries in series, giving me 4.5 Volts.</P>
+	<P
+		>Apart from this adventure, things went smoothly. Note that these are mostly out of the box
+		values a novice like myself would realistally achieve. I'm sure one could optimize the power
+		consumption further with advanced tricks.</P>
 </Note>
