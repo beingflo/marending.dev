@@ -10,6 +10,7 @@
 	import Title from '$lib/components/Title.svelte';
 	import { cpp } from 'svelte-highlight/languages';
 	import Details from '$lib/components/Details.svelte';
+	import Results from './results-table.svelte';
 	import Info from '$lib/components/Info.svelte';
 </script>
 
@@ -61,4 +62,11 @@
 	<Info>
 		Note that these are mostly out of the box values a novice like myself would realistally achieve.
 		I'm sure one could optimize the power consumption further with advanced tricks.</Info>
+	<H2>Boards under test</H2>
+	<P
+		>I'm testing a DFRobot Firebeetle ESP32 and a Firebeetle ESP32-E. The latter has a low power pad
+		that can be cut with a knife to isolate an LED. For this board I've measured power before and
+		after the pad was disconnected.</P>
+	<H2>Results</H2>
+	<Results />
 </Note>
