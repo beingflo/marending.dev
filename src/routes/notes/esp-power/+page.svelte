@@ -30,19 +30,19 @@
 		>Until now, I've used Raspberry Pis and similar devices as low power home servers. They are
 		great as fully fledged file or web servers. For this endeavor however, they are clearly too
 		power hungry. I'm envisioning months if not years of battery life, not just days. So I started
-		playing with the idea of venturing into embedded devices. Since I have no idea what I'm doing, I
-		chose a well trodden path: ESP32.
+		playing with the idea of venturing into embedded devices. Since I had absolutely no idea what
+		I'm doing, I chose a well trodden path: ESP32.
 	</P>
 	<P>
 		As usual when I pick up a new topic of interest, I buy all kinds of stuff I probably don't need.
 		In this case I got a range of dev boards, dozens of sensors, breadboards, cables, a ridiculous
-		number of resistors and even a multimeter. You might think it's stupid to just buy a ton of
-		stuff hoping it will keep an interest going, but think again: It sometimes works.
+		number of resistors and even a multimeter. This is of course a stupid thing to do but all that
+		stuff was just <em>so damn cheap</em> I couldn't help it.
 	</P>
 	<P
 		>For starters, I want to understand what kind of power envelopes I'm dealing with on these
-		devices. So I run a couple of dev boards in different states: Normal operation without Wifi,
-		normal operation with Wifi, light sleep and deep sleep.
+		devices. So I measured the power consumption of two dev boards in different scenarios: Normal
+		operation without Wifi, normal operation with Wifi, light sleep and deep sleep.
 	</P>
 	<H2>Methodology</H2>
 	<P
@@ -55,9 +55,9 @@
 		>The dev boards need a lot of power to initially boot up and start running code. Once they enter
 		sleep, the current drops down. A tiny hiccup here was to realize that I can't set my multimeter
 		to the microamp setting from the beginning, as apparently not enough current makes it through
-		the device to start up properly. Instead, I need to set it to miliamps at first, this way it can
-		boot up and afterwards I can turn the setting to microamps without the power getting
-		interrupted.
+		the meter to let the board start up properly. Instead, I need to set it to miliamps at first,
+		this way it can boot up and afterwards I can turn the setting to microamps without the power
+		getting interrupted.
 	</P>
 	<Info>
 		Note that these are mostly out of the box values a novice like myself would realistally achieve.
@@ -69,4 +69,25 @@
 		after the pad was disconnected.</P>
 	<H2>Results</H2>
 	<Results />
+	<Info
+		>The current while the Wifi module is connecting to the access point is too erratic to draw
+		conclusions from in my opinion.</Info>
+	<P
+		>I'm pleased to see that the advertised 10 microampere deep sleep current are actually
+		achievable out of the box. This should enable some really long-lived battery powered sensors.
+		Some back-of-the-napkin math tells us that a device that sleeps with this power draw could
+		realistically run 10 to 15 <em>years</em> off of a small 1500 mAh battery. Quite exciting!
+	</P>
+	<P
+		>Also interesting is the vast impact the connected LED seems to have on the deep sleep current.
+		470 uA vs 12 uA could have a huge impact for a device that is mostly sleeping. With the same
+		1500 mAh battery a device with 470 uA draw could only sleep for around 100 days.
+	</P>
+	<H2>Next steps</H2>
+	<P
+		>Now that we have established that deep sleep current is probably not going to be the bottleneck
+		in terms of battery life, I will explore different approaches for getting data off device as
+		fast as possible without wasting power. E.g. Bluetooth low energy (BLE) compared to Wifi or ESP
+		Now.
+	</P>
 </Note>
