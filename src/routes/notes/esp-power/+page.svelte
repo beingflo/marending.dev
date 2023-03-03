@@ -10,6 +10,7 @@
 	import Title from '$lib/components/Title.svelte';
 	import { cpp } from 'svelte-highlight/languages';
 	import Details from '$lib/components/Details.svelte';
+	import Info from '$lib/components/Info.svelte';
 </script>
 
 <Note>
@@ -50,7 +51,14 @@
 		get access to the wires. So instead, I wired together a bootleg battery by connecting three AA
 		batteries in series, giving me 4.5 Volts.</P>
 	<P
-		>Apart from this adventure, things went smoothly. Note that these are mostly out of the box
-		values a novice like myself would realistally achieve. I'm sure one could optimize the power
-		consumption further with advanced tricks.</P>
+		>The dev boards need a lot of power to initially boot up and start running code. Once they enter
+		sleep, the current drops down. A tiny hiccup here was to realize that I can't set my multimeter
+		to the microamp setting from the beginning, as apparently not enough current makes it through
+		the device to start up properly. Instead, I need to set it to miliamps at first, this way it can
+		boot up and afterwards I can turn the setting to microamps without the power getting
+		interrupted.
+	</P>
+	<Info>
+		Note that these are mostly out of the box values a novice like myself would realistally achieve.
+		I'm sure one could optimize the power consumption further with advanced tricks.</Info>
 </Note>
