@@ -96,11 +96,7 @@
 	</P>
 	<Code
 		language={bash}
-		value={`wrk -c 100 -d 30s -t 6 -H "no-track: true" --latency http://localhost:3000/notes/lines`} />
-	<P
-		>The purpose of the <C>no-track</C> header is to make sure the server doesn't record the page views
-		for the <A href="/metrics/views">metrics</A> section.
-	</P>
+		value={`wrk -c 100 -d 30s -t 6 --latency http://localhost:3000/notes/lines`} />
 	<P
 		>For faster turnaround when benchmarking I'm running the preview server of SvelteKit locally. So
 		any numbers presented here are not to be compared with performance numbers from the production
