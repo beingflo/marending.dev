@@ -14,6 +14,7 @@
 	import CaddyStatic from './caddy-static-table.svelte';
 	import { bash } from 'svelte-highlight/languages';
 	import Details from '$lib/components/Details.svelte';
+	import Info from '$lib/components/Info.svelte';
 </script>
 
 <Note>
@@ -78,6 +79,7 @@
 		database on every request. If we pre-render the pages at build-time and serving them from a
 		webserver, there is no code running server-side to keep track of views.
 	</P>
+	<Info>Update: The metrics section is gone for now :(</Info>
 	<P
 		>However, in the process of thinking about this I had an idea to be able to statically
 		pre-render all pages while still collecting statistics: Instead of building the collection into
