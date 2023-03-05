@@ -35,7 +35,5 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@types/better-sqlite3": "^7.6.2",
-		"better-sqlite3": "^7.6.2"
 	}
 }
