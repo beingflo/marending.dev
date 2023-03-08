@@ -84,6 +84,21 @@
 		1500 mAh battery a device with 470 uA draw could only sleep for around 100 days.
 	</P>
 	<ResultsC3 />
+	<P
+		>Given that the ESP32-C3 boards only have one processing core compared to the two on the other
+		ESP32 boards, it's not suprising to see less power consumption in normal operation. They are
+		also RISC-V based.</P>
+	<P
+		>The M5Stamp board is kind of underwhelming with very bad deep sleep current. As it's in a
+		similar ballpark as the FireBeetle ESP32-E with the low power pad still connected, I would guess
+		that it's due to the extremely bright LED that is on this board.
+	</P>
+	<P
+		>The Seeed XIAO on the other hand surprises with extremly good light sleep current. On a 1500
+		mAh battery this device could sleep in light sleep for almost a full year, and around 4 years in
+		deep sleep. It will be interesting to check if it's even worthwile to go into deep sleep on this
+		device assuming wake-up is probably slower.
+	</P>
 	<H2>Next steps</H2>
 	<P
 		>Now that we have established that deep sleep current is probably not going to be the bottleneck
