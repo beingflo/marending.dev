@@ -19,16 +19,16 @@
 			<td align="right">40.5 mA</td>
 		</tr>
 		<tr>
-			<td align="left">Light sleep no LED</td>
-			<td align="right">1.2 mA</td>
-			<td align="right">2.6 mA</td>
-			<td align="right">2.2 mA</td>
-		</tr>
-		<tr>
 			<td align="left">Light sleep with LED</td>
 			<td align="right">1.5 mA</td>
 			<td align="right">3.2 mA</td>
 			<td align="right">2.65 mA</td>
+		</tr>
+		<tr>
+			<td align="left">Light sleep no LED</td>
+			<td align="right">1.2 mA</td>
+			<td align="right">2.6 mA</td>
+			<td align="right">2.2 mA</td>
 		</tr>
 		<tr>
 			<td align="left">Deep sleep</td>

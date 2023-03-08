@@ -3,7 +3,8 @@
 	import Note from '$lib/components/Note.svelte';
 	import P from '$lib/components/P.svelte';
 	import Title from '$lib/components/Title.svelte';
-	import Results from './results-table.svelte';
+	import ResultsFirebeetle from './results-table-firebeetle.svelte';
+	import ResultsC3 from './results-table-c3.svelte';
 	import Info from '$lib/components/Info.svelte';
 	import A from '$lib/components/A.svelte';
 </script>
@@ -67,7 +68,7 @@
 			href="https://shop.m5stack.com/products/m5stamp-c3u-mate-with-pin-headers">M5Stamp C3U</A> to test.
 	</P>
 	<H2>Results</H2>
-	<Results />
+	<ResultsFirebeetle />
 	<Info
 		>The current while the Wifi module is connecting to the access point is too erratic to draw
 		conclusions from in my opinion.</Info>
@@ -82,6 +83,7 @@
 		470 uA vs 12 uA could have a huge impact for a device that is mostly sleeping. With the same
 		1500 mAh battery a device with 470 uA draw could only sleep for around 100 days.
 	</P>
+	<ResultsC3 />
 	<H2>Next steps</H2>
 	<P
 		>Now that we have established that deep sleep current is probably not going to be the bottleneck
