@@ -5,20 +5,21 @@
 	import Title from '$lib/components/Title.svelte';
 	import Results from './results-table.svelte';
 	import Info from '$lib/components/Info.svelte';
+	import A from '$lib/components/A.svelte';
 </script>
 
 <Note>
 	<Title subtitle="First forays into embedded devices"
-		>Measuring power consumption of an ESP32 development board</Title>
+		>Measuring power consumption of ESP32 development boards</Title>
 	<P
 		>I like some nice greenery in the living room. I also like data. Naturally, I have to monitor
 		the CO2, temperature and humidity in the room as well as the soil moisture and incident light on
-		the plant.
+		the plants.
 	</P>
 	<P
 		>Fine, maybe I don't <em>have</em> to, but it's fun anyway. To make it happen without a huge mess
 		of cables, I would like to set up a system where the sensors are battery operated and report their
-		measurements into my monitoring setup (prometheus as of now).</P>
+		measurements into my monitoring setup (prometheus + grafana as of now).</P>
 	<P
 		>Until now, I've used Raspberry Pis and similar devices as low power home servers. They are
 		great as fully fledged file or web servers. For this endeavor however, they are clearly too
@@ -34,7 +35,7 @@
 	</P>
 	<P
 		>For starters, I want to understand what kind of power envelopes I'm dealing with on these
-		devices. So I measured the power consumption of two dev boards in different scenarios: Normal
+		devices. So I measured the power consumption of four dev boards in different scenarios: Normal
 		operation without Wifi, normal operation with Wifi, light sleep and deep sleep.
 	</P>
 	<H2>Methodology</H2>
@@ -57,9 +58,14 @@
 		I'm sure one could optimize the power consumption further with advanced tricks.</Info>
 	<H2>Boards under test</H2>
 	<P
-		>I'm testing a DFRobot Firebeetle ESP32 and a Firebeetle ESP32-E. The latter has a low power pad
-		that can be cut with a knife to isolate an LED. For this board I've measured power before and
-		after the pad was disconnected.</P>
+		>I'm testing a <A href="https://www.dfrobot.com/product-1590.html">DFRobot FireBeetle ESP32</A> and
+		a <A href="https://www.dfrobot.com/product-2195.html">Firebeetle ESP32-E</A>. The latter has a
+		low power pad that can be cut with a knife to isolate an LED. For this board I've measured power
+		before and after the pad was disconnected. Next, I also have a <A
+			href="https://www.seeedstudio.com/Seeed-XIAO-ESP32C3-p-5431.html"
+			>Seeed Studio XIAO ESP32C3</A> and an <A
+			href="https://shop.m5stack.com/products/m5stamp-c3u-mate-with-pin-headers">M5Stamp C3U</A> to test.
+	</P>
 	<H2>Results</H2>
 	<Results />
 	<Info

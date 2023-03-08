@@ -6,7 +6,7 @@
 <Page>
 	<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 md:gap-12">
 		<NoteSummary
-			title="Measuring power consumption of an ESP32 development board"
+			title="Measuring power consumption of ESP32 development boards"
 			summary="First forays into embedded devices"
 			date="25 February 2023"
 			link="/notes/esp-power" />
