@@ -104,6 +104,6 @@
 		>Now that we have established that deep sleep current is probably not going to be the bottleneck
 		in terms of battery life, I will explore different approaches for getting data off device as
 		fast as possible without wasting power. E.g. Bluetooth low energy (BLE) compared to Wifi or ESP
-		Now.
+		Now. <A href="/notes/esp-protocol">Continue reading Part II</A>
 	</P>
 </Note>
