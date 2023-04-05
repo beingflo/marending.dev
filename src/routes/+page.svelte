@@ -8,7 +8,7 @@
 		<NoteSummary
 			title="A comparison of wireless protocols for battery powered embedded devices"
 			summary="Trying to sleep as much as possible"
-			date="14 March 2023"
+			date="5 April 2023"
 			link="/notes/esp-protocol" />
 		<NoteSummary
 			title="Measuring power consumption of ESP32 development boards"
