@@ -33,6 +33,9 @@
 		time until a packet is sent, it allows broadcasting messages and it runs on the normal Wifi band
 		meaning we inherit the range capabilities.
 	</P>
+	<P
+		>Both BLE and ESP-NOW would require a gateway device that receives messages and sends them off
+		via Wifi to my monitoring setup in the cloud.</P>
 	<H2>Awake time is essential</H2>
 	<P
 		>For the sake of a rough estimation, we will assume that while awake the device consumes the
@@ -45,5 +48,13 @@
 		>Comparing this number to a deep sleep current of 10 - 40 uA it's easy to see that it's
 		essential for battery life to spend as little time as possible awake. An additional second of
 		active processing can shorten the possible sleep time by almost 2 hours!
+	</P>
+	<P
+		>For this reason we are going to measure how quickly a device can wake up from light or deep
+		sleep, establish a connection (if necessary), send a small message with sensor readings and go
+		back to sleep. Since the boot process of the chip is hard to time exactly, I figure the most
+		effective way to measure the full cycle is to sleep only very briefly in-between cycles and
+		check how many messages are received over time. If e.g. 2 messages reach the monitoring setup
+		per second, then one full cycle takes 0.5 seconds.
 	</P>
 </Note>
