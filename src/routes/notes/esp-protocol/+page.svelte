@@ -71,6 +71,7 @@
 		couldn't test this on a Seeed XIAO because the serial monitor doesn't automatically reconnect,
 		which makes it hard to observe the output. I'm sure this could be fixed if one wasn't a complete
 		novice. I would assume it's not much different considering it has a chip in the same family.
+		Once we get to the protocols we'll see if this assumption makes sense.
 	</P>
 	<Code
 		caption="Code 1: Script to test deep sleep wakeup time"
@@ -95,5 +96,14 @@ void loop()
 	// This is not going to be called
 }
 	`} />
-	<P>This is quite promising!</P>
+	<P
+		>This is quite promising for deep sleep wakeup! If we can keep the Modem startup and
+		transmission time on a reasonable scale we'll have pretty good battery life.</P>
+	<Code value={`WiFi.mode(WIFI_STA);`} caption="Code 2: Start the modem in WiFi station mode" />
+	<P
+		>When we add the above snippet to the test script we measure a total cycle time of <b>312 ms</b
+		>. Starting the modem (at least I suspect this doesn't just set the mode considering the time
+		increase) makes the startup process quite a bit slower.</P>
+	<P>But enough groundwork, let's get to trialing the first protocol.</P>
+	<H2>ESP-NOW</H2>
 </Note>
