@@ -138,6 +138,17 @@ void loop()
 		</P>
 		<Code value={`Serial.setTxTimeoutMs(0);`} respectMargin />
 		<P>With this, I see around <b>800 messages per second</b> at a message size of 16 bytes.</P>
+		<P
+			>Another gotcha I encountered is how sensitive the antennas are to interference when the
+			signal gets weak. For instance, when the sender or receiver is in my laundry room (1 floor
+			down and a couple walls in between) the devices need to be kept well away of any metal object,
+			otherwise no transmission will succeed. Even a metal baseplate that attaches legs to my dining
+			room table are enough to block the signal from a device laying on the table. Ask me how I
+			know.
+		</P>
+		<P
+			>In circumstances with weak signal strength it is also noticable how sometimes a couple of
+			retries are required. I would theorize this is due to WiFi interference on the 2.4 GHz band.</P>
 	</Details>
 	<Code
 		caption="Code 3: Test script to measure time from deep sleep to successful data transmission with ESP-NOW"
