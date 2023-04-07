@@ -38,6 +38,19 @@
 	<P
 		>Both BLE and ESP-NOW would require a gateway device that receives messages and sends them off
 		via WiFi to my monitoring setup in the cloud.</P>
+	<H2>Boards under test</H2>
+	<P
+		>We measured power draw of four different development boards. Now that we know their
+		characteristics (and I'm lazy), we will proceed to only consider two boards from here on out:
+		The <A href="https://www.dfrobot.com/product-1590.html">DFRobot FireBeetle ESP32</A> and the
+		<A href="https://www.seeedstudio.com/Seeed-XIAO-ESP32C3-p-5431.html"
+			>Seeed Studio XIAO ESP32C3</A
+		>. They represent a nice selection of the boards I own. The FireBeetle is the fully featured
+		ESP32 board, with an ARM based chip with two cores, plenty of GPIO pins and a built-in battery
+		connector. The XIAO on the other hand is tiny, more affordable and ships with an external
+		antenna presumably due to a lack of space for a PCB antenna. It features the ESP32C3, a RISV-V
+		based single core CPU.
+	</P>
 	<H2>Awake time is essential</H2>
 	<P
 		>For the sake of a rough estimation, we will assume that while awake the device consumes the
