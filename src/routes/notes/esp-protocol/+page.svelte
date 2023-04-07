@@ -1,5 +1,6 @@
 <script>
 	import A from '$lib/components/A.svelte';
+	import Code from '$lib/components/Code.svelte';
 	import H2 from '$lib/components/H2.svelte';
 	import Info from '$lib/components/Info.svelte';
 	import Note from '$lib/components/Note.svelte';
@@ -66,9 +67,33 @@
 	<P>
 		To measure this I simply log some serial output, go to deep sleep and immediately wake up again
 		and repeat. This shows around 7.5 wakeups per second on the Firebeetle ESP32 board, that gives a
-		boot time of <b>133 ms</b>. I couldn't test this on a Seeed XIAO because the serial monitor
-		doesn't automatically reconnect, which makes it hard to observe the output. I'm sure this could
-		be fixed if one wasn't a complete novice. I would assume it's not much different considering it
-		has a chip in the same family.
+		boot time of <b>133 ms</b>. For wakeup after light sleep I'm getting around <b>1.4 ms</b>. I
+		couldn't test this on a Seeed XIAO because the serial monitor doesn't automatically reconnect,
+		which makes it hard to observe the output. I'm sure this could be fixed if one wasn't a complete
+		novice. I would assume it's not much different considering it has a chip in the same family.
 	</P>
+	<Code
+		caption="Code 1: Script to test deep sleep wakeup time"
+		value={`#include "Arduino.h"
+
+RTC_DATA_ATTR int value = 0;
+
+void setup()
+{
+	Serial.begin(115200);
+
+	Serial.println(value);
+	value += 1;
+
+	esp_sleep_enable_timer_wakeup(1);
+
+	esp_deep_sleep_start();
+}
+
+void loop()
+{
+	// This is not going to be called
+}
+	`} />
+	<P>This is quite promising!</P>
 </Note>
