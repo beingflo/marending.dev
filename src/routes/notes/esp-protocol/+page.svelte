@@ -58,4 +58,17 @@
 		per second, then one full cycle takes 500 miliseconds. Or if only 1 message every 7 seconds
 		arrives, clearly the cycles takes 7 second.
 	</P>
+	<H2>Boot time</H2>
+	<P
+		>First it would be interesting to time the boot time of a board in isolation. That way we will
+		have a reference to know how much time we actually spend in a transmission and how much is just
+		waking up.</P>
+	<P>
+		To measure this I simply log some serial output, go to deep sleep and immediately wake up again
+		and repeat. This shows around 7.5 wakeups per second on the Firebeetle ESP32 board, that gives a
+		boot time of <b>133 ms</b>. I couldn't test this on a Seeed XIAO because the serial monitor
+		doesn't automatically reconnect, which makes it hard to observe the output. I'm sure this could
+		be fixed if one wasn't a complete novice. I would assume it's not much different considering it
+		has a chip in the same family.
+	</P>
 </Note>
