@@ -3,6 +3,7 @@
 	import Code from '$lib/components/Code.svelte';
 	import Details from '$lib/components/Details.svelte';
 	import H2 from '$lib/components/H2.svelte';
+	import Hint from '$lib/components/Hint.svelte';
 	import Info from '$lib/components/Info.svelte';
 	import Note from '$lib/components/Note.svelte';
 	import P from '$lib/components/P.svelte';
@@ -108,8 +109,7 @@ void setup()
 void loop()
 {
 	// This is not going to be called
-}
-	`} />
+}`} />
 	<P
 		>This is quite promising for deep sleep wakeup! If we can keep the Modem startup and
 		transmission time on a reasonable scale we'll have pretty good battery life.</P>
@@ -121,6 +121,114 @@ void loop()
 	<P>But enough groundwork, let's get to trialing the first protocol.</P>
 	<H2>ESP-NOW</H2>
 	<Details
-		title="If you're like me you know nothing about ESP-NOW, so let's explore it a bit first:"
-		>Background</Details>
+		title="If you're like me you know nothing about ESP-NOW, so let's explore it a bit first">
+		<P>
+			ESP-NOW is designed for small messages up to 250 bytes. It can send messages to specific
+			receivers or broadcast to anyone in listening range, without the need to establish a
+			connection first. This is bound to give us an advantage when we try to minimize the time to
+			ship data off device.
+		</P>
+		<P
+			>The first thing I was interested to know after getting a proof of concept to work was how
+			high the message throughput is. The very first test when sending from the XIAO to the
+			FireBeetle showed just 3 messages per second. Very disappointing! Curiously, when the device
+			is connected to a serial monitor, it's <em>much</em> faster. It turns out that there is a <A
+				href="https://github.com/espressif/arduino-esp32/issues/6983">bug in Arduino</A> regarding buffering
+			serial output. The fix is simple:
+		</P>
+		<Code value={`Serial.setTxTimeoutMs(0);`} respectMargin />
+		<P>With this, I see around <b>800 messages per second</b> at a message size of 16 bytes.</P>
+	</Details>
+	<Code
+		caption="Code 3: Test script to measure time from deep sleep to successful data transmission with ESP-NOW"
+		value={`#include <esp_now.h>
+#include <WiFi.h>
+
+uint8_t receiver[] = {0x24, 0x4C, 0xAB, 0x82, 0xF5, 0x0C};
+
+esp_now_peer_info_t peerInfo;
+
+RTC_DATA_ATTR int counter = 0;
+int success = 0;
+
+struct msg_data
+{
+  int counter;
+  int num_tries;
+};
+
+void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status)
+{
+  Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Success" : "Fail");
+
+  if (status == ESP_NOW_SEND_SUCCESS)
+  {
+    success = 1;
+  }
+}
+
+void setup()
+{
+  Serial.begin(115200);
+  WiFi.mode(WIFI_STA);
+
+  if (esp_now_init() != ESP_OK)
+  {
+    Serial.println("Error initializing ESP-NOW");
+    return;
+  }
+
+  if (esp_now_register_send_cb(OnDataSent) != ESP_OK)
+  {
+    Serial.println("Error registering callback");
+    return;
+  }
+
+  memcpy(peerInfo.peer_addr, receiver, 6);
+  peerInfo.channel = 0;
+  peerInfo.encrypt = false;
+
+  if (esp_now_add_peer(&peerInfo) != ESP_OK)
+  {
+    Serial.println("Error adding peer");
+    return;
+  }
+
+  int num_tries = 0;
+
+  // Resend until data was received by recipient
+  while (!success)
+  {
+    esp_err_t result = ESP_FAIL;
+
+    // Try sending until successfully sent
+    while (result != ESP_OK)
+    {
+      num_tries += 1;
+
+      struct msg_data data = {counter, num_tries};
+
+      result = esp_now_send(receiver, (uint8_t *)&data, sizeof(msg_data));
+
+      if (result != ESP_OK)
+      {
+        Serial.println("Error sending the data");
+      }
+    }
+
+    // Allow time for callback to signal success
+    delay(100);
+  }
+
+  counter += 1;
+
+  esp_sleep_enable_timer_wakeup(1);
+
+  esp_deep_sleep_start();
+}
+
+void loop()
+{
+}`} />
+	<Hint>Under construction ...</Hint>
 </Note>
