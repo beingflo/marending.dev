@@ -1,6 +1,7 @@
 <script>
 	import A from '$lib/components/A.svelte';
 	import Code from '$lib/components/Code.svelte';
+	import Details from '$lib/components/Details.svelte';
 	import H2 from '$lib/components/H2.svelte';
 	import Info from '$lib/components/Info.svelte';
 	import Note from '$lib/components/Note.svelte';
@@ -106,4 +107,7 @@ void loop()
 		increase) makes the startup process quite a bit slower.</P>
 	<P>But enough groundwork, let's get to trialing the first protocol.</P>
 	<H2>ESP-NOW</H2>
+	<Details
+		title="If you're like me you know nothing about ESP-NOW, so let's explore it a bit first:"
+		>Background</Details>
 </Note>
