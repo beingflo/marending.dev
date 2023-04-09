@@ -9,6 +9,7 @@
 	import Note from '$lib/components/Note.svelte';
 	import P from '$lib/components/P.svelte';
 	import Title from '$lib/components/Title.svelte';
+	import ResultsEspNow from './results-esp-now.svelte';
 </script>
 
 <Note>
@@ -247,5 +248,6 @@ void setup()
 void loop()
 {
 }`} />
+	<ResultsEspNow />
 	<Hint>Under construction ...</Hint>
 </Note>
