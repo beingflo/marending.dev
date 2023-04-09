@@ -1,5 +1,6 @@
 <script>
 	import A from '$lib/components/A.svelte';
+	import C from '$lib/components/C.svelte';
 	import Code from '$lib/components/Code.svelte';
 	import Details from '$lib/components/Details.svelte';
 	import H2 from '$lib/components/H2.svelte';
@@ -150,6 +151,11 @@ void loop()
 			>In circumstances with weak signal strength it is also noticable how sometimes a couple of
 			retries are required. I would theorize this is due to WiFi interference on the 2.4 GHz band.</P>
 	</Details>
+	<P
+		>Let's get to testing ESP-NOW. The following script starts up, sets everything up to be able to
+		transmit data via ESP-NOW and then attempts to resend data until the recipient (in this case the
+		device with the mac address described in the <C>receiver[]</C> array) acknowledges it. Then the device
+		enters deep sleep for a microsecond, wakes up and reruns the procedure.</P>
 	<Code
 		caption="Code 3: Test script to measure time from deep sleep to successful data transmission with ESP-NOW"
 		value={`#include <esp_now.h>
