@@ -4,6 +4,7 @@
 	import Code from '$lib/components/Code.svelte';
 	import Details from '$lib/components/Details.svelte';
 	import H2 from '$lib/components/H2.svelte';
+	import H3 from '$lib/components/H3.svelte';
 	import Hint from '$lib/components/Hint.svelte';
 	import Info from '$lib/components/Info.svelte';
 	import Note from '$lib/components/Note.svelte';
@@ -11,6 +12,7 @@
 	import Title from '$lib/components/Title.svelte';
 	import ResultsEspNow from './results-esp-now.svelte';
 	import arduino from 'svelte-highlight/languages/arduino';
+	import ResultsWifi from './results-wifi.svelte';
 </script>
 
 <Note>
@@ -117,12 +119,108 @@ void loop()
 	<P
 		>This is quite promising for deep sleep wakeup! If we can keep the Modem startup and
 		transmission time on a reasonable scale we'll have pretty good battery life.</P>
-	<Code value={`WiFi.mode(WIFI_STA);`} caption="Code 2: Start the modem in WiFi station mode" />
+	<Code value={`WiFi.mode(WIFI_STA);`} />
 	<P
 		>When we add the above snippet to the test script we measure a total cycle time of <b>312 ms</b
 		>. Starting the modem (at least I suspect this doesn't just set the mode considering the time
 		increase) makes the startup process quite a bit slower.</P>
 	<P>But enough groundwork, let's get to trialing the first protocol.</P>
+	<H2>WiFi</H2>
+	<P
+		>First let's test the obvious choice. We want to resume from deep sleep, start the modem,
+		connect to the Access Point, send a packet to my metric collection system which is hosted in the
+		cloud and then finally go back to sleep.</P>
+	<Code
+		caption="Code 2: Test script to measure time from deep sleep to successful data transmission with WiFi"
+		language={arduino}
+		value={`#include <WiFi.h>
+#include <HTTPClient.h>
+
+RTC_DATA_ATTR int counter = 0;
+
+const char *ssid = "SSID";
+const char *password = "PASSWORD";
+
+String endpoint = "ENDPOINT";
+
+void setup()
+{
+  Serial.begin(115200);
+  WiFi.begin(ssid, password);
+
+  Serial.println("Connecting");
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    delay(200);
+    Serial.print(".");
+  }
+
+  Serial.print("Connected!");
+  Serial.println(WiFi.localIP());
+}
+
+void loop()
+{
+  if (WiFi.status() == WL_CONNECTED)
+  {
+    HTTPClient http;
+
+    String body = "#TYPE some_metric gauge\\nsome_metric " + String(counter) + "\\n";
+
+    http.begin(endpoint.c_str());
+
+    int responseCode = http.POST(body);
+
+    if (responseCode > 0)
+    {
+      Serial.print("HTTP Response: ");
+      Serial.println(responseCode);
+    }
+    else
+    {
+      Serial.print("Error: ");
+      Serial.println(responseCode);
+    }
+
+    http.end();
+  }
+
+  counter += 1;
+
+  esp_sleep_enable_timer_wakeup(1);
+  Serial.println("Enter sleep");
+  esp_deep_sleep_start();
+}`} />
+	<P
+		>In the above snippet we send an incrementing counter to a <A
+			href="https://github.com/prometheus/pushgateway">Prometheus PushGateway</A
+		>, that's where this weird <C>#TYPE some_metric gauge</C> syntax comes from. By letting this run
+		for a couple of minutes and then checking what count has been reached in Prometheus, we get the following
+		timings for a single wake-up cycle:
+	</P>
+	<ResultsWifi />
+	<P
+		>Interestingly the XIAO is significantly faster in acquiring a connection to the access point
+		and sending the data. I'm not sure if this is due to the ESP32-C3 chip or the external antenna
+		that comes with this board. Either way, this distinctly shorter time to get data off device
+		should result in some juicy battery savings in the long run.</P>
+	<P
+		>I also ran these tests in my laundry room to check if these numbers are affected by physical
+		distance to the AP and walls in-between. It turns out the numbers look exactly the same.</P>
+	<H3>Static IP address (no DHCP)</H3>
+	<P
+		>I had read that we can cut the WiFi connection time short by providing a static IP, thus
+		skipping DHCP entirely. To do this one simply configures values in the WiFi setup like so:</P>
+	<Code
+		value={`IPAddress ip(192, 168, 178, 48);
+IPAddress gw(192, 168, 178, 1);
+IPAddress dns(192, 168, 178, 1);
+IPAddress sn(255, 255, 255, 0);
+WiFi.config(ip, gw, sn, dns);`} />
+	<P
+		>Interestingly this didn't do much at all, arguably just noise in the measurements. I'm not sure
+		if I did something wrong or if there are other factors, such as the WiFi router being used etc.
+	</P>
 	<H2>ESP-NOW</H2>
 	<Details
 		title="If you're like me you know nothing about ESP-NOW, so let's explore it a bit first">
