@@ -10,6 +10,7 @@
 	import P from '$lib/components/P.svelte';
 	import Title from '$lib/components/Title.svelte';
 	import ResultsEspNow from './results-esp-now.svelte';
+	import arduino from 'svelte-highlight/languages/arduino';
 </script>
 
 <Note>
@@ -92,6 +93,7 @@
 	</P>
 	<Code
 		caption="Code 1: Script to test deep sleep wakeup time"
+		language={arduino}
 		value={`#include "Arduino.h"
 
 RTC_DATA_ATTR int value = 0;
@@ -159,6 +161,7 @@ void loop()
 		enters deep sleep for a microsecond, wakes up and reruns the procedure.</P>
 	<Code
 		caption="Code 3: Test script to measure time from deep sleep to successful data transmission with ESP-NOW"
+		language={arduino}
 		value={`#include <esp_now.h>
 #include <WiFi.h>
 #include <esp_wifi.h>
