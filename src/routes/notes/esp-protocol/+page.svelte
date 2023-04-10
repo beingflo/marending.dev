@@ -260,6 +260,18 @@ void loop()
 }`} />
 	<P>The results are very promising:</P>
 	<ResultsEspNow />
+	<P
+		>Now we have some end-to-end timings to gauge how much time we should expect for a full cycle of
+		waking up, sending data and resuming sleep in this protocol. Remember that assumption above,
+		that the XIAO probably takes the same amount of time to wake from sleep? Clearly that didn't pan
+		out if we consider the numbers here.</P>
+	<P>Instead, the XIAO, or rather the ESP32-C3, is remarkably fast to wake from deep sleep.</P>
+	<P
+		>It will be interesting to consider in a next post which scenario is a particularly good fit for
+		each of these boards. The FireBeetle has particularly good deep sleep current, but is slower to
+		wake up and send data, whereas the XIAO has 4 times higher deep sleep current but is
+		significantly faster to wake up and send data. Naturally, the XIAO should do better the higher
+		the required frequency of measurments.</P>
 	<Details title="Beware some pitfalls of light and deep sleep">
 		<P>
 			The loop is useless for the deep sleep test as upon wake up, the device starts executing from
