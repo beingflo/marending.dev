@@ -156,9 +156,7 @@ void loop()
 		>Let's get to testing ESP-NOW. The following script starts up, sets everything up to be able to
 		transmit data via ESP-NOW and then attempts to resend data until the recipient (in this case the
 		device with the mac address described in the <C>receiver[]</C> array) acknowledges it. Then the device
-		enters deep sleep for a microsecond, wakes up and reruns the procedure. Notice that the loop is useless
-		for the dep sleep test as upon wake up, the device starts executing from the start, rerunning the
-		setup. I've only structured the code this way to enable testing light sleep with minimal modification.</P>
+		enters deep sleep for a microsecond, wakes up and reruns the procedure.</P>
 	<Code
 		caption="Code 3: Test script to measure time from deep sleep to successful data transmission with ESP-NOW"
 		value={`#include <esp_now.h>
@@ -260,6 +258,25 @@ void loop()
 	// or
 	// esp_light_sleep_start();
 }`} />
+	<P>The results are very promising:</P>
 	<ResultsEspNow />
+	<Details title="Beware some pitfalls of light and deep sleep">
+		<P>
+			The loop is useless for the deep sleep test as upon wake up, the device starts executing from
+			the start, rerunning the setup. This is unintuitive if one expects the code to resume from the
+			invocation of <C>esp_deep_sleep_start()</C>. However, it makes sense once we consider that in
+			this sleep mode just about everything is turned off to save power, including the memory that
+			stores program state. That's why you'll notice the counter to be stored in RTC memory (via <C
+				>RTC_DATA_ATTR</C
+			>), this makes sure it survives the deep sleep.
+		</P>
+		<P
+			>It took me some time to get this test to work with light sleep. The problem here is that
+			while the program state is persisted and the code resumes as you would expect, the modem is
+			powered down to save power. To be able to start it up properly, we <em>need</em> to call <C
+				>esp_wifi_stop()</C> prior to starting sleep, otherwise you will not be able to send ESP-NOW
+			messages.
+		</P>
+	</Details>
 	<Hint>Under construction ...</Hint>
 </Note>
