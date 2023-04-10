@@ -156,11 +156,14 @@ void loop()
 		>Let's get to testing ESP-NOW. The following script starts up, sets everything up to be able to
 		transmit data via ESP-NOW and then attempts to resend data until the recipient (in this case the
 		device with the mac address described in the <C>receiver[]</C> array) acknowledges it. Then the device
-		enters deep sleep for a microsecond, wakes up and reruns the procedure.</P>
+		enters deep sleep for a microsecond, wakes up and reruns the procedure. Notice that the loop is useless
+		for the dep sleep test as upon wake up, the device starts executing from the start, rerunning the
+		setup. I've only structured the code this way to enable testing light sleep with minimal modification.</P>
 	<Code
 		caption="Code 3: Test script to measure time from deep sleep to successful data transmission with ESP-NOW"
 		value={`#include <esp_now.h>
 #include <WiFi.h>
+#include <esp_wifi.h>
 
 uint8_t receiver[] = {0x24, 0x4C, 0xAB, 0x82, 0xF5, 0x0C};
 
@@ -171,82 +174,91 @@ int success = 0;
 
 struct msg_data
 {
-  int counter;
-  int num_tries;
+	int counter;
+	int num_tries;
 };
 
 void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status)
 {
-  Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Success" : "Fail");
+	Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Success" : "Fail");
 
-  if (status == ESP_NOW_SEND_SUCCESS)
-  {
-    success = 1;
-  }
+	if (status == ESP_NOW_SEND_SUCCESS)
+	{
+		success = 1;
+	}
 }
 
 void setup()
 {
-  Serial.begin(115200);
-  WiFi.mode(WIFI_STA);
+	Serial.begin(115200);
+	// For ESP32-C3
+	// Serial.setTxTimeoutMs(0);
+	WiFi.mode(WIFI_STA);
 
-  if (esp_now_init() != ESP_OK)
-  {
-    Serial.println("Error initializing ESP-NOW");
-    return;
-  }
+	if (esp_now_init() != ESP_OK)
+	{
+		Serial.println("Error initializing ESP-NOW");
+		return;
+	}
 
-  if (esp_now_register_send_cb(OnDataSent) != ESP_OK)
-  {
-    Serial.println("Error registering callback");
-    return;
-  }
+	if (esp_now_register_send_cb(OnDataSent) != ESP_OK)
+	{
+		Serial.println("Error registering callback");
+		return;
+	}
 
-  memcpy(peerInfo.peer_addr, receiver, 6);
-  peerInfo.channel = 0;
-  peerInfo.encrypt = false;
+	memcpy(peerInfo.peer_addr, receiver, 6);
+	peerInfo.channel = 0;
+	peerInfo.encrypt = false;
 
-  if (esp_now_add_peer(&peerInfo) != ESP_OK)
-  {
-    Serial.println("Error adding peer");
-    return;
-  }
-
-  int num_tries = 0;
-
-  // Resend until data was received by recipient
-  while (!success)
-  {
-    esp_err_t result = ESP_FAIL;
-
-    // Try sending until successfully sent
-    while (result != ESP_OK)
-    {
-      num_tries += 1;
-
-      struct msg_data data = {counter, num_tries};
-
-      result = esp_now_send(receiver, (uint8_t *)&data, sizeof(msg_data));
-
-      if (result != ESP_OK)
-      {
-        Serial.println("Error sending the data");
-      }
-    }
-
-    // Allow time for callback to signal success
-    delay(100);
-  }
-
-  counter += 1;
-
-  esp_sleep_enable_timer_wakeup(1);
-
-  esp_deep_sleep_start();
+	if (esp_now_add_peer(&peerInfo) != ESP_OK)
+	{
+		Serial.println("Error adding peer");
+		return;
+	}
 }
 
 void loop()
 {
+	esp_wifi_start();
+	WiFi.mode(WIFI_STA);
+
+	int num_tries = 0;
+
+	// Resend until data was received by recipient
+	while (!success)
+	{
+		esp_err_t result = ESP_FAIL;
+
+		// Try sending until successfully sent
+		while (result != ESP_OK)
+		{
+			num_tries += 1;
+
+			struct msg_data data = {counter, num_tries};
+
+			result = esp_now_send(receiver, (uint8_t *)&data, sizeof(msg_data));
+
+			if (result != ESP_OK)
+			{
+				Serial.println("Error sending the data");
+				break;
+			}
+		}
+
+		// Allow time for callback to signal success
+		delay(100);
+	}
+
+	success = 0;
+	counter += 1;
+
+	esp_wifi_stop();
+	esp_sleep_enable_timer_wakeup(1);
+
+	esp_deep_sleep_start();
+	// or
+	// esp_light_sleep_start();
 }`} />
 	<ResultsEspNow />
 	<Hint>Under construction ...</Hint>

@@ -12,8 +12,8 @@
 		</tr>
 		<tr>
 			<td align="left">Light sleep</td>
-			<td align="right">10 ms</td>
-			<td align="right">5 ms</td>
+			<td align="right">104 ms</td>
+			<td align="right">102 ms</td>
 		</tr>
 	</table>
 </div>
