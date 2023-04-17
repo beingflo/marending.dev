@@ -1,10 +1,10 @@
 <script>
 	import NoteSummary from '$lib/components/NoteSummary.svelte';
-	import Page from '$lib/components/Page.svelte';
+	import WidePage from '$lib/components/WidePage.svelte';
 </script>
 
-<Page>
-	<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 md:gap-12">
+<WidePage>
+	<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 md:gap-12 md:gap-y-16">
 		<NoteSummary
 			title="A comparison of wireless protocols for battery powered embedded devices"
 			summary="Trying to sleep as much as possible"
@@ -31,4 +31,4 @@
 			date="27 November 2022"
 			link="/notes/website" />
 	</div>
-</Page>
+</WidePage>
