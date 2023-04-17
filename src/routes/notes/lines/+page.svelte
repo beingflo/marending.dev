@@ -20,7 +20,6 @@
 
 <Note>
 	<Title subtitle="Some schmuck tries his hands at generative art">A study of lines</Title>
-	<Hint>Work in progress</Hint>
 	<P>
 		After moving into a bigger apartment, I've found the walls of our office to be a bit naked.
 		While I'm a hobby photographer and would like to get more into printing my work, for this space
@@ -156,4 +155,5 @@
 		artist driven <q>macro features</q>. Only the details are left to chance. They feel a lot more
 		deliberate than what I've been pumping out here. So let's give that a shot instead.
 	</P>
+	<Hint>Work in progress</Hint>
 </Note>
