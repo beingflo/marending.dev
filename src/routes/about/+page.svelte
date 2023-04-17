@@ -10,7 +10,7 @@
 			<p>My name is Florian Marending, I'm a software engineer.</p>
 			<p>
 				Currently, my interests include lean web development using Svelte and robust backends
-				written in Rust.
+				written in Rust. Very recently I started dabbling in embedded devices.
 			</p>
 			<p class="pt-8">
 				You can reach me at
