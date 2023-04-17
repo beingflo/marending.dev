@@ -226,13 +226,12 @@ WiFi.config(ip, gw, sn, dns);`} />
 		>Next, I was going to look at BLE. However, it quickly became apparent that this protocol is not
 		a good fit for my purposes due to multiple reasons.</P>
 	<P
-		>First, it's range is very limited. No chance to reach my laundry room if it can't even
-		penetrate one wall in my apartment. That's quite limiting and means for some applications I
-		would need to go for a different protocol. In that case I'd rather stick to one that fits all my
-		needs.</P>
+		>First, its range is very limited. No chance to reach my laundry room if it can't even penetrate
+		one wall in my apartment. That's quite limiting and means for some applications I would need to
+		reach for a different protocol. In that case I'd rather stick to one that fits all my needs.</P>
 	<P>
 		Next, it's clearly designed with sensors in mind that are running continuously and regularly
-		advertise a new reading. Say a smart watch. When instead the beacon is sleeping most of the
+		advertise a new reading, say a smart watch. When instead the beacon is sleeping most of the
 		time, and then spins up a BLE server just to send one value, one can feel the resistance of the
 		protocol. There is a lot more code required to make this happen than in the other protocols I
 		tested.
@@ -580,13 +579,9 @@ void loop()
 		waking up, sending data and resuming sleep in this protocol. Remember that assumption above,
 		that the XIAO probably takes the same amount of time to wake from sleep? Clearly that didn't pan
 		out if we consider the numbers here.</P>
-	<P>Instead, the XIAO, or rather the ESP32-C3, is remarkably fast to wake from deep sleep.</P>
 	<P
-		>It will be interesting to consider in a next post which scenario is a particularly good fit for
-		each of these boards. The FireBeetle has particularly good deep sleep current, but is slower to
-		wake up and send data, whereas the XIAO has 4 times higher deep sleep current but is
-		significantly faster to wake up and send data. Naturally, the XIAO should do better the higher
-		the required frequency of measurments.</P>
+		>Instead, the XIAO, or rather the ESP32-C3, is remarkably fast to wake from deep sleep and get
+		that data out the door.</P>
 	<Details title="Beware some pitfalls of light and deep sleep">
 		<P>
 			The loop is useless for the deep sleep test as upon wake up, the device starts executing from
@@ -605,5 +600,20 @@ void loop()
 			messages.
 		</P>
 	</Details>
-	<Hint>Under construction ...</Hint>
+	<H2>Conclusion</H2>
+	<P
+		>From the above tests it is clear that ESP-NOW is the winner. It's <em>by far</em> the fastest,
+		which should allow us to conserve battery power. Further, it has as good a range as we can
+		expect. While I initially thought of a gateway device that receives a measurement and sends it
+		on towards the internet as a negative, I've since come around: The gateway saves time as the
+		sensor device does not need to wait the round trip time to the cloud service, it can buffer
+		results in case my access point is down and I could even augment the gateway device with a
+		screen and show <em>the freshest</em> sensor values for my viewing pleasure.
+	</P>
+	<P
+		>It will be interesting to consider in a next post which scenario is a particularly good fit for
+		each of these boards. The FireBeetle has particularly good deep sleep current, but is slower to
+		wake up and send data, whereas the XIAO has 4 times higher deep sleep current but is
+		significantly faster to wake up and send data. Naturally, the XIAO should do better the higher
+		the required frequency of measurments.</P>
 </Note>
