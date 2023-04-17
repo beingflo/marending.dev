@@ -222,7 +222,31 @@ WiFi.config(ip, gw, sn, dns);`} />
 		if I did something wrong or if there are other factors, such as the WiFi router being used etc.
 	</P>
 	<H2>Bluetooth Low Energy</H2>
-	<P>Next, let's look at BLE.</P>
+	<P
+		>Next, I was going to look at BLE. However, it quickly became apparent that this protocol is not
+		a good fit for my purposes due to multiple reasons.</P>
+	<P
+		>First, it's range is very limited. No chance to reach my laundry room if it can't even
+		penetrate one wall in my apartment. That's quite limiting and means for some applications I
+		would need to go for a different protocol. In that case I'd rather stick to one that fits all my
+		needs.</P>
+	<P>
+		Next, it's clearly designed with sensors in mind that are running continuously and regularly
+		advertise a new reading. Say a smart watch. When instead the beacon is sleeping most of the
+		time, and then spins up a BLE server just to send one value, one can feel the resistance of the
+		protocol. There is a lot more code required to make this happen than in the other protocols I
+		tested.
+	</P>
+	<P
+		>Third, I found the reconnection logic to be fragile. Once the server boots and starts
+		advertising, the client (in my case that would be the gateway which will relay a message to the
+		internet) has to find it and connect to it, at which point the server can notify of a new value.
+		This did not work as robustly as I would like with the client sometimes just not finding the
+		server. This may well be my codes shortcoming of course, but I will count it against the
+		protocol nonetheless, since WiFi and ESP-NOW put up less resistance.</P>
+	<P
+		>So ultimately I did not proceed with timing the code, below you will find my server and client
+		scripts anyway if you need inspiration.</P>
 	<Details title="BLE server code">
 		<Code
 			respectMargin
