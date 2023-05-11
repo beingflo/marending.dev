@@ -32,6 +32,7 @@
 	<Chart
 		options={{
 			y: { label: '↑ co2 (ppm)', domain: [0, 1050] },
+			x: { type: 'time' },
 			marks: [
 				Plot.lineY(
 					dataOpenDoor?.map(({ date, value }) => ({
@@ -43,9 +44,6 @@
 				Plot.ruleY([1000], { stroke: 'orange', strokeDasharray: 2 }),
 			],
 		}} />
-	<Hint
-		>Note a 2 hour shift in the graphs due to timezone shenanigans that I can't figure out (and
-		don't want to fix by changing the data)</Hint>
 	<P
 		>As the night progresses we can observe a slight rise in CO2 concentration, but the large body
 		of air in the entire apartment makes sure that the air quality stays in a good range.</P>
@@ -55,6 +53,7 @@
 	<Chart
 		options={{
 			y: { label: '↑ co2 (ppm)' },
+			x: { type: 'time' },
 			marks: [
 				Plot.lineY(
 					dataClosedDoor?.map(({ date, value }) => ({
