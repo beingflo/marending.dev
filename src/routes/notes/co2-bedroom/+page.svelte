@@ -29,43 +29,51 @@
 	<P
 		>The question arises immediately what happens to the CO2 level in each scenario. First, I placed
 		the sensor in the bedroom and left the door open:</P>
-	<Chart
-		options={{
-			y: { label: '↑ co2 (ppm)', domain: [0, 1050] },
-			x: { type: 'time' },
-			marks: [
-				Plot.lineY(
-					dataOpenDoor?.map(({ date, value }) => ({
-						date: new Date(date),
-						value,
-					})),
-					{ x: 'date', y: 'value' }
-				),
-				Plot.ruleY([1000], { stroke: 'orange', strokeDasharray: 2 }),
-			],
-		}} />
+	<div class="my-4">
+		<Chart
+			options={{
+				y: { label: '↑ co2 (ppm)', domain: [0, 1050] },
+				x: { type: 'time' },
+				style: { fontSize: '12px' },
+				marginLeft: 60,
+				marks: [
+					Plot.lineY(
+						dataOpenDoor?.map(({ date, value }) => ({
+							date: new Date(date),
+							value,
+						})),
+						{ x: 'date', y: 'value' }
+					),
+					Plot.ruleY([1000], { stroke: 'orange', strokeDasharray: 2 }),
+				],
+			}} />
+	</div>
 	<P
 		>As the night progresses we can observe a slight rise in CO2 concentration, but the large body
 		of air in the entire apartment makes sure that the air quality stays in a good range.</P>
 	<P
 		>Next, I repeated the experiment with the bedroom door closed. Two people, one CO2 sensor, very
 		romantic:</P>
-	<Chart
-		options={{
-			y: { label: '↑ co2 (ppm)' },
-			x: { type: 'time' },
-			marks: [
-				Plot.lineY(
-					dataClosedDoor?.map(({ date, value }) => ({
-						date: new Date(date),
-						value,
-					})),
-					{ x: 'date', y: 'value' }
-				),
-				Plot.ruleY([1000], { stroke: 'orange', strokeDasharray: 2 }),
-				Plot.ruleY([2000], { stroke: 'red', strokeDasharray: 2 }),
-			],
-		}} />
+	<div class="my-4">
+		<Chart
+			options={{
+				y: { label: '↑ co2 (ppm)' },
+				x: { type: 'time' },
+				marginLeft: 60,
+				style: { fontSize: '12px' },
+				marks: [
+					Plot.lineY(
+						dataClosedDoor?.map(({ date, value }) => ({
+							date: new Date(date),
+							value,
+						})),
+						{ x: 'date', y: 'value' }
+					),
+					Plot.ruleY([1000], { stroke: 'orange', strokeDasharray: 2 }),
+					Plot.ruleY([2000], { stroke: 'red', strokeDasharray: 2 }),
+				],
+			}} />
+	</div>
 	<P
 		>I was shocked to see just how high the CO2 concentration goes in a relatively short period of
 		time. Interesting is also the sharp decline once we got up and opened the door.
