@@ -24,6 +24,7 @@ export type MatchRaw = {
 };
 
 export type Match = {
+	gameId: string;
 	players: Array<string>;
 	teamA: Array<string>;
 	teamB: Array<string>;
@@ -40,7 +41,10 @@ export type Goals = {
 };
 
 export const getData = (): Array<Match> => {
-	return (data as [])?.map((d: MatchRaw) => ({
+	const filtered = (data as Array<MatchRaw>)?.filter((d) => d.scorers?.length !== 0);
+
+	const mappedMatches = filtered?.map((d: MatchRaw) => ({
+		gameId: d.gameId,
 		startDate: new Date(d.startDate?.slice(0, -4)),
 		endDate: new Date(d.endDate?.slice(0, -4)),
 		players: d.players,
@@ -48,6 +52,15 @@ export const getData = (): Array<Match> => {
 		teamB: d.teamB,
 		teamAScore: d.teamAScore,
 		teamBScore: d.teamBScore,
-		goals: d.goals,
+		goals: {
+			scorer: d.goals?.scorer ?? d.scorers,
+			time: d.goals?.time || [],
+		},
 	}));
+
+	mappedMatches.sort((a, b) => {
+		return new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
+	});
+
+	return mappedMatches;
 };

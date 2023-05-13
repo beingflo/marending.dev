@@ -21,9 +21,9 @@
 		return prev;
 	}, {});
 
-	const matchFrequency = Object.entries(matchesByDay)?.map(([date, value]) => ({
+	const matchFrequency = Object.entries(matchesByDay)?.map(([date, matches]) => ({
 		date: new Date(date),
-		value,
+		matches,
 	}));
 
 	const getWeek = (date: Date): number => {
@@ -34,7 +34,7 @@
 	};
 </script>
 
-<Figure caption="Figure 1. Match frequency per day">
+<Figure caption="Figure 1. Number of matches played per day">
 	<Chart
 		options={{
 			x: { axis: null },
@@ -49,7 +49,7 @@
 				Plot.cell(matchFrequency, {
 					x: (d) => getWeek(d.date),
 					y: (d) => d.date.getDay(),
-					fill: 'value',
+					fill: 'matches',
 					fy: (d) => d.date.getFullYear(),
 				}),
 			],
