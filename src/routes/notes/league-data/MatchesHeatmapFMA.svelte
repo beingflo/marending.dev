@@ -6,20 +6,22 @@
 
 	export let matches: Array<Match>;
 
-	const matchesByDay = matches.reduce((prev: Record<string, number>, d) => {
-		const day = d.startDate.toLocaleString('en-US', {
-			day: 'numeric',
-			month: 'numeric',
-			year: 'numeric',
-		});
+	const matchesByDay = matches
+		?.filter((m) => m.players.includes('fma'))
+		.reduce((prev: Record<string, number>, d) => {
+			const day = d.startDate.toLocaleString('en-US', {
+				day: 'numeric',
+				month: 'numeric',
+				year: 'numeric',
+			});
 
-		if (prev[day]) {
-			prev[day] += 1;
-		} else {
-			prev[day] = 1;
-		}
-		return prev;
-	}, {});
+			if (prev[day]) {
+				prev[day] += 1;
+			} else {
+				prev[day] = 1;
+			}
+			return prev;
+		}, {});
 
 	const matchFrequency = Object.entries(matchesByDay)?.map(([date, matches]) => ({
 		date: new Date(date),
@@ -34,7 +36,7 @@
 	};
 </script>
 
-<Figure caption="Figure 1. Number of matches played per day">
+<Figure caption="Figure 2. Number of matches played per day by me">
 	<Chart
 		options={{
 			x: { axis: null, domain: [...Array(52).keys()].map((x) => x + 1) },

@@ -3,12 +3,15 @@
 	import Title from '$lib/components/Title.svelte';
 	import { getData } from './utils';
 	import MatchesHeatmap from './MatchesHeatmap.svelte';
+	import MatchesHeatmapFma from './MatchesHeatmapFMA.svelte';
+	import MatchesPerPlayer from './MatchesPerPlayer.svelte';
 
 	const matches = getData();
 </script>
 
 <Note>
-	<Title subtitle="Don't tell managment what we're up to"
-		>9 years worth of foosball data analyzed</Title>
+	<Title subtitle="Nobody tell management">9 years worth of company foosball data analyzed</Title>
 	<MatchesHeatmap {matches} />
+	<MatchesHeatmapFma {matches} />
+	<MatchesPerPlayer {matches} />
 </Note>

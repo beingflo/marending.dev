@@ -41,7 +41,9 @@ export type Goals = {
 };
 
 export const getData = (): Array<Match> => {
-	const filtered = (data as Array<MatchRaw>)?.filter((d) => d.scorers?.length !== 0);
+	const filtered = (data as Array<MatchRaw>)
+		?.filter((d) => d.scorers?.length !== 0)
+		?.filter((d) => Number(d.teamAScore) + Number(d.teamBScore) === d?.scorers?.length);
 
 	const mappedMatches = filtered?.map((d: MatchRaw) => ({
 		gameId: d.gameId,
