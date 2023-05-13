@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Note from '$lib/components/Note.svelte';
 	import Chart from '$lib/components/Chart.svelte';
 	import * as Plot from '@observablehq/plot';
 	import type { Match } from './utils';
+	import Figure from '$lib/components/lines/Figure.svelte';
 
 	export let matches: Array<Match>;
 
@@ -34,25 +34,24 @@
 	};
 </script>
 
-<Note>
-	<div class="my-4">
-		<Chart
-			options={{
-				x: { axis: null },
-				y: {
-					tickFormat: Plot.formatWeekday('en', 'narrow'),
-					tickSize: 0,
-				},
-				fy: { tickFormat: '' },
-				color: { scheme: 'Greens', type: 'log', legend: 'ramp' },
-				marks: [
-					Plot.cell(matchFrequency, {
-						x: (d) => getWeek(d.date),
-						y: (d) => d.date.getDay(),
-						fill: 'value',
-						fy: (d) => d.date.getFullYear(),
-					}),
-				],
-			}} />
-	</div>
-</Note>
+<Figure caption="Figure 1. Match frequency per day">
+	<Chart
+		options={{
+			x: { axis: null },
+			y: {
+				tickFormat: Plot.formatWeekday('en', 'narrow'),
+				tickSize: 0,
+			},
+			fy: { tickFormat: '' },
+			color: { scheme: 'Greens', type: 'log', legend: 'ramp' },
+			aspectRatio: 0.8,
+			marks: [
+				Plot.cell(matchFrequency, {
+					x: (d) => getWeek(d.date),
+					y: (d) => d.date.getDay(),
+					fill: 'value',
+					fy: (d) => d.date.getFullYear(),
+				}),
+			],
+		}} />
+</Figure>
