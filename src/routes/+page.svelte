@@ -6,6 +6,11 @@
 <WidePage>
 	<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 md:gap-12 md:gap-y-16">
 		<NoteSummary
+			title="9 years worth of foosball data analyzed"
+			summary="Don't tell managment what we're up to"
+			date="20 May 2023"
+			link="/notes/league-data" />
+		<NoteSummary
 			title="The air quality impact of closing your bedroom door at night"
 			summary="Trying not to suffocate while sleeping"
 			date="10 May 2023"
