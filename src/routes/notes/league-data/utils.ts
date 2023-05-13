@@ -64,3 +64,11 @@ export const getData = (): Array<Match> => {
 
 	return mappedMatches;
 };
+
+export const getPlayers = (matches: Array<Match>): Array<string> => {
+	let players: string[] = [];
+	matches.forEach((m) => {
+		players = [...new Set([...m.teamA, ...m.teamB, ...players])];
+	});
+	return players;
+};
