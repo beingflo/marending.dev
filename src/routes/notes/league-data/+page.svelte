@@ -5,6 +5,7 @@
 	import MatchesHeatmap from './MatchesHeatmap.svelte';
 	import MatchesHeatmapFma from './MatchesHeatmapFMA.svelte';
 	import MatchesPerPlayer from './MatchesPerPlayer.svelte';
+	import MatchesBar from './MatchesBar.svelte';
 
 	const matches = getData();
 </script>
@@ -12,6 +13,7 @@
 <Note>
 	<Title subtitle="Nobody tell management">9 years worth of company foosball data analyzed</Title>
 	<MatchesHeatmap {matches} />
+	<MatchesBar {matches} />
 	<MatchesHeatmapFma {matches} />
 	<MatchesPerPlayer {matches} />
 </Note>

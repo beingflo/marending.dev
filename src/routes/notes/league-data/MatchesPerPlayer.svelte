@@ -22,7 +22,7 @@
 	data.sort((a, b) => b.matches - a.matches);
 </script>
 
-<Figure caption="Figure 3. Number of matches by player. Limited to the 100 top players">
+<Figure caption="Figure 3. Number of matches played by player. Limited to the top 100 players">
 	<Chart
 		options={{
 			x: { tickSize: 0, tickFormat: (d) => '', label: 'Players' },
