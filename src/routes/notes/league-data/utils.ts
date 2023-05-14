@@ -30,8 +30,8 @@ export type Match = {
 	teamB: Array<string>;
 	startDate: Date;
 	endDate: Date;
-	teamAScore: string;
-	teamBScore: string;
+	teamAScore: number;
+	teamBScore: number;
 	goals?: Goals;
 };
 
@@ -52,8 +52,8 @@ export const getData = (): Array<Match> => {
 		players: d.players,
 		teamA: d.teamA,
 		teamB: d.teamB,
-		teamAScore: d.teamAScore,
-		teamBScore: d.teamBScore,
+		teamAScore: Number(d.teamAScore),
+		teamBScore: Number(d.teamBScore),
 		goals: {
 			scorer: d.goals?.scorer ?? d.scorers,
 			time: d.goals?.time || [],

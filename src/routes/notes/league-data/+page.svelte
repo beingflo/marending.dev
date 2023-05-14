@@ -9,12 +9,14 @@
 	import GoalsViaMatches from './GoalsViaMatches.svelte';
 	import MatchesTimeOfDay from './MatchesTimeOfDay.svelte';
 	import MatchesDayOfWeek from './MatchesDayOfWeek.svelte';
+	import MatchesViaGoalsPerMatch from './MatchesViaGoalsPerMatch.svelte';
 
 	const matches = getData();
 </script>
 
 <Note>
 	<Title subtitle="Nobody tell management">9 years worth of company foosball data analyzed</Title>
+	<MatchesViaGoalsPerMatch {matches} />
 	<MatchesDayOfWeek {matches} />
 	<MatchesTimeOfDay {matches} />
 	<MatchesHeatmap {matches} />
