@@ -35,7 +35,7 @@
 	}));
 </script>
 
-<Figure caption="Figure 3. Number of goals scored by player. Limited to the top 100 players">
+<Figure caption="Figure 3. Goals versus matches for players who scored at least 100 goals">
 	<Chart
 		options={{
 			x: { grid: true },
@@ -48,7 +48,7 @@
 				),
 				Plot.linearRegressionY(
 					data.filter((d) => d.goals > 100),
-					{ x: 'matches', y: 'goals', stroke: 'steelblue' }
+					{ x: 'matches', y: 'goals', stroke: 'red' }
 				),
 				Plot.text(
 					data.filter((d) => d.goals > 100),
