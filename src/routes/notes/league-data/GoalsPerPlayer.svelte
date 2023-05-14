@@ -20,7 +20,6 @@
 
 	const data = Object.entries(goalsPerPlayer).map(([p, n]) => ({ player: p, goals: n }));
 	data.sort((a, b) => b.goals - a.goals);
-	console.log(data);
 </script>
 
 <Figure caption="Figure 3. Number of goals scored by player. Limited to the top 100 players">

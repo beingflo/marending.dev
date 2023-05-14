@@ -7,6 +7,7 @@
 	import MatchesPerPlayer from './MatchesPerPlayer.svelte';
 	import MatchesBar from './MatchesBar.svelte';
 	import GoalsPerPlayer from './GoalsPerPlayer.svelte';
+	import GoalsViaMatches from './GoalsViaMatches.svelte';
 
 	const matches = getData();
 </script>
@@ -18,4 +19,5 @@
 	<MatchesHeatmapFma {matches} />
 	<MatchesPerPlayer {matches} />
 	<GoalsPerPlayer {matches} />
+	<GoalsViaMatches {matches} />
 </Note>
