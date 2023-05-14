@@ -44,7 +44,7 @@
 			marks: [
 				Plot.dot(
 					data.filter((d) => d.goals > 100),
-					{ x: 'matches', y: 'goals', stroke: (d) => (d.player === 'fma' ? 'orange' : 'black') }
+					{ x: 'matches', y: 'goals', stroke: (d) => (d.player === 'fma' ? 'red' : 'black') }
 				),
 				Plot.linearRegressionY(
 					data.filter((d) => d.goals > 100),

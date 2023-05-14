@@ -31,6 +31,7 @@
 				Plot.barY(data.slice(0, 100), {
 					x: 'player',
 					y: 'matches',
+					fill: (d) => (d.player === 'fma' ? 'red' : 'black'),
 					sort: { x: 'y', reverse: true },
 				}),
 				Plot.text(data.slice(0, 100), {
