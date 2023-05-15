@@ -5,20 +5,7 @@
 	import Figure from '$lib/components/lines/Figure.svelte';
 
 	export let matches: Array<Match>;
-	console.log(
-		matches.reduce(
-			(ag, m) => {
-				const minutes = (m.endDate.getTime() - m.startDate.getTime()) / 60000;
-				let newAg = ag;
-				if (minutes <= 20) {
-					newAg[0] += minutes;
-					newAg[1] += 1;
-				}
-				return newAg;
-			},
-			[0, 0]
-		)
-	);
+
 	const filteredMatches = matches.filter(
 		(m) => (m.endDate.getTime() - m.startDate.getTime()) / 60000 < 20
 	);
