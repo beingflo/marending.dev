@@ -26,7 +26,9 @@ export type MatchRaw = {
 export type Match = {
 	gameId: string;
 	players: Array<string>;
+	// First entry in array is offensive player
 	teamA: Array<string>;
+	// First entry in array is offensive player
 	teamB: Array<string>;
 	startDate: Date;
 	endDate: Date;
