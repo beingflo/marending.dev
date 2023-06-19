@@ -3,8 +3,6 @@
 	import * as Plot from '@observablehq/plot';
 	import type { Match } from './utils';
 	import Figure from '$lib/components/lines/Figure.svelte';
-	import A from '$lib/components/A.svelte';
-	import { d } from 'svelte-highlight/languages';
 
 	export let matches: Array<Match>;
 
@@ -32,24 +30,22 @@
 		defensive: defensive / matches,
 	}));
 
-	data = data.filter((d) => d.matches > 10);
+	data = data.filter((d) => d.matches > 100);
 </script>
 
 <Figure
-	caption="Figure 7. Proportion of goals scored from offensive (circle) vs defensive (dot) position for all players who played at least 10 matches.">
+	caption="Figure 7. Proportion of goals scored from offensive position for all players who played at least 100 matches.">
 	<Chart
 		options={{
-			y: { tickFormat: (d) => '' },
-			x: { grid: true, label: 'goal rate  →' },
+			x: { tickFormat: (d) => '' },
+			y: { label: '↑ offensive rate' },
 			marks: [
-				Plot.link(data, {
-					x1: 'defensive',
-					x2: 'offensive',
-					markerStart: 'circle-stroke',
-					markerEnd: 'dot',
-					y: 'player',
-					sort: { y: 'x1' },
+				Plot.barY(data, {
+					x: 'player',
+					y: 'offensive',
+					sort: { x: 'y', reverse: true },
 				}),
+				Plot.ruleY([0.5], { stroke: 'red' }),
 			],
 		}} />
 </Figure>
