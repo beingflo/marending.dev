@@ -6,7 +6,9 @@
 
 <div class="mb-6">
 	<div class="shadow border border-black {respectMargin || 'lg:-mx-4'}">
-		{value}
+		<div class="whitespace-pre">
+			{value}
+		</div>
 	</div>
 	{#if caption}
 		<div class="pt-4 text-center text-gray-800 dark:text-gray-100 text-sm italic font-serif">

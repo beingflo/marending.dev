@@ -1,52 +1,52 @@
 ---
-import Feedback from "../components/Feedback.svelte";
+import Feedback from '../components/Feedback.svelte';
 const pathname = new URL(Astro.request.url).pathname;
 ---
 
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type ="image/svg+xml" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content = {Astro.generator} >
-    <title>marending.dev</title>
-  </head>
-  <body>
-    <header class="flex flex-row justify-between h-fit mx-auto mt-4">
-      <a href="/" class="flex flex-row gap-3 ml-4 h-fit">
-        <div class="flex flex-col w-fit">
-          <span>florian</span>
-          <span class="-mt-3">marending</span>
-        </div>
-      </a>
-      <nav class="flex flex-row gap-3 sm:gap-6 pr-6 h-fit decoration-1">
-        <a
-          class={`text-sm md:text-md ${(pathname.startsWith('/notes') || pathname === '/') && 'underline'}`}
-          href="/">notes</a
-        >
-        <a
-          class={`text-sm md:text-md ${pathname.startsWith('/projects') && 'underline'}`}
-          href="/projects"
-        >
-          projects</a
-        >
-        <a
-          class={`text-sm md:text-md ${pathname.startsWith('/about') && 'underline'}`}
-          href="/about"
-        >
-          about</a
-        >
-      </nav>
-    </header>
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>marending.dev</title>
+	</head>
+	<body>
+		<header class="flex flex-row justify-between h-fit mx-auto mt-4">
+			<a href="/" class="flex flex-row gap-3 ml-4 h-fit">
+				<div class="flex flex-col w-fit">
+					<span>florian</span>
+					<span class="-mt-3">marending</span>
+				</div>
+			</a>
+			<nav class="flex flex-row gap-3 sm:gap-6 pr-6 h-fit decoration-1">
+				<a
+					class={`text-sm md:text-md ${
+						(pathname.startsWith('/notes') || pathname === '/') && 'underline'
+					}`}
+					href="/">notes</a
+				>
+				<a
+					class={`text-sm md:text-md ${pathname.startsWith('/projects') && 'underline'}`}
+					href="/projects"
+				>
+					projects</a
+				>
+				<a
+					class={`text-sm md:text-md ${pathname.startsWith('/about') && 'underline'}`}
+					href="/about"
+				>
+					about</a
+				>
+			</nav>
+		</header>
 
-    <main>
-      <slot />
-    </main>
+		<main>
+			<slot />
+		</main>
 
-    <footer>
-      <button class="fixed p-2 bottom-0 right-2 text-xs font-light text-gray-600"
-        >feedback</button
-      >
-    </footer>
-  </body>
+		<footer>
+			<button class="fixed p-2 bottom-0 right-2 text-xs font-light text-gray-600">feedback</button>
+		</footer>
+	</body>
 </html>
