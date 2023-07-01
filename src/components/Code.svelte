@@ -6,7 +6,7 @@
 
 <div class="mb-6">
 	<div class="shadow border border-black {respectMargin || 'lg:-mx-4'}">
-		<div class="whitespace-pre-wrap p-2 font-mono">
+		<div class="whitespace-pre p-2 font-mono overflow-x-scroll">
 			{value}
 		</div>
 	</div>
