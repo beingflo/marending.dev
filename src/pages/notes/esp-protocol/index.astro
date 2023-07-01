@@ -1,0 +1,695 @@
+---
+import { H2 } from "../../../components/H2";
+import { H3 } from "../../../components/H3";
+import Info from "../../../components/Info.svelte";
+import { A } from "../../../components/A";
+import { C } from "../../../components/C";
+import Code from "../../../components/Code.svelte";
+import Note from "../../../components/Note.svelte";
+import P from "../../../components/P.svelte";
+import Title from "../../../components/Title.svelte";
+import Layout from "../../../layouts/layout.astro";
+import { Details } from "../../../components/Details";
+import ResultsEspNow from "./results-esp-now.svelte";
+import ResultsWifi from "./results-wifi.svelte";
+---
+
+<Layout>
+  <Note>
+    <Title subtitle="Trying to sleep as much as possible">
+      A comparison of wireless protocols for battery powered embedded devices
+    </Title>
+    <P>
+      <A href="/notes/esp-power">We've established</A> that deep sleep on ESP32 boards
+      gives us a runtime of ~4 up to ~15 years on a modest battery charge. This is
+      plenty for my applications. So now we need to turn our attention towards the
+      awake time of our sensor devices. This will mostly consist of collecting a
+      measurment, sending it off to some system collecting the metrics and then going
+      back to sleep.
+    </P>
+    <P>
+      To wirelessly transmit sensor readings to either a WiFi router or some
+      custom base-station device, I can think of the following protocols: WiFi,
+      Bluetooth low energy (BLE) and ESP-NOW.
+    </P>
+    <P>
+      WiFi is great because it allows the devices to connect directly to my WiFi
+      router, no middle-man required. On a 2.4 GHz network it also has
+      considerable range and can get signal through multiple walls. BLE on the
+      other hand could get away with much less power consumption (although from
+      what I read this is not particularly impressive on ESP32, and I'm too lazy
+      to test it myself), at the expense of shorter range and less wall
+      penetration.
+    </P>
+    <P>
+      The dark horse in the lineup is ESP-NOW. It's a proprietary protocol by
+      espressif with some desirable properties for my use-cases: It's
+      connectionless, which hopefully will shorten the time until a packet is
+      sent, it allows broadcasting messages and it runs on the normal WiFi band
+      meaning we inherit the range capabilities.
+    </P>
+    <P>
+      Both BLE and ESP-NOW would require a gateway device that receives messages
+      and sends them off via WiFi to my monitoring setup in the cloud.
+    </P>
+    <H2>Boards under test</H2>
+    <P>
+      We measured power draw of four different development boards. Now that we
+      know their characteristics (and I'm lazy), we will proceed to only
+      consider two boards from here on out: The <A
+        href="https://www.dfrobot.com/product-1590.html"
+      >
+        DFRobot FireBeetle ESP32
+      </A> and the
+      <A href="https://www.seeedstudio.com/Seeed-XIAO-ESP32C3-p-5431.html">
+        Seeed Studio XIAO ESP32C3
+      </A>. They represent a nice selection of the boards I own. The FireBeetle
+      is the fully featured ESP32 board, with an ARM based chip with two cores,
+      plenty of GPIO pins and a built-in battery connector. The XIAO on the
+      other hand is tiny, more affordable and ships with an external antenna
+      presumably due to a lack of space for a PCB antenna. It features the
+      ESP32C3, a RISV-V based single core CPU.
+    </P>
+    <H2>Awake time is essential</H2>
+    <P>
+      For the sake of a rough estimation, we will assume that while awake the
+      device consumes the amout of power we measured during WiFi setup. There is
+      some overlap between the different boards at around <b>60 mA</b>, so let's
+      go with that.
+    </P>
+    <Info>
+      Of course there is going to be a difference in power draw between WiFi and
+      BLE, they are fundamentally different in hardware. But as a simplification
+      I will just gloss over this.
+    </Info>
+    <P>
+      Comparing this number to a deep sleep current of 10 - 40 uA it's easy to
+      see that it's essential for battery life to spend as little time as
+      possible awake. An additional second of active processing can shorten the
+      possible sleep time by almost 2 hours!
+    </P>
+    <P>
+      For this reason we are going to measure how quickly a device can wake up
+      from light or deep sleep, establish a connection (if necessary), send a
+      small message with sensor readings and go back to sleep. Since the boot
+      process of the chip is hard to time exactly, I figure the most effective
+      way to measure the full cycle is to sleep only very briefly in-between
+      cycles and check how many messages are received over time. If e.g. 2
+      messages reach the monitoring setup per second, then one full cycle takes
+      500 miliseconds. Or if only 1 message every 7 seconds arrives, clearly the
+      cycles takes 7 second.
+    </P>
+    <H2>Boot time</H2>
+    <P>
+      First it would be interesting to time the boot time of a board in
+      isolation. That way we will have a reference to know how much time we
+      actually spend in a transmission and how much is just waking up.
+    </P>
+    <P>
+      To measure this I simply log some serial output, go to deep sleep and
+      immediately wake up again and repeat. This shows around 7.5 wakeups per
+      second on the Firebeetle ESP32 board, that gives a boot time of <b
+        >133 ms</b
+      >. For wakeup after light sleep I'm getting around <b>1.4 ms</b>. I
+      couldn't test this on a Seeed XIAO because the serial monitor doesn't
+      automatically reconnect, which makes it hard to observe the output. I'm
+      sure this could be fixed if one wasn't a complete novice. I would assume
+      it's not much different considering it has a chip in the same family. Once
+      we get to the protocols we'll see if this assumption makes sense.
+    </P>
+    <Code
+      caption="Code 1: Script to test deep sleep wakeup time"
+      value={`#include "Arduino.h"
+
+RTC_DATA_ATTR int value = 0;
+
+void setup()
+{
+	Serial.begin(115200);
+
+	Serial.println(value);
+	value += 1;
+
+	esp_sleep_enable_timer_wakeup(1);
+
+	esp_deep_sleep_start();
+}
+
+void loop()
+{
+	// This is not going to be called
+}`}
+    />
+    <P>
+      This is quite promising for deep sleep wakeup! If we can keep the Modem
+      startup and transmission time on a reasonable scale we'll have pretty good
+      battery life.
+    </P>
+    <Code value={`WiFi.mode(WIFI_STA);`} />
+    <P>
+      When we add the above snippet to the test script we measure a total cycle
+      time of <b>312 ms</b>. Starting the modem (at least I suspect this doesn't
+      just set the mode considering the time increase) makes the startup process
+      quite a bit slower.
+    </P>
+    <P>But enough groundwork, let's get to trialing the first protocol.</P>
+    <H2>WiFi</H2>
+    <P>
+      First let's test the obvious choice. We want to resume from deep sleep,
+      start the modem, connect to the Access Point, send a packet to my metric
+      collection system which is hosted in the cloud and then finally go back to
+      sleep.
+    </P>
+    <Code
+      caption="Code 2: Test script to measure time from deep sleep to successful data transmission with WiFi"
+      value={`#include <WiFi.h>
+#include <HTTPClient.h>
+
+RTC_DATA_ATTR int counter = 0;
+
+const char *ssid = "SSID";
+const char *password = "PASSWORD";
+
+String endpoint = "ENDPOINT";
+
+void setup()
+{
+  Serial.begin(115200);
+  WiFi.begin(ssid, password);
+
+  Serial.println("Connecting");
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    delay(200);
+    Serial.print(".");
+  }
+
+  Serial.print("Connected!");
+  Serial.println(WiFi.localIP());
+}
+
+void loop()
+{
+  if (WiFi.status() == WL_CONNECTED)
+  {
+    HTTPClient http;
+
+    String body = "#TYPE some_metric gauge\\nsome_metric " + String(counter) + "\\n";
+
+    http.begin(endpoint.c_str());
+
+    int responseCode = http.POST(body);
+
+    if (responseCode > 0)
+    {
+      Serial.print("HTTP Response: ");
+      Serial.println(responseCode);
+    }
+    else
+    {
+      Serial.print("Error: ");
+      Serial.println(responseCode);
+    }
+
+    http.end();
+  }
+
+  counter += 1;
+
+  esp_sleep_enable_timer_wakeup(1);
+  Serial.println("Enter sleep");
+  esp_deep_sleep_start();
+}`}
+    />
+    <P>
+      In the above snippet we send an incrementing counter to a <A
+        href="https://github.com/prometheus/pushgateway"
+      >
+        Prometheus PushGateway
+      </A>, that's where this weird <C>#TYPE some_metric gauge</C> syntax comes from.
+      By letting this run for a couple of minutes and then checking what count has
+      been reached in Prometheus, we get the following timings for a single wake-up
+      cycle:
+    </P>
+    <ResultsWifi />
+    <P>
+      Interestingly the XIAO is significantly faster in acquiring a connection
+      to the access point and sending the data. I'm not sure if this is due to
+      the ESP32-C3 chip or the external antenna that comes with this board.
+      Either way, this distinctly shorter time to get data off device should
+      result in some juicy battery savings in the long run.
+    </P>
+    <P>
+      I also ran these tests in my laundry room to check if these numbers are
+      affected by physical distance to the AP and walls in-between. It turns out
+      the numbers look exactly the same.
+    </P>
+    <H3>Static IP address (no DHCP)</H3>
+    <P>
+      I had read that we can cut the WiFi connection time short by providing a
+      static IP, thus skipping DHCP entirely. To do this one simply configures
+      values in the WiFi setup like so:
+    </P>
+    <Code
+      value={`IPAddress ip(192, 168, 178, 48);
+IPAddress gw(192, 168, 178, 1);
+IPAddress dns(192, 168, 178, 1);
+IPAddress sn(255, 255, 255, 0);
+WiFi.config(ip, gw, sn, dns);`}
+    />
+    <P>
+      Interestingly this didn't do much at all, arguably just noise in the
+      measurements. I'm not sure if I did something wrong or if there are other
+      factors, such as the WiFi router being used etc.
+    </P>
+    <H2>Bluetooth Low Energy</H2>
+    <P>
+      Next, I was going to look at BLE. However, it quickly became apparent that
+      this protocol is not a good fit for my purposes due to multiple reasons.
+    </P>
+    <P>
+      First, its range is very limited. No chance to reach my laundry room if it
+      can't even penetrate one wall in my apartment. That's quite limiting and
+      means for some applications I would need to reach for a different
+      protocol. In that case I'd rather stick to one that fits all my needs.
+    </P>
+    <P>
+      Next, it's clearly designed with sensors in mind that are running
+      continuously and regularly advertise a new reading, say a smart watch.
+      When instead the beacon is sleeping most of the time, and then spins up a
+      BLE server just to send one value, one can feel the resistance of the
+      protocol. There is a lot more code required to make this happen than in
+      the other protocols I tested.
+    </P>
+    <P>
+      Third, I found the reconnection logic to be fragile. Once the server boots
+      and starts advertising, the client (in my case that would be the gateway
+      which will relay a message to the internet) has to find it and connect to
+      it, at which point the server can notify of a new value. This did not work
+      as robustly as I would like with the client sometimes just not finding the
+      server. This may well be my codes shortcoming of course, but I will count
+      it against the protocol nonetheless, since WiFi and ESP-NOW put up less
+      resistance.
+    </P>
+    <P>
+      So ultimately I did not proceed with timing the code, below you will find
+      my server and client scripts anyway if you need inspiration.
+    </P>
+    <Details title="BLE server code">
+      <Code
+        respectMargin
+        value={`#include <BLEDevice.h>
+#include <BLEUtils.h>
+#include <BLEServer.h>
+#include <BLE2902.h>
+
+#define SERVICE_UUID "3fff1c98-3055-45b2-838e-b384b6fc1125"
+#define CHARACTERISTIC_UUID "a36e7c55-6bd4-4c3c-a003-8fe819de260a"
+
+#define bleServerName "ESP32-TEST-BLE"
+
+bool deviceConnected = false;
+
+unsigned long lastTime = 0;
+
+int counter = 0;
+
+BLECharacteristic characteristic(CHARACTERISTIC_UUID, BLECharacteristic::PROPERTY_NOTIFY);
+BLEDescriptor descriptor(BLEUUID((uint16_t)0x2902));
+
+// Setup callbacks onConnect and onDisconnect
+class MyServerCallbacks : public BLEServerCallbacks
+{
+	void onConnect(BLEServer *pServer)
+	{
+		deviceConnected = true;
+	};
+	void onDisconnect(BLEServer *pServer)
+	{
+		deviceConnected = false;
+	}
+};
+
+void setup()
+{
+	Serial.begin(115200);
+	Serial.println("Starting BLE");
+
+	BLEDevice::init(bleServerName);
+
+	BLEServer *pServer = BLEDevice::createServer();
+	pServer->setCallbacks(new MyServerCallbacks());
+
+	BLEService *pService = pServer->createService(SERVICE_UUID);
+
+	pService->addCharacteristic(&characteristic);
+	descriptor.setValue("Counter");
+	characteristic.addDescriptor(&descriptor);
+	// Start the service
+	pService->start();
+
+	BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
+	pAdvertising->addServiceUUID(SERVICE_UUID);
+	pServer->getAdvertising()->start();
+	Serial.println("Waiting a client connection to notify...");
+}
+
+void loop()
+{
+	if (deviceConnected)
+	{
+		if ((millis() - lastTime) > 5000)
+		{
+			char data[4];
+			dtostrf(counter, 4, 2, data);
+			characteristic.setValue(data);
+			characteristic.notify();
+
+			lastTime = millis();
+			counter += 1;
+		}
+	}
+}`}
+      />
+    </Details>
+    <Details title="BLE client code">
+      <Code
+        respectMargin
+        value={`#include "BLEDevice.h"
+
+#define bleServerName "ESP32-TEST-BLE"
+
+static BLEUUID serviceUUID("3fff1c98-3055-45b2-838e-b384b6fc1125");
+static BLEUUID characteristicUUID("a36e7c55-6bd4-4c3c-a003-8fe819de260a");
+
+static boolean doConnect = false;
+static boolean connected = false;
+
+static BLEAddress *pServerAddress;
+static BLERemoteCharacteristic *characteristic;
+
+const uint8_t notificationOn[] = {0x1, 0x0};
+const uint8_t notificationOff[] = {0x0, 0x0};
+
+char *counter;
+
+boolean newCounter = false;
+
+// Connect to the BLE Server that has the name, Service, and Characteristics
+bool connectToServer(BLEAddress pAddress)
+{
+  BLEClient *pClient = BLEDevice::createClient();
+
+  pClient->connect(pAddress);
+  Serial.println("Connected to server");
+
+  BLERemoteService *pRemoteService = pClient->getService(serviceUUID);
+  if (pRemoteService == nullptr)
+  {
+    Serial.print("Failed to find our service UUID: ");
+    Serial.println(serviceUUID.toString().c_str());
+    return (false);
+  }
+
+  characteristic = pRemoteService->getCharacteristic(characteristicUUID);
+
+  if (characteristic == nullptr)
+  {
+    Serial.print("Failed to find our characteristic UUID");
+    return false;
+  }
+  Serial.println(" - Found our characteristics");
+
+  // Assign callback functions for the Characteristics
+  characteristic->registerForNotify(counterNotifyCallback);
+  return true;
+}
+
+class MyAdvertisedDeviceCallbacks : public BLEAdvertisedDeviceCallbacks
+{
+  void onResult(BLEAdvertisedDevice advertisedDevice)
+  {
+    if (advertisedDevice.getName() == bleServerName)
+    {
+      advertisedDevice.getScan()->stop();
+      pServerAddress = new BLEAddress(advertisedDevice.getAddress());
+      doConnect = true;
+      Serial.println("Device found. Connecting!");
+    }
+  }
+};
+
+static void counterNotifyCallback(BLERemoteCharacteristic *pBLERemoteCharacteristic,
+                                  uint8_t *pData, size_t length, bool isNotify)
+{
+  counter = (char *)pData;
+  newCounter = true;
+}
+
+void setup()
+{
+  Serial.begin(115200);
+  Serial.println("Starting ble client");
+
+  BLEDevice::init("");
+
+  BLEScan *pBLEScan = BLEDevice::getScan();
+  pBLEScan->setAdvertisedDeviceCallbacks(new MyAdvertisedDeviceCallbacks());
+  pBLEScan->setActiveScan(true);
+  pBLEScan->start(30);
+}
+
+void loop()
+{
+  if (doConnect == true)
+  {
+    if (connectToServer(*pServerAddress))
+    {
+      Serial.println("Connected to server");
+      // Activate the Notify property of each Characteristic
+      characteristic->getDescriptor(BLEUUID((uint16_t)0x2902))->writeValue((uint8_t *)notificationOn, 2, true);
+      connected = true;
+    }
+    else
+    {
+      Serial.println("Failed to connect to server");
+    }
+    doConnect = false;
+  }
+  if (newCounter)
+  {
+    newCounter = false;
+    Serial.println(counter);
+  }
+  delay(1000);
+}`}
+      />
+    </Details>
+    <H2>ESP-NOW</H2>
+    <Details
+      title="If you're like me you know nothing about ESP-NOW, so let's explore it a bit first"
+    >
+      <P>
+        ESP-NOW is designed for small messages up to 250 bytes. It can send
+        messages to specific receivers or broadcast to anyone in listening
+        range, without the need to establish a connection first. This is bound
+        to give us an advantage when we try to minimize the time to ship data
+        off device.
+      </P>
+      <P>
+        The first thing I was interested to know after getting a proof of
+        concept to work was how high the message throughput is. The very first
+        test when sending from the XIAO to the FireBeetle showed just 3 messages
+        per second. Very disappointing! Curiously, when the device is connected
+        to a serial monitor, it's <em>much</em> faster. It turns out that there is
+        a <A href="https://github.com/espressif/arduino-esp32/issues/6983">
+          bug in Arduino
+        </A> regarding buffering serial output. The fix is simple:
+      </P>
+      <Code value={`Serial.setTxTimeoutMs(0);`} respectMargin />
+      <P>
+        With this, I see around <b>800 messages per second</b> at a message size
+        of 16 bytes.
+      </P>
+      <P>
+        Another gotcha I encountered is how sensitive the antennas are to
+        interference when the signal gets weak. For instance, when the sender or
+        receiver is in my laundry room (1 floor down and a couple walls in
+        between) the devices need to be kept well away of any metal object,
+        otherwise no transmission will succeed. Even a metal baseplate that
+        attaches legs to my dining room table are enough to block the signal
+        from a device laying on the table. Ask me how I know.
+      </P>
+      <P>
+        In circumstances with weak signal strength it is also noticable how
+        sometimes a couple of retries are required. I would theorize this is due
+        to WiFi interference on the 2.4 GHz band.
+      </P>
+    </Details>
+    <P>
+      Let's get to testing ESP-NOW. The following script starts up, sets
+      everything up to be able to transmit data via ESP-NOW and then attempts to
+      resend data until the recipient (in this case the device with the mac
+      address described in the <C>receiver[]</C> array) acknowledges it. Then the
+      device enters deep sleep for a microsecond, wakes up and reruns the procedure.
+    </P>
+    <Code
+      caption="Code 3: Test script to measure time from deep sleep to successful data transmission with ESP-NOW"
+      value={`#include <esp_now.h>
+#include <WiFi.h>
+#include <esp_wifi.h>
+
+uint8_t receiver[] = {0x24, 0x4C, 0xAB, 0x82, 0xF5, 0x0C};
+
+esp_now_peer_info_t peerInfo;
+
+RTC_DATA_ATTR int counter = 0;
+int success = 0;
+
+struct msg_data
+{
+	int counter;
+	int num_tries;
+};
+
+void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status)
+{
+	Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Success" : "Fail");
+
+	if (status == ESP_NOW_SEND_SUCCESS)
+	{
+		success = 1;
+	}
+}
+
+void setup()
+{
+	Serial.begin(115200);
+	// For ESP32-C3
+	// Serial.setTxTimeoutMs(0);
+	WiFi.mode(WIFI_STA);
+
+	if (esp_now_init() != ESP_OK)
+	{
+		Serial.println("Error initializing ESP-NOW");
+		return;
+	}
+
+	if (esp_now_register_send_cb(OnDataSent) != ESP_OK)
+	{
+		Serial.println("Error registering callback");
+		return;
+	}
+
+	memcpy(peerInfo.peer_addr, receiver, 6);
+	peerInfo.channel = 0;
+	peerInfo.encrypt = false;
+
+	if (esp_now_add_peer(&peerInfo) != ESP_OK)
+	{
+		Serial.println("Error adding peer");
+		return;
+	}
+}
+
+void loop()
+{
+	esp_wifi_start();
+	WiFi.mode(WIFI_STA);
+
+	int num_tries = 0;
+
+	// Resend until data was received by recipient
+	while (!success)
+	{
+		esp_err_t result = ESP_FAIL;
+
+		// Try sending until successfully sent
+		while (result != ESP_OK)
+		{
+			num_tries += 1;
+
+			struct msg_data data = {counter, num_tries};
+
+			result = esp_now_send(receiver, (uint8_t *)&data, sizeof(msg_data));
+
+			if (result != ESP_OK)
+			{
+				Serial.println("Error sending the data");
+				break;
+			}
+		}
+
+		// Allow time for callback to signal success
+		delay(100);
+	}
+
+	success = 0;
+	counter += 1;
+
+	esp_wifi_stop();
+	esp_sleep_enable_timer_wakeup(1);
+
+	esp_deep_sleep_start();
+	// or
+	// esp_light_sleep_start();
+}`}
+    />
+    <P>The results are very promising:</P>
+    <ResultsEspNow />
+    <P>
+      Now we have some end-to-end timings to gauge how much time we should
+      expect for a full cycle of waking up, sending data and resuming sleep in
+      this protocol. Remember that assumption above, that the XIAO probably
+      takes the same amount of time to wake from sleep? Clearly that didn't pan
+      out if we consider the numbers here.
+    </P>
+    <P>
+      Instead, the XIAO, or rather the ESP32-C3, is remarkably fast to wake from
+      deep sleep and get that data out the door.
+    </P>
+    <Details title="Beware some pitfalls of light and deep sleep">
+      <P>
+        The loop is useless for the deep sleep test as upon wake up, the device
+        starts executing from the start, rerunning the setup. This is
+        unintuitive if one expects the code to resume from the invocation of <C>
+          esp_deep_sleep_start()
+        </C>. However, it makes sense once we consider that in this sleep mode
+        just about everything is turned off to save power, including the memory
+        that stores program state. That's why you'll notice the counter to be
+        stored in RTC memory (via <C>RTC_DATA_ATTR</C>), this makes sure it
+        survives the deep sleep.
+      </P>
+      <P>
+        It took me some time to get this test to work with light sleep. The
+        problem here is that while the program state is persisted and the code
+        resumes as you would expect, the modem is powered down to save power. To
+        be able to start it up properly, we <em>need</em> to call <C>
+          esp_wifi_stop()
+        </C> prior to starting sleep, otherwise you will not be able to send ESP-NOW
+        messages.
+      </P>
+    </Details>
+    <H2>Conclusion</H2>
+    <P>
+      From the above tests it is clear that ESP-NOW is the winner. It's <em
+        >by far</em
+      > the fastest, which should allow us to conserve battery power. Further, it
+      has as good a range as we can expect. While I initially thought of a gateway
+      device that receives a measurement and sends it on towards the internet as
+      a negative, I've since come around: The gateway saves time as the sensor device
+      does not need to wait the round trip time to the cloud service, it can buffer
+      results in case my access point is down and I could even augment the gateway
+      device with a screen and show <em>the freshest</em> sensor values for my viewing
+      pleasure.
+    </P>
+    <P>
+      It will be interesting to consider in a next post which scenario is a
+      particularly good fit for each of these boards. The FireBeetle has
+      particularly good deep sleep current, but is slower to wake up and send
+      data, whereas the XIAO has 4 times higher deep sleep current but is
+      significantly faster to wake up and send data. Naturally, the XIAO should
+      do better the higher the required frequency of measurments.
+    </P>
+  </Note>
+</Layout>
