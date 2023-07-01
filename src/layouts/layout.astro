@@ -1,5 +1,6 @@
 ---
 import Feedback from "../components/Feedback.svelte";
+const pathname = new URL(Astro.request.url).pathname;
 ---
 
 <html lang="en">
@@ -20,17 +21,17 @@ import Feedback from "../components/Feedback.svelte";
       </a>
       <nav class="flex flex-row gap-3 sm:gap-6 pr-6 h-fit decoration-1">
         <a
-          class="text-sm md:text-md {($page.url.pathname.startsWith('/notes') || $page.url.pathname === '/') && 'underline'}"
+          class={`text-sm md:text-md ${(pathname.startsWith('/notes') || pathname === '/') && 'underline'}`}
           href="/">notes</a
         >
         <a
-          class="text-sm md:text-md {$page.url.pathname.startsWith('/projects') && 'underline'}"
+          class={`text-sm md:text-md ${pathname.startsWith('/projects') && 'underline'}`}
           href="/projects"
         >
           projects</a
         >
         <a
-          class="text-sm md:text-md {$page.url.pathname.startsWith('/about') && 'underline'}"
+          class={`text-sm md:text-md ${pathname.startsWith('/about') && 'underline'}`}
           href="/about"
         >
           about</a
