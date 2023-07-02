@@ -17,11 +17,16 @@ import ChaosAngles90 from './ChaosAngles90.svelte';
 import CircularDisturbance from './CircularDisturbance.svelte';
 import FeatheredEpicenter from './FeatheredEpicenter.svelte';
 import Hint from '../../../components/Hint.svelte';
+import { notes } from '../../notes';
+
+const info = notes['lines'];
 ---
 
 <Layout>
 	<Note>
-		<Title subtitle="Some schmuck tries his hands at generative art">A study of lines</Title>
+		<Title subtitle={info.subtitle}>
+			{info.title}
+		</Title>
 		<P>
 			After moving into a bigger apartment, I've found the walls of our office to be a bit naked.
 			While I'm a hobby photographer and would like to get more into printing my work, for this

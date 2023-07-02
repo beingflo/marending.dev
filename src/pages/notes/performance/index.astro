@@ -15,12 +15,15 @@ import SSR from './ssr-table.svelte';
 import SSG from './ssg-table.svelte';
 import Caddy from './caddy-table.svelte';
 import CaddyStatic from './caddy-static-table.svelte';
+import { notes } from '../../notes';
+
+const info = notes['performance'];
 ---
 
 <Layout>
 	<Note>
-		<Title subtitle="Making sure my website can handle all those page views it isn't getting">
-			Performance tuning a specific SvelteKit application
+		<Title subtitle={info.subtitle}>
+			{info.title}
 		</Title>
 		<P>
 			During my studies, I focused on high-performance computing. My interest in this field

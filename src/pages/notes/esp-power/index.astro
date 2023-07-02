@@ -8,12 +8,15 @@ import Title from '../../../components/Title.svelte';
 import Layout from '../../../layouts/layout.astro';
 import ResultsFirebeetle from './results-table-firebeetle.svelte';
 import ResultsC3 from './results-table-c3.svelte';
+import { notes } from '../../notes';
+
+const info = notes['esp-power'];
 ---
 
 <Layout>
 	<Note>
-		<Title subtitle="First forays into embedded devices">
-			Measuring power consumption of ESP32 development boards
+		<Title subtitle={info.subtitle}>
+			{info.title}
 		</Title>
 		<P>
 			I like some nice greenery in the living room. I also like data. Naturally, I have to monitor

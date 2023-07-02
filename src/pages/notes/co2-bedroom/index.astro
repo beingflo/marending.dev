@@ -9,12 +9,15 @@ import Chart from '../../../components/Chart.astro';
 
 import * as Plot from '@observablehq/plot';
 import { dataOpenDoor, dataClosedDoor } from './data';
+import { notes } from '../../notes';
+
+const info = notes['co2-bedroom'];
 ---
 
 <Layout>
 	<Note>
-		<Title subtitle="Trying not to suffocate while sleeping">
-			The air quality impact of closing your bedroom door at night
+		<Title subtitle={info.subtitle}>
+			{info.title}
 		</Title>
 		<P>
 			My recent foray into embedded devices has yielded a nice little CO2 sensor based on the <A

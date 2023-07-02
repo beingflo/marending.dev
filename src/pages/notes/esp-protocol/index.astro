@@ -12,12 +12,15 @@ import Layout from '../../../layouts/layout.astro';
 import { Details } from '../../../components/Details';
 import ResultsEspNow from './results-esp-now.svelte';
 import ResultsWifi from './results-wifi.svelte';
+import { notes } from '../../notes';
+
+const info = notes['esp-protocol'];
 ---
 
 <Layout>
 	<Note>
-		<Title subtitle="Trying to sleep as much as possible">
-			A comparison of wireless protocols for battery powered embedded devices
+		<Title subtitle={info.subtitle}>
+			{info.title}
 		</Title>
 		<P>
 			<A href="/notes/esp-power">We've established</A> that deep sleep on ESP32 boards gives us a runtime

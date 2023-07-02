@@ -7,11 +7,14 @@ import Note from '../../components/Note.svelte';
 import P from '../../components/P.svelte';
 import Title from '../../components/Title.svelte';
 import Layout from '../../layouts/layout.astro';
+import { notes } from '../notes';
+
+const info = notes['website'];
 ---
 
 <Layout>
 	<Note>
-		<Title subtitle="There are many like it, but this one is mine">About this website</Title>
+		<Title subtitle={info.subtitle}>{info.title}</Title>
 		<P>
 			Some time ago I decided to build a personal website to write about technical things I'm up to.
 			If you're reading this, suprisingly, I followed through. Now, I'm under no delusion that the
