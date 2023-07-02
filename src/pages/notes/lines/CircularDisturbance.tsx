@@ -1,6 +1,7 @@
-<script>
-	import Figure from './Figure.svelte';
+import { For } from 'solid-js';
+import { Figure } from './Figure';
 
+export const CircularDisturbance = () => {
 	const width = 600;
 	const height = 400;
 
@@ -23,20 +24,25 @@
 			transform: `translate(${translate[0]}, ${translate[1]}) rotate(${rotation})`,
 		};
 	};
-</script>
 
-<Figure caption="Fig 6. Horizontal lines with vertical region around random point">
-	<div class="w-full sm:w-[600px]">
-		<svg viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg">
-			{#each Array(num) as _}
-				<line
-					{...getRandomTransformation()}
-					x1={-length / 2}
-					y1="0"
-					x2={length / 2}
-					y2="0"
-					stroke="currentColor" />
-			{/each}
-		</svg>
-	</div>
-</Figure>
+	return (
+		<Figure caption="Fig 6. Horizontal lines with vertical region around random point">
+			<div class="w-full sm:w-[600px]">
+				<svg viewBox={`0 0 ${width} ${height}`} xmlns="http://www.w3.org/2000/svg">
+					<For each={Array(num)}>
+						{() => (
+							<line
+								{...getRandomTransformation()}
+								x1={-length / 2}
+								y1="0"
+								x2={length / 2}
+								y2="0"
+								stroke="currentColor"
+							/>
+						)}
+					</For>
+				</svg>
+			</div>
+		</Figure>
+	);
+};
