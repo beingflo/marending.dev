@@ -15,7 +15,7 @@ export const notes = {
 		title: 'Measuring power consumption of ESP32 development boards',
 		subtitle: 'First forays into embedded devices',
 		date: '25 February 2023',
-		link: '/notes/esp-power',
+		link: '/notes/esp-power/',
 	},
 	performance: {
 		title: 'Performance tuning a specific SvelteKit application',
