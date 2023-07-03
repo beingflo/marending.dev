@@ -9,7 +9,7 @@ export const FeatheredEpicenter = () => {
 	const length = 30;
 
 	// Point of disturbance
-	const PoD = [Math.random() * width, Math.random() * height];
+	const PoD = [400, 150];
 
 	const maxDistance = 100 * 100;
 

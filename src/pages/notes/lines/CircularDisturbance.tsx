@@ -9,7 +9,7 @@ export const CircularDisturbance = () => {
 	const length = 30;
 
 	// Point of disturbance
-	const PoD = [Math.random() * width, Math.random() * height];
+	const PoD = [200, 150];
 	const distance = 100;
 
 	const getRandomTransformation = () => {
