@@ -90,7 +90,7 @@ const info = notes['lines'];
 			<P>
 				Before I arrived at the above piece, my makeshift <C>SVG</C> rendering blessed me with this abomination:
 			</P>
-			<ChaosWrong />
+			<ChaosWrong client:only="solid-js" />
 			<P>
 				The problem here is the the origin of the rotational transform. You see, drawing a line that
 				is not horizontal in an <C>SVG</C> could be accomplished by providing the start and endpoint
@@ -137,12 +137,12 @@ const info = notes['lines'];
 				>untamed randomness</em
 			>. We might get more visually appealing structures by restricting e.g. the angle of the lines.
 		</P>
-		<ChaosAngles />
+		<ChaosAngles client:only="solid-js" />
 		<P>
 			At this point I'm not sure if there is an optical illusion with all these
 			specs-of-dust-looking things between the lines or my monitor is dirty. We will never know.
 		</P>
-		<ChaosAngles90 />
+		<ChaosAngles90 client:only="solid-js" />
 		<P>
 			Adding more, smaller lines and rotating them around by 90 degrees makes this look a bit like
 			rain. What if we try segmenting our piece into multiple regions with distinct handling of
@@ -151,14 +151,14 @@ const info = notes['lines'];
 			between 80 and 100 degrees. We expect to see some area of <em>disturbance</em> around our chosen
 			point.
 		</P>
-		<CircularDisturbance />
+		<CircularDisturbance client:only="solid-js" />
 		<P>
 			That's quite nice! But that sharp transition between horizontal and vertical lines is almost
 			screaming for a nicely feathered approach. What if we use the distance between the center
 			point of a line and our <C>epicenter</C> to tune the rotation of the line? Say, the closer the
 			line, the more upright, i.e. 90 degrees, the line is.
 		</P>
-		<FeatheredEpicenter />
+		<FeatheredEpicenter client:only="solid-js" />
 		<Info>
 			Fun fact: At this point in writing this note, the <C>/notes/lines</C> page you're currently viewing
 			can be server-side rendered approximately 40 times per second. Compare that to 1000 times per second
