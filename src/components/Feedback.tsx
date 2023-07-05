@@ -5,7 +5,7 @@ export const Feedback = () => {
 	const [content, setContent] = createSignal('');
 	const [notification, setNotification] = createSignal('');
 
-	const submit = async (event) => {
+	const submit = async (event: any) => {
 		event.preventDefault();
 
 		const response = await fetch('/api/feedback', {
