@@ -11,10 +11,10 @@ import { P } from '../../../components/P';
 import { Title } from '../../../components/Title';
 import Layout from '../../../layouts/layout.astro';
 import { Details } from '../../../components/Details';
-import SSR from './ssr-table.svelte';
-import SSG from './ssg-table.svelte';
-import Caddy from './caddy-table.svelte';
-import CaddyStatic from './caddy-static-table.svelte';
+import { SSRResults } from './ssr-results';
+import { SSGResults } from './ssg-results';
+import { CaddyResults } from './caddy-results';
+import { CaddyStaticResults } from './caddy-static-results';
 import { notes } from '../../notes';
 
 const info = notes['performance'];
@@ -120,7 +120,7 @@ const info = notes['performance'];
 			adapter. That means CSR as well as SSR are employed, while no pages are pre-rendered at
 			build-time.
 		</P>
-		<SSR />
+		<SSRResults />
 		<P>
 			For the <C>/notes/lines</C> page there is a noticable degredation because there are thousands of
 			elements rendered into <C>SVGs</C>, which has the server do some work. The whole page is also
@@ -129,7 +129,7 @@ const info = notes['performance'];
 		<P>
 			Next, we are going to turn on pre-rendering (or SSG) while keeping everything else the same.
 		</P>
-		<SSG />
+		<SSGResults />
 		<P>
 			The impact is immediately noticable for both pages. Now the difference between <C>/</C> and <C
 			>
@@ -146,7 +146,7 @@ const info = notes['performance'];
 			</A>, which acts as a reverse proxy to the SvelteKit node server. Before we go further, we
 			should establish if we incur a performance penality for this.
 		</P>
-		<Caddy />
+		<CaddyResults />
 		<P>
 			Indeed we do, and it's suprising to me how much throughput we lose. But this scenario begs the
 			question if we even need the node server: If we just have static assets, we might as well let
@@ -161,7 +161,7 @@ const info = notes['performance'];
 				appropriately
 			</A>. Otherwise reloading a subpage doesn't work. Don't ask me how I know.
 		</Hint>
-		<CaddyStatic />
+		<CaddyStaticResults />
 		<Details title="Validating measurements is a pretty good idea!">
 			<P>
 				At first I was actually measuring around 62'000 requests per second for the <C>
