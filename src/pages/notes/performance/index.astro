@@ -18,6 +18,8 @@ import { CaddyStaticResults } from './caddy-static-results';
 import { notes } from '../../notes';
 
 const info = notes['performance'];
+
+const adapterLink = 'https://github.com/sveltejs/kit/tree/master/packages/adapter-static';
 ---
 
 <Layout>
@@ -27,12 +29,10 @@ const info = notes['performance'];
 		</Title>
 		<P>
 			During my studies, I focused on high-performance computing. My interest in this field
-			culminated in my (only mildly interesting) <A
-				href="https://ieeexplore.ieee.org/abstract/document/7967093"
-			>
-				undergrad thesis
-			</A>. What's left of my passing passion is <em class="line-through">the need for speed</em> a distain
-			for slow software.
+			culminated in my (only mildly interesting)
+			<A href="https://ieeexplore.ieee.org/abstract/document/7967093">undergrad thesis</A>. What's
+			left of my passing passion is <em class="line-through">the need for speed</em> a distain for slow
+			software.
 		</P>
 		<P>
 			Due to this conditioning, I always find myself curious about performance characteristics of my
@@ -103,8 +103,7 @@ const info = notes['performance'];
 		</P>
 		<H2 id="benchmark">Benchmarking marending.dev</H2>
 		<P>
-			To get a realistic end-to-end view of how the server performs, I'm running benchmarks at the <C
-			>
+			To get a realistic end-to-end view of how the server performs, I'm running benchmarks at the <C>
 				HTTP
 			</C> level using <C>wrk</C> approximately like so:
 		</P>
@@ -131,20 +130,17 @@ const info = notes['performance'];
 		</P>
 		<SSGResults />
 		<P>
-			The impact is immediately noticable for both pages. Now the difference between <C>/</C> and <C
-			>
+			The impact is immediately noticable for both pages. Now the difference between <C>/</C> and <C>
 				/notes/lines
 			</C> is probably down to the size of the pages as no additional effort is required per request
 			for either.
 		</P>
 		<P>
 			Obviously SSG is going to be faster than SSR, nothing unexpected here. However, that's not the
-			end of it. In the production deployment, the site sits behind <A
-				href="https://caddyserver.com/"
-			>
-				Caddy
-			</A>, which acts as a reverse proxy to the SvelteKit node server. Before we go further, we
-			should establish if we incur a performance penality for this.
+			end of it. In the production deployment, the site sits behind
+			<A href="https://caddyserver.com/">Caddy</A>, which acts as a reverse proxy to the SvelteKit
+			node server. Before we go further, we should establish if we incur a performance penality for
+			this.
 		</P>
 		<CaddyResults />
 		<P>
@@ -157,9 +153,8 @@ const info = notes['performance'];
 		<Hint>
 			When switching Caddy from reverse proxying requests to directly serving the static assets,
 			make sure to set the <C>trailingSlash</C>
-			<A href="https://github.com/sveltejs/kit/tree/master/packages/adapter-static">
-				appropriately
-			</A>. Otherwise reloading a subpage doesn't work. Don't ask me how I know.
+			<A href={adapterLink}>appropriately</A>. Otherwise reloading a subpage doesn't work. Don't ask
+			me how I know.
 		</Hint>
 		<CaddyStaticResults />
 		<Details title="Validating measurements is a pretty good idea!">

@@ -11,6 +11,8 @@ import { ResultsC3 } from './results-c3';
 import { notes } from '../../notes';
 
 const info = notes['esp-power'];
+
+const xiaoLink = 'https://www.seeedstudio.com/Seeed-XIAO-ESP32C3-p-5431.html';
 ---
 
 <Layout>
@@ -71,13 +73,10 @@ const info = notes['esp-power'];
 			I'm testing a <A href="https://www.dfrobot.com/product-1590.html">DFRobot FireBeetle ESP32</A>
 			and a <A href="https://www.dfrobot.com/product-2195.html">Firebeetle ESP32-E</A>. The latter
 			has a low power pad that can be cut with a knife to isolate an LED. For this board I've
-			measured power before and after the pad was disconnected. Next, I also have a <A
-				href="https://www.seeedstudio.com/Seeed-XIAO-ESP32C3-p-5431.html"
-			>
-				Seeed Studio XIAO ESP32C3
-			</A> and an <A href="https://shop.m5stack.com/products/m5stamp-c3u-mate-with-pin-headers">
-				M5Stamp C3U
-			</A> to test.
+			measured power before and after the pad was disconnected. Next, I also have a
+			<A href={xiaoLink}>Seeed Studio XIAO ESP32C3</A> and an
+			<A href="https://shop.m5stack.com/products/m5stamp-c3u-mate-with-pin-headers">M5Stamp C3U</A> to
+			test.
 		</P>
 		<H2>Results</H2>
 		<ResultsFirebeetle />

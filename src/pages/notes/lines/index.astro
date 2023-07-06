@@ -54,16 +54,13 @@ const info = notes['lines'];
 			deal for me is that <C>JS</C>-based code can be natively embedded right here, on this page.
 			<br /><br />
 			Next, I was exploring libraries that would make the whole ordeal easier. Top contenders include
-			<A href="https://p5js.org/">p5js</A>, <A href="https://ptsjs.org/">Pts.js</A> and <A
-				href="http://paperjs.org/"
-			>
-				Paper.js
-			</A>. Ultimately, I came to the conclusion that I don't need the extensive feature sets of any
-			of these libraries. Animation, physics and geometry utilities are nice-to-haves but unlikely
-			to see any use in my use-case. Instead, all I really need is a way to programatically draw
-			lines, ideally in a way that I can get a high-resolution image out of it somehow for print.
-			And what better way to do this than with our good old friend, the <C>SVG</C>. So I just
-			directly construct <C>SVGs</C> in my <C>Svelte</C> components.
+			<A href="https://p5js.org/">p5js</A>, <A href="https://ptsjs.org/">Pts.js</A> and
+			<A href="http://paperjs.org/">Paper.js</A>. Ultimately, I came to the conclusion that I don't
+			need the extensive feature sets of any of these libraries. Animation, physics and geometry
+			utilities are nice-to-haves but unlikely to see any use in my use-case. Instead, all I really
+			need is a way to programatically draw lines, ideally in a way that I can get a high-resolution
+			image out of it somehow for print. And what better way to do this than with our good old
+			friend, the <C>SVG</C>. So I just directly construct <C>SVGs</C> in my <C>Svelte</C> components.
 		</Details>
 		<P>So without further ado, let's draw some lines!</P>
 		<Circle />
@@ -113,8 +110,7 @@ const info = notes['lines'];
 				This way I don't have to do any math, just generate random numbers for the rotation. As it
 				turns out, this doesn't work correctly as we have seen above. The lines are rotated about
 				the
-				<C>(0, 0)</C> origin instead of the center point of the line. To fix it, we either set the <C
-				>
+				<C>(0, 0)</C> origin instead of the center point of the line. To fix it, we either set the <C>
 					transform-origin
 				</C> property on the <C>SVG</C> correctly, or we get fancy:
 			</P>

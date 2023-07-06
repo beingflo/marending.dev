@@ -15,6 +15,8 @@ import { ResultsWifi } from './results-wifi';
 import { notes } from '../../notes';
 
 const info = notes['esp-protocol'];
+
+const xiaoLink = 'https://www.seeedstudio.com/Seeed-XIAO-ESP32C3-p-5431.html';
 ---
 
 <Layout>
@@ -55,13 +57,11 @@ const info = notes['esp-protocol'];
 			We measured power draw of four different development boards. Now that we know their
 			characteristics (and I'm lazy), we will proceed to only consider two boards from here on out:
 			The <A href="https://www.dfrobot.com/product-1590.html">DFRobot FireBeetle ESP32</A> and the
-			<A href="https://www.seeedstudio.com/Seeed-XIAO-ESP32C3-p-5431.html">
-				Seeed Studio XIAO ESP32C3
-			</A>. They represent a nice selection of the boards I own. The FireBeetle is the fully
-			featured ESP32 board, with an ARM based chip with two cores, plenty of GPIO pins and a
-			built-in battery connector. The XIAO on the other hand is tiny, more affordable and ships with
-			an external antenna presumably due to a lack of space for a PCB antenna. It features the
-			ESP32C3, a RISV-V based single core CPU.
+			<A href={xiaoLink}>Seeed Studio XIAO ESP32C3</A>. They represent a nice selection of the
+			boards I own. The FireBeetle is the fully featured ESP32 board, with an ARM based chip with
+			two cores, plenty of GPIO pins and a built-in battery connector. The XIAO on the other hand is
+			tiny, more affordable and ships with an external antenna presumably due to a lack of space for
+			a PCB antenna. It features the ESP32C3, a RISV-V based single core CPU.
 		</P>
 		<H2>Awake time is essential</H2>
 		<P>
@@ -205,13 +205,11 @@ void loop()
 }`}
 		/>
 		<P>
-			In the above snippet we send an incrementing counter to a <A
-				href="https://github.com/prometheus/pushgateway"
-			>
-				Prometheus PushGateway
-			</A>, that's where this weird <C>#TYPE some_metric gauge</C> syntax comes from. By letting this
-			run for a couple of minutes and then checking what count has been reached in Prometheus, we get
-			the following timings for a single wake-up cycle:
+			In the above snippet we send an incrementing counter to a
+			<A href="https://github.com/prometheus/pushgateway">Prometheus PushGateway</A>, that's where
+			this weird <C>#TYPE some_metric gauge</C> syntax comes from. By letting this run for a couple of
+			minutes and then checking what count has been reached in Prometheus, we get the following timings
+			for a single wake-up cycle:
 		</P>
 		<ResultsWifi />
 		<P>
@@ -463,8 +461,7 @@ void loop()
 		</Details>
 		<H2>ESP-NOW</H2>
 		<Details
-			title="If you're like me you know nothing about ESP-NOW, so let's explore it a bit first"
-		>
+			title="If you're like me you know nothing about ESP-NOW, so let's explore it a bit first">
 			<P>
 				ESP-NOW is designed for small messages up to 250 bytes. It can send messages to specific
 				receivers or broadcast to anyone in listening range, without the need to establish a
@@ -475,13 +472,14 @@ void loop()
 				The first thing I was interested to know after getting a proof of concept to work was how
 				high the message throughput is. The very first test when sending from the XIAO to the
 				FireBeetle showed just 3 messages per second. Very disappointing! Curiously, when the device
-				is connected to a serial monitor, it's <em>much</em> faster. It turns out that there is a <A
-					href="https://github.com/espressif/arduino-esp32/issues/6983"
-				>
-					bug in Arduino
-				</A> regarding buffering serial output. The fix is simple:
+				is connected to a serial monitor, it's <em>much</em> faster. It turns out that there is a
+				<A href="https://github.com/espressif/arduino-esp32/issues/6983">bug in Arduino</A>
+				regarding buffering serial output. The fix is simple:
 			</P>
-			<Code value={`Serial.setTxTimeoutMs(0);`} respectMargin />
+			<Code
+				value={`Serial.setTxTimeoutMs(0);`}
+				respectMargin
+			/>
 			<P>
 				With this, I see around <b>800 messages per second</b> at a message size of 16 bytes.
 			</P>

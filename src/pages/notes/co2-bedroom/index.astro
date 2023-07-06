@@ -12,6 +12,10 @@ import { dataOpenDoor, dataClosedDoor } from './data';
 import { notes } from '../../notes';
 
 const info = notes['co2-bedroom'];
+
+const seedLink =
+	'http://www.seeedstudio.com/Grove-CO2-Temperature-Humidity-Sensor-SCD30-p-2911.html';
+const co2Link = 'https://www.dhs.wisconsin.gov/chemical/carbondioxide.htm';
 ---
 
 <Layout>
@@ -20,13 +24,11 @@ const info = notes['co2-bedroom'];
 			{info.title}
 		</Title>
 		<P>
-			My recent foray into embedded devices has yielded a nice little CO2 sensor based on the <A
-				href="http://www.seeedstudio.com/Grove-CO2-Temperature-Humidity-Sensor-SCD30-p-2911.html">
-				Seeed Grove SCD30
-			</A>. I normally place it in the living room and ingest all the data into my Grafana /
-			Prometheus based monitoring system. Unfortunately, looking at some pretty graphs that tell you
-			that you should probably open some windows gets a bit old at times. So I decided to conduct
-			some experiments with the sensor instead.
+			My recent foray into embedded devices has yielded a nice little CO2 sensor based on the
+			<A href={seedLink}>Seeed Grove SCD30</A>. I normally place it in the living room and ingest
+			all the data into my Grafana / Prometheus based monitoring system. Unfortunately, looking at
+			some pretty graphs that tell you that you should probably open some windows gets a bit old at
+			times. So I decided to conduct some experiments with the sensor instead.
 		</P>
 		<Info>What follows is highly unscientific (n=1). Proceed with caution.</Info>
 		<P>
@@ -92,11 +94,10 @@ const info = notes['co2-bedroom'];
 		</P>
 		<P>
 			I'm obviously not qualified to make claims about health impacts, but I wouldn't be surprised
-			if this CO2 level affects sleep quality. For reference, some <A
-				href="https://www.dhs.wisconsin.gov/chemical/carbondioxide.htm">
-				information on the internet
-			</A> suggests that a concentration starting at 2000 ppm is associated with increased heart rate
-			and headaches.
+			if this CO2 level affects sleep quality. For reference, some
+			<A href={co2Link}>information on the internet</A>
+			suggests that a concentration starting at 2000 ppm is associated with increased heart rate and
+			headaches.
 		</P>
 		<P>Needless to say we will leave our door open.</P>
 	</Note>
