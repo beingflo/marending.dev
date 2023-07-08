@@ -33,11 +33,11 @@ export const Feedback = () => {
 		<>
 			<button
 				onClick={() => setShowFeedback((prev) => !prev)}
-				class="fixed p-2 bottom-0 right-2 text-xs font-light text-gray-600">
+				class="fixed p-2 bottom-0 right-2 text-xs font-light text-gray-600 dark:text-gray-200">
 				feedback
 			</button>
 			<Show when={showFeedback()}>
-				<form class="fixed bottom-8 right-2 border border-black dark:border-white bg-white dark:bg-black p-2 flex flex-col gap-2 left-2 md:left-auto shadow-[4px_4px_0_rgba(0,0,0,0.15)]">
+				<form class="fixed bottom-8 right-2 border border-black dark:border-white bg-white dark:bg-zinc-800 p-2 flex flex-col gap-2 left-2 md:left-auto shadow-[4px_4px_0_rgba(0,0,0,0.15)]">
 					<span class="mb-2 font-semibold">Feedback</span>
 					<p class="mb-2 text-gray-600 dark:text-gray-200 text-sm">
 						Found a typo or want to let me know something?
@@ -50,7 +50,7 @@ export const Feedback = () => {
 							type="text"
 							name="content"
 							onChange={(e) => setEmail(e.target.value)}
-							class="block w-full border border-gray-900 dark:border-gray-200 dark:bg-black p-0.5"
+							class="block w-full border border-gray-900 dark:border-gray-200 dark:bg-zinc-800 p-0.5"
 						/>
 					</label>
 					<label class="block">
@@ -58,7 +58,7 @@ export const Feedback = () => {
 						<textarea
 							name="content"
 							onChange={(e) => setContent(e.target.value)}
-							class="block resize w-full h-24 border border-gray-900 dark:border-gray-200 dark:bg-black p-0.5"
+							class="block resize w-full h-24 border border-gray-900 dark:border-gray-200 dark:bg-zinc-800 p-0.5"
 						/>
 					</label>
 					<div class="flex flex-row justify-end gap-2 items-center">

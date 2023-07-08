@@ -15,3 +15,4 @@ export { P } from './P';
 export { Page } from './Page';
 export { Title } from './Title';
 export { WidePage } from './WidePage';
+export { Table } from './Table';
