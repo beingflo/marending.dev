@@ -3,8 +3,8 @@
   viewBox="0 0 100 100" 
   xmlns="http://www.w3.org/2000/svg"
 >
-  <rect width="100" height="100" fill="black" />
+  <rect width="100" height="100" fill="darkslategray" />
   <circle cx="15" cy="15" r="70" fill="white" />
-  <rect width="100" height="15" fill="black" />
-  <rect width="15" height="100" fill="black" />
+  <rect width="100" height="15" fill="darkslategray" />
+  <rect width="15" height="100" fill="darkslategray" />
 </svg>
