@@ -1,6 +1,6 @@
 export const ResultsFirebeetle = () => (
 	<>
-		<div class="shadow mt-4 border border-black dark:border-white p-4 lg:-mx-4 shadow-[6px_6px_0_#00000020]">
+		<div class="mt-4 border border-black dark:border-white p-4 lg:-mx-4 shadow-[6px_6px_0_#00000020]">
 			<table class="w-full">
 				<tbody>
 					<tr class="border-b border-black dark:border-white font-normal">
