@@ -9,9 +9,11 @@ export const Feedback = () => {
 	const submit = async (event: any) => {
 		event.preventDefault();
 
+		const location = window.location.href;
+
 		const response = await fetch('/api/feedback', {
 			method: 'POST',
-			body: JSON.stringify({ email: email(), content: content() }),
+			body: JSON.stringify({ email: email(), content: content(), location }),
 		}).catch((error) => {
 			setNotification('failure');
 			throw error;
@@ -31,8 +33,7 @@ export const Feedback = () => {
 		<>
 			<button
 				onClick={() => setShowFeedback((prev) => !prev)}
-				class="fixed p-2 bottom-0 right-2 text-xs font-light text-gray-600"
-			>
+				class="fixed p-2 bottom-0 right-2 text-xs font-light text-gray-600">
 				feedback
 			</button>
 			<Show when={showFeedback()}>
@@ -69,7 +70,9 @@ export const Feedback = () => {
 								<p class="text-rose-800 dark:text-rose-200">Something went wrong :(</p>
 							</Match>
 						</Switch>
-						<button class="border border-black dark:border-white py-1 px-2" onClick={submit}>
+						<button
+							class="border border-black dark:border-white py-1 px-2"
+							onClick={submit}>
 							Send
 						</button>
 					</div>
