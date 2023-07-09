@@ -1,4 +1,4 @@
-import { JSX } from 'solid-js/jsx-runtime';
+import type { JSX } from 'solid-js/jsx-runtime';
 
 export type Props = {
 	href: string;
@@ -6,7 +6,9 @@ export type Props = {
 };
 
 export const A = ({ href, children }: Props) => (
-	<a href={href} class="underline decoration-1 border-dashed">
+	<a
+		href={href}
+		class="underline decoration-1 border-dashed">
 		{children}
 	</a>
 );
