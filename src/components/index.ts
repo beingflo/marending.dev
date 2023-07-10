@@ -3,7 +3,6 @@ export { C } from './C';
 export { default as Chart } from './Chart.astro';
 export { Code } from './Code';
 export { Details } from './Details';
-export { Feedback } from './Feedback';
 export { GithubSVG } from './GithubSVG';
 export { H2 } from './H2';
 export { H3 } from './H3';

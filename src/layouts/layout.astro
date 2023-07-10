@@ -1,5 +1,4 @@
 ---
-import { Feedback } from '../components/Feedback';
 const pathname = new URL(Astro.request.url).pathname;
 ---
 
@@ -51,13 +50,15 @@ const pathname = new URL(Astro.request.url).pathname;
 				>
 			</nav>
 		</header>
-
 		<main>
 			<slot />
 		</main>
-
 		<footer>
-			<Feedback client:idle />
+			<a
+				class="fixed p-2 bottom-0 right-2 text-xs font-light text-gray-600 dark:text-gray-200"
+				href="/feedback/">
+				feedback
+			</a>
 		</footer>
 	</body>
 </html>
