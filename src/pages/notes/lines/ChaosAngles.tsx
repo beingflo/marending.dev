@@ -1,5 +1,5 @@
 import { For } from 'solid-js';
-import { Figure } from './Figure';
+import { Figure } from '../../../components/Figure';
 
 export const ChaosAngles = () => {
 	const width = 600;
@@ -19,7 +19,9 @@ export const ChaosAngles = () => {
 	return (
 		<Figure caption="Fig 4. Randomly placed lines with angles between -5 and 5 degrees.">
 			<div class="w-full sm:w-[600px]">
-				<svg viewBox={`0 0 ${width} ${height}`} xmlns="http://www.w3.org/2000/svg">
+				<svg
+					viewBox={`0 0 ${width} ${height}`}
+					xmlns="http://www.w3.org/2000/svg">
 					<For each={Array(num)}>
 						{() => (
 							<line

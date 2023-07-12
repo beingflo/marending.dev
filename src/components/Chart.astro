@@ -1,11 +1,13 @@
 ---
 // @ts-nocheck
-import { JSDOM } from "jsdom";
-import * as Plot from "@observablehq/plot";
-const jsdom = new JSDOM("");
+import { JSDOM } from 'jsdom';
+import { createCanvas } from 'canvas';
+import * as Plot from '@observablehq/plot';
+const jsdom = new JSDOM('');
+const canvas = createCanvas();
 
 export interface Props {
-  options: Plot.PlotOptions;
+	options: Plot.PlotOptions;
 }
 
 global.window = jsdom.window;
@@ -14,6 +16,7 @@ global.Event = jsdom.window.Event;
 global.Node = jsdom.window.Node;
 global.NodeList = jsdom.window.NodeList;
 global.HTMLCollection = jsdom.window.HTMLCollection;
+global.canvas = canvas;
 
 const { options } = Astro.props;
 
@@ -27,4 +30,7 @@ delete global.NodeList;
 delete global.HTMLCollection;
 ---
 
-<div class="flex justify-center" set:html={chart.outerHTML} />
+<div
+	class="flex justify-center"
+	set:html={chart.outerHTML}
+/>

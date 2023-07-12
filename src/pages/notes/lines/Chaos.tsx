@@ -1,5 +1,5 @@
 import { For } from 'solid-js';
-import { Figure } from './Figure';
+import { Figure } from '../../../components/Figure';
 
 export const Chaos = () => {
 	const width = 600;
@@ -20,7 +20,9 @@ export const Chaos = () => {
 	return (
 		<Figure caption={`Fig 3. ${num} randomly translated and rotated lines`}>
 			<div class="w-full sm:w-[600px]">
-				<svg viewBox={`0 0 ${width} ${height}`} xmlns="http://www.w3.org/2000/svg">
+				<svg
+					viewBox={`0 0 ${width} ${height}`}
+					xmlns="http://www.w3.org/2000/svg">
 					<For each={Array(num)}>
 						{() => (
 							<line
