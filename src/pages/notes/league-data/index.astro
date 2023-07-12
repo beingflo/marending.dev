@@ -2,8 +2,16 @@
 import Layout from '../../../layouts/layout.astro';
 import { Page } from '../../../components';
 import MatchesHeatmap from './MatchesHeatmap.astro';
+import MatchesBar from './MatchesBar.astro';
+import MatchesDayOfWeek from './MatchesDayOfWeek.astro';
+import MatchesHeatmapMe from './MatchesHeatmapMe.astro';
 ---
 
 <Layout>
-	<Page><MatchesHeatmap /></Page>
+	<Page>
+		<MatchesHeatmap />
+		<MatchesBar />
+		<MatchesDayOfWeek />
+		<MatchesHeatmapMe />
+	</Page>
 </Layout>

@@ -1,0 +1,61 @@
+---
+import { Chart } from '../../../components';
+import { Figure } from '../../../components/Figure';
+import * as Plot from '@observablehq/plot';
+import type { Match } from './types';
+import { getMatches } from './util';
+
+let matches: Array<Match> = getMatches();
+
+const matchesByDay = matches
+	?.filter((m) => m.players.includes('251'))
+	?.reduce((prev: Record<string, number>, d) => {
+		const day = d.startDate.toLocaleString('en-US', {
+			day: 'numeric',
+			month: 'numeric',
+			year: 'numeric',
+		});
+
+		if (prev[day]) {
+			prev[day] += 1;
+		} else {
+			prev[day] = 1;
+		}
+		return prev;
+	}, {});
+
+const matchFrequency = Object.entries(matchesByDay)?.map(([date, matches]) => ({
+	date: new Date(date),
+	matches,
+}));
+
+const getWeek = (date: Date): number => {
+	const startDate = new Date(date.getFullYear(), 0, 1);
+	const days = Math.floor((date.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000));
+
+	return Math.ceil(days / 7);
+};
+---
+
+<Figure caption="Figure 1. Number of matches played per day by me">
+	<Chart
+		options={{
+			x: { axis: null, domain: [...Array(52).keys()].map((x) => x + 1) },
+			y: {
+				tickFormat: Plot.formatWeekday('en', 'narrow'),
+				tickSize: 0,
+			},
+			fy: { tickFormat: '' },
+			color: { scheme: 'Greens', type: 'log', legend: true, ticks: 6 },
+			aspectRatio: 0.8,
+			marks: [
+				Plot.cell(matchFrequency, {
+					x: (d) => getWeek(d.date),
+					y: (d) => d.date.getDay(),
+					fill: 'matches',
+					fy: (d) => d.date.getFullYear(),
+				}),
+			],
+		}}
+	/>
+</Figure>

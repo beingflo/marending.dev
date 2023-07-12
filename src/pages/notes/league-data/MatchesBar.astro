@@ -1,0 +1,21 @@
+---
+import { Chart } from '../../../components';
+import { Figure } from '../../../components/Figure';
+import * as Plot from '@observablehq/plot';
+import type { Match } from './types';
+import { getMatches } from './util';
+
+let matches: Array<Match> = getMatches();
+---
+
+<Figure caption="Figure 2. Number of matches played per quarter">
+	<Chart
+		options={{
+			y: { grid: true, label: '↑ matches' },
+			x: { label: 'time →' },
+			marks: [
+				Plot.rectY(matches, Plot.binX({ y: 'count', interval: 'quarter' }, { x: 'startDate' })),
+			],
+		}}
+	/>
+</Figure>
