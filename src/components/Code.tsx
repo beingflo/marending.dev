@@ -9,7 +9,7 @@ export type Props = {
 export const Code = ({ value, caption = '', respectMargin = false }: Props) => (
 	<div class="mb-6">
 		<div
-			class={`shadow border border-black dark:border-white ${
+			class={`shadow border border-black dark:border-white bg-stone-50 ${
 				respectMargin ? '' : 'lg:-mx-4'
 			} shadow-[6px_6px_0_#00000020] dark:shadow-[6px_6px_0_#FFFFFF40]`}>
 			<div class="whitespace-pre p-2 font-mono overflow-x-scroll">{value}</div>
