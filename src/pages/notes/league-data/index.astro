@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../layouts/layout.astro';
-import { Page } from '../../../components';
+import { Note, Title, P } from '../../../components';
 import MatchesHeatmap from './MatchesHeatmap.astro';
 import MatchesBar from './MatchesBar.astro';
 import MatchesDayOfWeek from './MatchesDayOfWeek.astro';
@@ -13,21 +13,39 @@ import OffensiveGoalRate from './OffensiveGoalRate.astro';
 import WinStreakMe from './WinStreakMe.astro';
 import PlayerInvolvement from './PlayerInvolvement.astro';
 import PlayerInvolvementWins from './PlayerInvolvementWins.astro';
+import { notes } from '../../notes';
+
+const info = notes['league-data'];
 ---
 
 <Layout>
-	<Page>
-		<MatchesHeatmap />
-		<MatchesBar />
-		<MatchesDayOfWeek />
-		<MatchesHeatmapMe />
-		<MatchesPerPlayer />
-		<MatchesTimeOfDay />
-		<GoalsVsMatches />
-		<MatchesVsGoalsPerMatch />
-		<OffensiveGoalRate />
-		<WinStreakMe />
-		<PlayerInvolvement />
-		<PlayerInvolvementWins />
-	</Page>
+	<Note>
+		<Title subtitle={info.subtitle}>
+			{info.title}
+		</Title>
+		<P>
+			About 4 years ago I graduated from university and started my first job at a company. Some two
+			weeks into my employment I was asked to join a game of foosball (also known as table soccer or <em
+				>töggele</em
+			> if you care for some swiss german) by some colleagues. It was fun!
+		</P>
+		<P>
+			Anyway, so my career took off, I enjoyed the craft very much and like to say I contributed one
+			or the other valuable thing to the people around me. Today, I can proudly call myself a Senior
+			<s>Foosball Player</s>
+			<em>*cough*</em> Software Engineer.
+		</P>
+	</Note>
+	<MatchesHeatmap />
+	<MatchesBar />
+	<MatchesDayOfWeek />
+	<MatchesHeatmapMe />
+	<MatchesPerPlayer />
+	<MatchesTimeOfDay />
+	<GoalsVsMatches />
+	<MatchesVsGoalsPerMatch />
+	<OffensiveGoalRate />
+	<WinStreakMe />
+	<PlayerInvolvement />
+	<PlayerInvolvementWins />
 </Layout>

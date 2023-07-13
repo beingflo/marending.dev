@@ -1,4 +1,10 @@
 export const notes = {
+	'league-data': {
+		title: '9 years worth of company foosball data analyzed',
+		subtitle: 'Nobody tell management',
+		date: '13 Jul 2023',
+		link: '/notes/league-data/',
+	},
 	'co2-bedroom': {
 		title: 'The air quality impact of closing your bedroom door at night',
 		subtitle: 'Trying not to suffocate while sleeping',
