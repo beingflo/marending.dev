@@ -55,15 +55,7 @@ export const Feedback = () => {
 						class="block resize w-full h-24 border border-gray-900 dark:border-gray-200 dark:bg-zinc-800 p-0.5"
 					/>
 				</label>
-				<div class="flex flex-row justify-end gap-2 items-center">
-					<Switch>
-						<Match when={notification() === 'success'}>
-							<p class="text-green-800 dark:text-green-200">Thanks!</p>
-						</Match>
-						<Match when={notification() === 'failure'}>
-							<p class="text-rose-800 dark:text-rose-200">Something went wrong :(</p>
-						</Match>
-					</Switch>
+				<div class="flex flex-row justify-end items-center">
 					<button
 						class="border border-black dark:border-white py-1 px-2"
 						onClick={submit}>
@@ -71,6 +63,16 @@ export const Feedback = () => {
 					</button>
 				</div>
 			</form>
+			<div class="mt-8 flex flex-row justify-end p-2">
+				<Switch>
+					<Match when={notification() === 'success'}>
+						<p class="text-green-800 dark:text-green-200">Thanks!</p>
+					</Match>
+					<Match when={notification() === 'failure'}>
+						<p class="text-rose-800 dark:text-rose-200">Something went wrong :(</p>
+					</Match>
+				</Switch>
+			</div>
 		</div>
 	);
 };
