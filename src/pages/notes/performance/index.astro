@@ -111,16 +111,16 @@ const adapterLink = 'https://github.com/sveltejs/kit/tree/master/packages/adapte
 		</P>
 		<SSRResults />
 		<P>
-			For the <C>/notes/lines</C> page there is a noticable degredation because there are thousands of
-			elements rendered into <C>SVGs</C>, which has the server do some work. The whole page is also
-			significantly larger, which is also going to have some impact.
+			For the <C>/notes/lines</C> page there is a noticeable degredation because there are thousands
+			of elements rendered into <C>SVGs</C>, which has the server do some work. The whole page is
+			also significantly larger, which is also going to have some impact.
 		</P>
 		<P>
 			Next, we are going to turn on pre-rendering (or SSG) while keeping everything else the same.
 		</P>
 		<SSGResults />
 		<P>
-			The impact is immediately noticable for both pages. Now the difference between <C>/</C> and <C>
+			The impact is immediately noticeable for both pages. Now the difference between <C>/</C> and <C>
 				/notes/lines
 			</C> is probably down to the size of the pages as no additional effort is required per request
 			for either.
