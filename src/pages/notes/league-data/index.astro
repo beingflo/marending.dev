@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../layouts/layout.astro';
-import { Note, Title, P } from '../../../components';
+import { Note, Title, P, H2 } from '../../../components';
 import MatchesHeatmap from './MatchesHeatmap.astro';
 import MatchesBar from './MatchesBar.astro';
 import MatchesDayOfWeek from './MatchesDayOfWeek.astro';
@@ -35,17 +35,30 @@ const info = notes['league-data'];
 			<s>Foosball Player</s>
 			<em>*cough*</em> Software Engineer.
 		</P>
+		<MatchesHeatmap />
+		<MatchesBar />
+		<MatchesDayOfWeek />
+		<MatchesHeatmapMe />
+		<MatchesPerPlayer />
+		<MatchesTimeOfDay />
+		<GoalsVsMatches />
+		<MatchesVsGoalsPerMatch />
+		<OffensiveGoalRate />
+		<WinStreakMe />
+		<PlayerInvolvement />
+		<PlayerInvolvementWins />
+		<H2>What's next?</H2>
+		<P>
+			There are of course many more interesting visualizations left untouched here. If you have a
+			great idea make sure to let me know in the feedback box on the bottom right of the page.
+		</P>
+		<P>
+			The thing we're really interested in however, is who's the best. After all, at least half the
+			enjoyment (according to me) of a competitive activity is being able to tell others they suck
+			if you win. But how do we know who is the best? A simple measure like the ratio of wins to
+			matches played has shortcomings. Luckily this is a well established problem with intersting
+			solutions. In a follow up note we will compare different ranking algorithms by their ability
+			to predict the outcome of future matches.
+		</P>
 	</Note>
-	<MatchesHeatmap />
-	<MatchesBar />
-	<MatchesDayOfWeek />
-	<MatchesHeatmapMe />
-	<MatchesPerPlayer />
-	<MatchesTimeOfDay />
-	<GoalsVsMatches />
-	<MatchesVsGoalsPerMatch />
-	<OffensiveGoalRate />
-	<WinStreakMe />
-	<PlayerInvolvement />
-	<PlayerInvolvementWins />
 </Layout>
