@@ -94,9 +94,8 @@ const adapterLink = 'https://github.com/sveltejs/kit/tree/master/packages/adapte
 		</P>
 		<H2 id="benchmark">Benchmarking marending.dev</H2>
 		<P>
-			To get a realistic end-to-end view of how the server performs, I'm running benchmarks at the <C>
-				HTTP
-			</C> level using <C>wrk</C> approximately like so:
+			To get a realistic end-to-end view of how the server performs, I'm running benchmarks at the
+			<C>HTTP</C> level using <C>wrk</C> approximately like so:
 		</P>
 		<Code value={`wrk -c 100 -d 30s -t 6 --latency http://localhost:3000/notes/lines`} />
 		<P>
@@ -150,12 +149,11 @@ const adapterLink = 'https://github.com/sveltejs/kit/tree/master/packages/adapte
 		<CaddyStaticResults />
 		<Details title="Validating measurements is a pretty good idea!">
 			<P>
-				At first I was actually measuring around 62'000 requests per second for the <C>
-					/notes/lines
-				</C> page. This was surprising since it's a larger page than <C>/</C>, so if anything, it
-				should be slower. My first thought was that I mistyped the URL and was hitting the <C>
-					404
-				</C> page, but visiting it in the browser worked just fine.
+				At first I was actually measuring around 62'000 requests per second for the
+				<C>/notes/lines</C> page. This was surprising since it's a larger page than <C>/</C>, so if
+				anything, it should be slower. My first thought was that I mistyped the URL and was hitting
+				the
+				<C>404</C> page, but visiting it in the browser worked just fine.
 			</P>
 			<P>
 				Only when <C>curl</C>ing the page from the command line did I notice that I was getting a
