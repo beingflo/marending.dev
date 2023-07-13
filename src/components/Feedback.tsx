@@ -8,9 +8,12 @@ export const Feedback = () => {
 	const submit = async (event: any) => {
 		event.preventDefault();
 
+		const urlParams = new URLSearchParams(window.location.search);
+		const path = urlParams.get('path');
+
 		const response = await fetch('/api/feedback', {
 			method: 'POST',
-			body: JSON.stringify({ email: email(), content: content() }),
+			body: JSON.stringify({ email: email(), content: content(), path }),
 		}).catch((error) => {
 			setNotification('failure');
 			throw error;
