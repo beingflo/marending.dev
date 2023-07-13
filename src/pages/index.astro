@@ -6,7 +6,7 @@ import { notes } from './notes';
 
 <Layout>
 	<WidePage>
-		<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 md:gap-12 md:gap-y-16">
+		<div class="flex flex-col gap-4 w-fit xl:w-full mx-auto">
 			{
 				Object.values(notes).map((note) => (
 					<NoteSummary
