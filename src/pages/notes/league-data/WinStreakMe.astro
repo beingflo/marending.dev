@@ -1,0 +1,40 @@
+---
+import { Chart } from '../../../components';
+import { Figure } from '../../../components/Figure';
+import * as Plot from '@observablehq/plot';
+import type { Match } from './types';
+import { getMatches } from './util';
+
+let matches: Array<Match> = getMatches();
+let players: Record<string, number> = {};
+
+let streaksMe: Array<{ match: number; streak: number }> = [];
+
+matches.forEach((m) => {
+	const aWins = m.teamAScore > m.teamBScore;
+	const winningTeam = aWins ? m.teamA : m.teamB;
+	const losingTeam = aWins ? m.teamB : m.teamA;
+
+	winningTeam.forEach((p) => {
+		players[p] = players[p] ? players[p] + 1 : 1;
+	});
+
+	losingTeam.forEach((p) => {
+		players[p] = 0;
+	});
+
+	if (losingTeam.includes('251') || winningTeam.includes('251')) {
+		streaksMe.push({ match: streaksMe.length, streak: players['251'] });
+	}
+});
+---
+
+<Figure caption="Figure 8. Matches I won in a row over all matches I played">
+	<Chart
+		options={{
+			y: { grid: true, label: '↑ win streak' },
+			x: { label: 'match →' },
+			marks: [Plot.dotY(streaksMe, { x: 'match', y: 'streak' })],
+		}}
+	/>
+</Figure>
