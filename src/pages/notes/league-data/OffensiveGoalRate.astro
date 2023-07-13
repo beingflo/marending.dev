@@ -37,8 +37,8 @@ data = data.filter((d) => d.matches > 100);
 	caption="Figure 7. Proportion of goals scored from offensive position for all players who played at least 100 matches.">
 	<Chart
 		options={{
-			x: { tickFormat: (d) => '', type: 'band' },
-			y: { label: '↑ offensive rate' },
+			x: { tickFormat: (d) => '', type: 'band', label: '' },
+			y: { label: '↑ offensive rate', domain: [0.45, 0.75] },
 			marks: [
 				Plot.barY(data, {
 					x: 'player',
