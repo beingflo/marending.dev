@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../layouts/layout.astro';
-import { Note, Title, P, H2, A } from '../../../components';
+import { Info, Note, Title, P, H2, A, Details } from '../../../components';
 import MatchesHeatmap from './MatchesHeatmap.astro';
 import MatchesBar from './MatchesBar.astro';
 import MatchesDayOfWeek from './MatchesDayOfWeek.astro';
@@ -23,6 +23,7 @@ const info = notes['league-data'];
 		<Title subtitle={info.subtitle}>
 			{info.title}
 		</Title>
+		<Info>Work in progress</Info>
 		<P>
 			About 4 years ago I graduated from university and started my first job at a company. Some two
 			weeks into my employment I was asked to join a game of foosball (also known as table soccer or <em
@@ -63,6 +64,19 @@ const info = notes['league-data'];
 			hopefully improve on the current implementation. Lastly, the goal is to implement V2 of this
 			app as the old one is showing its age.
 		</P>
+		<Details title="How are these plots generated?">
+			<P>
+				I'm using an excellent JS library called
+				<A href="https://observablehq.com/plot/">Observable Plot</A>. It's highly configurable but
+				still fairly ergonomic to use. In fact, the library is written by the same author as D3,
+				<em>the</em> data viz library.
+			</P>
+			<P>
+				The plots are generated statically at build-time and shipped as SVGs in the HTML. Very happy
+				with this setup and I highly recommend to try Plot!
+			</P>
+		</Details>
+		<H2>Match distributions</H2>
 		<MatchesHeatmap />
 		<MatchesBar />
 		<MatchesDayOfWeek />
