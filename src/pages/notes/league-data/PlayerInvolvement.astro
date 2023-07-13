@@ -1,0 +1,90 @@
+---
+import { Chart } from '../../../components';
+import { Figure } from '../../../components/Figure';
+import * as Plot from '@observablehq/plot';
+import type { Match } from './types';
+import { getMatches } from './util';
+
+let matches: Array<Match> = getMatches();
+let players: Record<string, number> = {};
+let proPlayers: Array<string> = [];
+let proPlayersByMatchCount: Array<{ matches: number; player: string }> = [];
+let involvement: Map<string, number> = new Map();
+
+matches.forEach((m) => {
+	m.teamA.forEach((p) => {
+		players[p] = (players[p] ?? 0) + 1;
+	});
+	m.teamB.forEach((p) => {
+		players[p] = (players[p] ?? 0) + 1;
+	});
+});
+
+Object.entries(players).forEach(([p, m]) => {
+	if (m > 1000) {
+		proPlayers.push(p);
+	}
+});
+
+Object.entries(players).forEach(([p, m]) => {
+	if (m > 1000) {
+		proPlayersByMatchCount.push({ player: p, matches: m });
+	}
+});
+
+proPlayersByMatchCount.sort((a, b) => b.matches - a.matches);
+
+matches.forEach((m) => {
+	let player1 = m.teamA[0];
+	let player2 = m.teamA[1];
+
+	if (proPlayers.includes(player1) && proPlayers.includes(player2)) {
+		let key = `${player1}-${player2}`;
+		involvement.set(key, (involvement.get(key) ?? 0) + 1);
+
+		key = `${player2}-${player1}`;
+		involvement.set(key, (involvement.get(key) ?? 0) + 1);
+	}
+
+	player1 = m.teamB[0];
+	player2 = m.teamB[1];
+
+	if (proPlayers.includes(player1) && proPlayers.includes(player2)) {
+		let key = `${player1}-${player2}`;
+		involvement.set(key, (involvement.get(key) ?? 0) + 1);
+
+		key = `${player2}-${player1}`;
+		involvement.set(key, (involvement.get(key) ?? 0) + 1);
+	}
+});
+
+const playerInvolvement: Array<{ player1: string; player2: string; matches: number }> = [];
+involvement.forEach((val, key) => {
+	const [player1, player2] = key.split('-');
+	playerInvolvement.push({ player1, player2, matches: val });
+});
+
+playerInvolvement.sort((a, b) => a.matches - b.matches);
+---
+
+<Figure caption="Figure 9. Number of matches played together between prolific players.">
+	<Chart
+		options={{
+			y: { label: '', type: 'band', domain: proPlayersByMatchCount.map((p) => p.player) },
+			x: {
+				label: '',
+				type: 'band',
+				domain: proPlayersByMatchCount.map((p) => p.player),
+				tickRotate: -90,
+			},
+			color: { scheme: 'YlGn', type: 'log', legend: true, ticks: 6 },
+			marks: [
+				Plot.cell(playerInvolvement, {
+					x: 'player1',
+					y: 'player2',
+					fill: 'matches',
+				}),
+			],
+		}}
+	/>
+</Figure>
