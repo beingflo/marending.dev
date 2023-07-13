@@ -45,9 +45,8 @@ const info = notes['lines'];
 			myself to <span class="hover:line-through decoration-1 font-bold">straight lines</span>.
 		</P>
 		<Details title="How do I go about generating my lines?">
-			Initially I had two programming languages in mind: <C>Rust</C> or <C>Javascript</C>. <C>
-				Rust
-			</C>
+			Initially I had two programming languages in mind: <C>Rust</C> or <C>Javascript</C>.
+			<C>Rust</C>
 			being my favorite language was an obvious choice. However, the dynamic nature of <C>JS</C> lends
 			itself to a problem like this. No sense in fighting <C>Rusts</C> borrow-checker for interactive
 			code, and the upsides you get in turn don't really come into play here. What further seals the
@@ -110,9 +109,8 @@ const info = notes['lines'];
 				This way I don't have to do any math, just generate random numbers for the rotation. As it
 				turns out, this doesn't work correctly as we have seen above. The lines are rotated about
 				the
-				<C>(0, 0)</C> origin instead of the center point of the line. To fix it, we either set the <C>
-					transform-origin
-				</C> property on the <C>SVG</C> correctly, or we get fancy:
+				<C>(0, 0)</C> origin instead of the center point of the line. To fix it, we either set the
+				<C>transform-origin</C> property on the <C>SVG</C> correctly, or we get fancy:
 			</P>
 			<Code
 				respectMargin
