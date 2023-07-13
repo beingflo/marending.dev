@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../layouts/layout.astro';
-import { Note, Title, P, H2 } from '../../../components';
+import { Note, Title, P, H2, A } from '../../../components';
 import MatchesHeatmap from './MatchesHeatmap.astro';
 import MatchesBar from './MatchesBar.astro';
 import MatchesDayOfWeek from './MatchesDayOfWeek.astro';
@@ -30,10 +30,38 @@ const info = notes['league-data'];
 			> if you care for some swiss german) by some colleagues. It was fun!
 		</P>
 		<P>
-			Anyway, so my career took off, I enjoyed the craft very much and like to say I contributed one
-			or the other valuable thing to the people around me. Today, I can proudly call myself a Senior
+			Anyway, so my career took off, I enjoyed the craft very much and developed some solid skills.
+			I'd even say I made one or the other valuable contribution to the people around me and their
+			success. Today, I can proudly call myself Senior
 			<s>Foosball Player</s>
 			<em>*cough*</em> Software Engineer.
+		</P>
+		<P>
+			All jokes aside, I did spend most of my time writing software (sitting in meetings) and far
+			too little playing foosball. Luckily a colleague built a web app that has been used to
+			meticulously track every match played at work, so I <em>could</em> give you the exact time I spent
+			playing foosball. But I won't without a lawyer in the room. Thinking about this now, you'd assume
+			someone going through the trouble of building an app where people willingly record their slacking
+			off would be out to blackmail you later. I'm reasonably certain that's not the case. Especially
+			because the author is also the most prolific player.
+		</P>
+		<H2>Data</H2>
+		<P>
+			So this is the deal: For the past nine years employees of my company have played foosball and
+			tracked every match. The data includes timestamps of the start and end of every match, who
+			played, in what constellation and who scored goals. The app also implements a ranking based on
+			an <A href="https://en.wikipedia.org/wiki/Elo_rating_system">Elo rating system</A>. A typical
+			pilgrimage to the foosball table would include 4 matches to 5 goals each. The players are
+			arranged in a specific way and permutated between matches. For instance, among 4 players and 4
+			matches, everyone needs to play with someone twice. The app would ensure that the top and
+			bottom rated players play together twice to even out the playing field.
+		</P>
+		<P>
+			Naturally, this treasure trove of company time embezzelment deserves a thorough look. First I
+			want to run some analysis on the data and produce some nice visualizations. That's the note
+			you're looking at right now. In a follow-up, I will compare different ranking algorithms and
+			hopefully improve on the current implementation. Lastly, the goal is to implement V2 of this
+			app as the old one is showing its age.
 		</P>
 		<MatchesHeatmap />
 		<MatchesBar />
