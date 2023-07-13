@@ -8,7 +8,7 @@ export type Props = {
 export const H2 = ({ id, children }: Props) => (
 	<h2
 		id={id}
-		class="text-xl font-semibold mb-3 mt-4">
+		class="text-xl font-semibold mb-3 mt-6">
 		{children}
 	</h2>
 );

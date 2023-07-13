@@ -1,5 +1,5 @@
 ---
-import { C, Code, H2, H3, Note, P, Title } from '../../components';
+import { A, C, Code, H2, H3, Note, P, Title } from '../../components';
 import Layout from '../../layouts/layout.astro';
 import { notes } from '../notes';
 
@@ -65,6 +65,28 @@ const info = notes['website'];
 			The SvelteKit application is built with the static adapter. This outputs only static assets
 			that I'm serving directly from my webserver. I use caddy as the webserver as well as a reverse
 			proxy to route the requests to the other applications I have running.
+		</P>
+		<H2>Update July 2023</H2>
+		<P>
+			In the meantime I've ported this page to <A href="https://astro.build">Astro</A>. I know, I
+			know, but rewriting a website is just excellent procrastination instead of actually writing
+			notes.
+		</P>
+		<P>
+			While I largely enjoyed SvelteKit, I felt like it's not the right tool for the job. It's
+			geared towards full stack apps, including backend apis and what have you. To just output a
+			static site with statically generated graphs felt like going against the flow.
+		</P>
+		<P>
+			So I chose a more appropriate technology. Astro is built for static content and optionally
+			allows sprinkling some interactivity into pages using its <em>island architecture</em>. It
+			works really well so far.
+		</P>
+		<P>
+			An additional benefit is that components from any major framework can be rendered, statically
+			at build time or on the client. This made porting extremely easy as I could use the Svelte
+			component as is in <C>.astro</C> files. Gradually, I switched them over to
+			<A href="https://www.solidjs.com/">SolidJS</A>.
 		</P>
 	</Note>
 </Layout>
