@@ -35,7 +35,7 @@ const data = Object.entries(players).map(([player, [goals, matches]]) => ({
 }));
 ---
 
-<Figure caption="Figure 3. Goals versus matches for players who scored at least 100 goals">
+<Figure caption="Figure 8. Goals versus matches for players who scored at least 100 goals">
 	<Chart
 		options={{
 			x: { grid: true },
@@ -48,7 +48,7 @@ const data = Object.entries(players).map(([player, [goals, matches]]) => ({
 				),
 				Plot.linearRegressionY(
 					data.filter((d) => d.goals > 100),
-					{ x: 'matches', y: 'goals', stroke: 'red' }
+					{ x: 'matches', y: 'goals', stroke: 'red', ci: 0 }
 				),
 				Plot.text(
 					data.filter((d) => d.goals > 100),

@@ -114,7 +114,7 @@ const info = notes['league-data'];
 			Overall, the matches are distributed quite evenly across all weekdays. A few games have been
 			played on Saturday, this might have been at some company events. And not a single game on
 			Sunday, almost as if people consider foosball work and god-fearingly refuse to do it on
-			<em>that</em> day.
+			<em>that</em> day. No, that can't be it.
 		</P>
 		<MatchesDayOfWeek />
 		<P>
@@ -152,23 +152,47 @@ const info = notes['league-data'];
 		</P>
 		<PlayerInvolvement />
 		<P>
-			The players are sorted (ascending top and towards left) by total number of matches played. I'm
+			The players are sorted (ascending towards top and left) by total number of matches played. I'm
 			player #251 in this anonymized permutation. With my 1'048 matches I barely make the cut. Due
 			to being a relatively new player - missing out during COVID, too - I haven't played a single
 			game with the majority of these prolific players. Some people on here have surely already left
 			the company.
 		</P>
 		<P>
+			How #39 and #161 managed to play with themselves is a mystery to me by the way. All I know is
+			that they should get a room when they do.
+		</P>
+		<P>
 			There would probably be some correlation between higher density in ones row on this plot and
 			seniority at the company. But I'm not about to enrich this already risky endeavour with
 			personally identifiable data.
 		</P>
-		<P>Let's turn our attention towards scoring goals. We're not playing for fun here right?</P>
+		<P>Let's turn our attention towards goals. We're playing to win, not just for fun, right?</P>
 		<GoalsVsMatches />
+		<P>
+			The red line is a linear regression fitted to all the players. There is a surpring consistency
+			to this. No extreme outliers at least among the more prolific players.
+		</P>
+		<P>
+			When we plot this more explicitly as goals per match vs matches played, we see that among
+			rookie players there is a lot more spread than more seasoned ones:
+		</P>
 		<MatchesVsGoalsPerMatch />
+		<P>I'm just glad I'm in the upper half.</P>
+		<P>
+			Next, I wondered how consistent people are in scoring goals from different positions. There
+			are some notorious players that can produce some real bangers from the defensive position,
+			while others almost exclusively score goals in the offensive.
+		</P>
 		<OffensiveGoalRate />
-		<WinStreakMe />
+		<P>
+			There is a lot more spread here. If we don't exclude players with less than 100 matches we
+			even get some that score more in the defense than the offense. Some would say that makes them
+			very balanced players, others that they suck in the offensive. It all depends on which team
+			you're on.
+		</P>
 		<PlayerInvolvementWins />
+		<WinStreakMe />
 		<H2>What's next?</H2>
 		<P>
 			There are of course many more interesting visualizations left untouched here. If you have a
