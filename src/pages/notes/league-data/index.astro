@@ -60,9 +60,11 @@ const info = notes['league-data'];
 		<P>
 			Naturally, this treasure trove of company time embezzelment data deserves a thorough look.
 			First, I want to run some analysis on the data and produce some nice visualizations. That's
-			the note you're looking at right now. In a follow-up, I will compare different ranking
-			algorithms and hopefully improve on the current implementation. Lastly, the goal is to
-			implement V2 of this app as the old one is showing its age.
+			the note you're looking at right now. In the data and the plots you'll see below, I have
+			anonymized the company-internal shortnames to protect the innocent (or rather the guilty). In
+			a follow-up, I will compare different ranking algorithms and hopefully improve on the current
+			implementation. Lastly, the goal is to implement V2 of this app as the old one is showing its
+			age.
 		</P>
 		<Details title="How are these plots generated?">
 			<P>
@@ -72,8 +74,9 @@ const info = notes['league-data'];
 				<em>the</em> data viz library.
 			</P>
 			<P>
-				The plots are generated statically at build-time and shipped as SVGs in the HTML. Very happy
-				with this setup and I highly recommend to try Plot!
+				The plots are generated statically at build-time and shipped as SVGs in the HTML. This leads
+				to quite a heavy page at around half a megabyte. Still better than shipping 12 megabytes of
+				match data and having the client render the plots though.
 			</P>
 		</Details>
 		<H2>Match distributions</H2>
@@ -102,13 +105,35 @@ const info = notes['league-data'];
 		</P>
 		<P>
 			There is still a long way to go of course, the golden age of ~60 games per day in 2014 and
-			2015 is long gone. But one day we shall ring in the days of bountiful matches again.
+			2015 is long gone. But one day we shall ring in the days of bountiful matches again. When we
+			look at the number of matches played by quarter we can see that we are at least at
+			pre-COVID-19 levels.
 		</P>
 		<MatchesBar />
+		<P>
+			Overall, the matches are distributed quite evenly across all weekdays. A few games have been
+			played on Saturday, this might have been at some company events. And not a single game on
+			Sunday, almost as if people consider foosball work and god-fearingly refuse to do it on
+			<em>that</em> day.
+		</P>
 		<MatchesDayOfWeek />
-		<MatchesHeatmapMe />
-		<MatchesPerPlayer />
+		<P>
+			If we plotted the day of week distribution over time we'd see that lately it has been very
+			hard to find enough players on a Friday, as visible in Figure 1.
+		</P>
+		<P>
+			Most matches are played in the 2 hours around lunch. Maybe that's when people are unlikely to
+			have meetings. Though some mad people have the nerve to show up to the office at 7 and go
+			straight for the foosball table.
+		</P>
 		<MatchesTimeOfDay />
+		<MatchesPerPlayer />
+		<P>
+			In a small personal detour, let's look at the distribution of matches I played. A fun fact
+			about this is that of all games played in the last two years, I was involved in 78%. Did I
+			already mention you shouldn't bring this to the attention of my companys management?
+		</P>
+		<MatchesHeatmapMe />
 		<GoalsVsMatches />
 		<MatchesVsGoalsPerMatch />
 		<OffensiveGoalRate />

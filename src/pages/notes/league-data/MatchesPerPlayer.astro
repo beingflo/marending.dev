@@ -22,7 +22,7 @@ const data = Object.entries(matchesPerPlayer).map(([p, n]) => ({ player: p, matc
 data.sort((a, b) => b.matches - a.matches);
 ---
 
-<Figure caption="Figure 3. Number of matches played by player. Limited to the top 100 players">
+<Figure caption="Figure 5. Number of matches played by player. Limited to the top 100 players">
 	<Chart
 		options={{
 			x: { tickSize: 0, tickFormat: (d) => '', label: 'Players', type: 'band' },
