@@ -58,7 +58,7 @@ const info = notes['league-data'];
 			bottom rated players play together twice to even out the playing field.
 		</P>
 		<P>
-			Naturally, this treasure trove of company time embezzelment data deserves a thorough look.
+			Naturally, this treasure trove of company time embezzlement data deserves a thorough look.
 			First, I want to run some analysis on the data and produce some nice visualizations. That's
 			the note you're looking at right now. In the data and the plots you'll see below, I have
 			anonymized the company-internal shortnames to protect the innocent (or rather the guilty). In
@@ -92,8 +92,8 @@ const info = notes['league-data'];
 		<P>
 			What's immediately evident is the general decline in eagerness to play over the years. When I
 			joined at the end of 2019 the company was already in a pitiful state. And of course, COVID-19
-			has immortalized itself in yet another dataset. During mandatory homeoffice periods there is a
-			disturbing lack of matches visible.
+			has immortalized itself in yet another dataset. During mandatory home-office periods there is
+			a disturbing lack of matches visible.
 		</P>
 		<P>
 			What's somewhat less obvious are the heroic actions of a single team (nay, single <em
@@ -130,7 +130,7 @@ const info = notes['league-data'];
 		<P>
 			In a small personal detour, let's look at the distribution of matches I played. A fun fact
 			about this is that of all games played in the last two years, I was involved in 78% of them.
-			Did I already mention you shouldn't bring this to the attention of my companys management?
+			Did I already mention you shouldn't bring this to the attention of my companies management?
 		</P>
 		<MatchesHeatmapMe />
 		<P>
@@ -170,8 +170,8 @@ const info = notes['league-data'];
 		<P>Let's turn our attention towards goals. We're playing to win, not just for fun, right?</P>
 		<GoalsVsMatches />
 		<P>
-			The red line is a linear regression fitted to all the players. There is a surpring consistency
-			to this. No extreme outliers at least among the more prolific players.
+			The red line is a linear regression fitted to all the players. There is a surprising
+			consistency to this. No extreme outliers at least among the more prolific players.
 		</P>
 		<P>
 			When we plot this more explicitly as goals per match vs matches played, we see that among
@@ -187,11 +187,19 @@ const info = notes['league-data'];
 		<OffensiveGoalRate />
 		<P>
 			There is a lot more spread here. If we don't exclude players with less than 100 matches we
-			even get some that score more in the defense than the offense. Some would say that makes them
+			even get some that score more in the defence than the offence. Some would say that makes them
 			very balanced players, others that they suck in the offensive. It all depends on which team
 			you're on.
 		</P>
+		<P>
+			Maybe some duos of players complement each others skills particularly well. To see this, I've
+			plotted - similar to Figure 7 above - all combinations of players. The color of each cell
+			indicates the win rate when the corresponding players join up. To exclude unrepresentative
+			results, I'm not showing a color at all when the match-up has not played at least 10 games
+			together.
+		</P>
 		<PlayerInvolvementWins />
+		<P>The darker squares now indicate particularly well functioning teams. Neat!</P>
 		<P>
 			Lastly, I leave you with a plot that looks kind of funny: The current win streak
 			(consecutively won matches) at every match I played.
@@ -200,7 +208,7 @@ const info = notes['league-data'];
 		<P>
 			If this plot was really wide we would see a sawtooth pattern: With every won match, the streak
 			would increase, only to drop down to zero instantly when I loose. The longer the win streak,
-			the more rare of an occurence it is. Clearly, the longest streak was 10 matches for me. The
+			the more rare of an occurrence it is. Clearly, the longest streak was 10 matches for me. The
 			longest streak across all players is 23 by the way.
 		</P>
 
@@ -213,7 +221,7 @@ const info = notes['league-data'];
 			The thing we're really interested in however, is who's the best. After all, at least half the
 			enjoyment (according to me) of a competitive activity is being able to tell others they suck
 			if you win. But how do we know who is the best? A simple measure like the ratio of wins to
-			matches played has shortcomings. Luckily this is a well established problem with intersting
+			matches played has shortcomings. Luckily this is a well established problem with interesting
 			solutions. In a follow up note we will compare different ranking algorithms by their ability
 			to predict the outcome of future matches.
 		</P>
