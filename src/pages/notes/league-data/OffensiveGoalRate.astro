@@ -38,7 +38,7 @@ data = data.filter((d) => d.matches > 100);
 	<Chart
 		options={{
 			x: { tickFormat: (d) => '', tickSize: 0, type: 'band', label: 'players', grid: true },
-			y: { label: '↑ offensive rate', domain: [0.45, 0.75], grid: true },
+			y: { label: '↑ offensive goal rate', domain: [0.45, 0.75], grid: true },
 			marks: [
 				Plot.dotY(data, {
 					x: 'player',
