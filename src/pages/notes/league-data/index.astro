@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../layouts/layout.astro';
-import { Info, Note, Title, P, H2, A, Details, C } from '../../../components';
+import { Note, Title, P, H3, A, Details, C } from '../../../components';
 import MatchesHeatmap from './MatchesHeatmap.astro';
 import MatchesBar from './MatchesBar.astro';
 import MatchesDayOfWeek from './MatchesDayOfWeek.astro';
@@ -45,7 +45,6 @@ const info = notes['league-data'];
 			off would be out to blackmail you later. I'm reasonably certain that's not the case. Especially
 			because the author is also the most prolific player.
 		</P>
-		<H2>Data</H2>
 		<P>
 			So this is the deal: For the past nine years employees of my company have played foosball and
 			tracked every match. The data includes timestamps of the start and end of every match, who
@@ -78,7 +77,6 @@ const info = notes['league-data'];
 				match data and having the client render the plots though.
 			</P>
 		</Details>
-		<H2>Match distributions</H2>
 		<P>
 			In total the data set contains around 25'000 matches spanning over 9 years! This works out to
 			about 8 matches played per day (or over 10 per working day). I, for instance, was personally
@@ -211,7 +209,7 @@ const info = notes['league-data'];
 			longest streak across all players is 23 by the way.
 		</P>
 
-		<H2>What's next?</H2>
+		<H3>What's next?</H3>
 		<P>
 			There are of course many more interesting visualizations left untouched here. If you have a
 			great idea make sure to let me know in the feedback box on the bottom right of the page.
