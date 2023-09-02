@@ -2,7 +2,7 @@ export const notes = {
 	'league-rating': {
 		title: 'Analyzing rating systems for foosball outcomes',
 		subtitle: 'Color me disappointed',
-		date: '13 Jul 2023',
+		date: '2 Sep 2023',
 		link: '/notes/league-rating/',
 	},
 	'league-data': {
