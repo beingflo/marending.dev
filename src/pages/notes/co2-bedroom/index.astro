@@ -37,32 +37,12 @@ const co2Link = 'https://www.dhs.wisconsin.gov/chemical/carbondioxide.htm';
 			The question arises immediately what happens to the CO2 level in each scenario. First, I
 			placed the sensor in the bedroom and left the door open:
 		</P>
-		<div class="my-4 dark:hidden">
+		<div class="my-4">
 			<Chart
 				options={{
 					y: { label: '↑ co2 (ppm)', domain: [0, 1050] },
 					x: { type: 'time' },
 					marginLeft: 60,
-					marks: [
-						Plot.lineY(
-							dataOpenDoor?.map(({ date, value }) => ({
-								date: new Date(date),
-								value,
-							})),
-							{ x: 'date', y: 'value' }
-						),
-						Plot.ruleY([1000], { stroke: 'orange', strokeDasharray: 2 }),
-					],
-				}}
-			/>
-		</div>
-		<div class="my-4 hidden dark:block">
-			<Chart
-				options={{
-					y: { label: '↑ co2 (ppm)', domain: [0, 1050] },
-					x: { type: 'time' },
-					marginLeft: 60,
-					style: { background: '#27272A' },
 					marks: [
 						Plot.lineY(
 							dataOpenDoor?.map(({ date, value }) => ({
@@ -84,33 +64,12 @@ const co2Link = 'https://www.dhs.wisconsin.gov/chemical/carbondioxide.htm';
 			Next, I repeated the experiment with the bedroom door closed. Two people, one CO2 sensor, very
 			romantic:
 		</P>
-		<div class="my-4 dark:hidden">
+		<div class="my-4">
 			<Chart
 				options={{
 					y: { label: '↑ co2 (ppm)' },
 					x: { type: 'time' },
 					marginLeft: 60,
-					marks: [
-						Plot.lineY(
-							dataClosedDoor?.map(({ date, value }) => ({
-								date: new Date(date),
-								value,
-							})),
-							{ x: 'date', y: 'value' }
-						),
-						Plot.ruleY([1000], { stroke: 'orange', strokeDasharray: 2 }),
-						Plot.ruleY([2000], { stroke: 'red', strokeDasharray: 2 }),
-					],
-				}}
-			/>
-		</div>
-		<div class="my-4 hidden dark:block">
-			<Chart
-				options={{
-					y: { label: '↑ co2 (ppm)' },
-					x: { type: 'time' },
-					marginLeft: 60,
-					style: { background: '#27272A' },
 					marks: [
 						Plot.lineY(
 							dataClosedDoor?.map(({ date, value }) => ({
