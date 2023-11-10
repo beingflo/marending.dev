@@ -11,9 +11,10 @@ export const Feedback = () => {
 		const urlParams = new URLSearchParams(window.location.search);
 		const path = urlParams.get('path');
 
-		const response = await fetch('/api/feedback', {
+		const response = await fetch('https://feedback.marending.dev/feedback', {
 			method: 'POST',
-			body: JSON.stringify({ email: email(), content: content(), path }),
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ project: 'marending.dev', email: email(), content: content(), path }),
 		}).catch((error) => {
 			setNotification('failure');
 			throw error;
