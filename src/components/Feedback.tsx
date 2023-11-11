@@ -4,27 +4,35 @@ export const Feedback = () => {
 	const [email, setEmail] = createSignal('');
 	const [content, setContent] = createSignal('');
 	const [notification, setNotification] = createSignal('');
+	const [sending, setSending] = createSignal(false);
+	const [disabledSend, setDisabledSend] = createSignal(false);
 
 	const submit = async (event: any) => {
 		event.preventDefault();
+		setSending(true);
 
 		const urlParams = new URLSearchParams(window.location.search);
 		const path = urlParams.get('path');
 
+		setNotification('');
 		const response = await fetch('https://feedback.marending.dev/feedback', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ project: 'marending.dev', email: email(), content: content(), path }),
-		}).catch((error) => {
-			setNotification('failure');
-			throw error;
-		});
+		})
+			.then((response) => {
+				setSending(false);
+				return response;
+			})
+			.catch((error) => {
+				setNotification('failure');
+				setSending(false);
+				throw error;
+			});
 
 		if (response.status === 200) {
-			setEmail('');
-			setContent('');
-
 			setNotification('success');
+			setDisabledSend(true);
 		} else {
 			setNotification('failure');
 		}
@@ -58,7 +66,10 @@ export const Feedback = () => {
 				</label>
 				<div class="flex flex-row justify-end items-center">
 					<button
-						class="border border-black dark:border-white py-1 px-2"
+						class={`border border-black dark:border-white py-1 px-2 ${
+							disabledSend() && 'text-gray-400 border-gray-400'
+						}`}
+						disabled={disabledSend()}
 						onClick={submit}>
 						Send
 					</button>
@@ -71,6 +82,9 @@ export const Feedback = () => {
 					</Match>
 					<Match when={notification() === 'failure'}>
 						<p class="text-rose-800 dark:text-rose-200">Something went wrong :(</p>
+					</Match>
+					<Match when={sending() && notification() === ''}>
+						<p class="text-black">Sending...</p>
 					</Match>
 				</Switch>
 			</div>
