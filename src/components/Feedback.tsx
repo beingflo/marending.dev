@@ -33,6 +33,8 @@ export const Feedback = () => {
 		if (response.status === 200) {
 			setNotification('success');
 			setDisabledSend(true);
+		} else if (response.status === 429) {
+			setNotification('slow-down');
 		} else {
 			setNotification('failure');
 		}
@@ -82,6 +84,9 @@ export const Feedback = () => {
 					</Match>
 					<Match when={notification() === 'failure'}>
 						<p class="text-rose-800 dark:text-rose-200">Something went wrong :(</p>
+					</Match>
+					<Match when={notification() === 'slow-down'}>
+						<p class="text-rose-800 dark:text-rose-200">Slow down :)</p>
 					</Match>
 					<Match when={sending() && notification() === ''}>
 						<p class="text-black">Sending...</p>
