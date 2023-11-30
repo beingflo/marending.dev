@@ -1,7 +1,7 @@
 export const notes = {
 	'16-hour-projects': {
 		title: '16 hour side-projects',
-		subtitle: 'An ode to minimalism',
+		subtitle: 'An ode to the MVP',
 		date: '30 Nov 2023',
 		link: '/notes/16-hour-projects/',
 	},
