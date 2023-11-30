@@ -1,4 +1,10 @@
 export const notes = {
+	'16-hour-projects': {
+		title: '16 hour side-projects',
+		subtitle: 'An ode to minimalism',
+		date: '30 Nov 2023',
+		link: '/notes/16-hour-projects/',
+	},
 	'league-rating': {
 		title: 'Analyzing rating systems for foosball outcomes',
 		subtitle: 'Color me disappointed',

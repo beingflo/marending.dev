@@ -1,0 +1,15 @@
+---
+import Layout from '../../../layouts/layout.astro';
+import { A, Note, Title, P, Info, C, H2 } from '../../../components';
+import { notes } from '../../notes';
+
+const info = notes['16-hour-projects'];
+---
+
+<Layout>
+	<Note>
+		<Title subtitle={info.subtitle}>
+			{info.title}
+		</Title>
+	</Note>
+</Layout>
