@@ -1,4 +1,10 @@
 export const notes = {
+	'sqlite-benchmarks': {
+		title: 'How fast is SQLite?',
+		subtitle: 'Plenty fast',
+		date: '31 Dec 2023',
+		link: '/notes/sqlite-benchmarks/',
+	},
 	'league-rating': {
 		title: 'Analyzing rating systems for foosball outcomes',
 		subtitle: 'Color me disappointed',
