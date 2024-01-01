@@ -14,8 +14,30 @@ const info = notes['vps-benchmarks'];
 		<Title subtitle={info.subtitle}>
 			{info.title}
 		</Title>
+		<P>
+			<A href="https://www.hetzner.com/">Hetzner</A> has been my go to hosting provider for some time,
+			thanks to their reliability and low cost. Some months ago they started offering Ampere-based ARM
+			servers on their VPSs. They offer more cores and more RAM for the same money. It sounds very appealing
+			to me to move away from x86 entirely, since my development machine is also ARM based (Macbook M1).
+			But before I migrate my setup to ARM servers I wanted to run some basic benchmarks to see what
+			I'm getting myself into.
+		</P>
+		<H2>Results</H2>
 		<CPUResults />
 		<MemoryResults />
 		<FileIOResults />
+		<P>
+			Results are mixed but it seems like especially for compute heavy applications the
+			price-to-performance is way better with the ARM servers.
+		</P>
+		<H2>Methodology</H2>
+		<P>The plots show the results of these sysbench invocations:</P>
+		<Code value="sysbench cpu --threads=x run" />
+		<Code value="sysbench memory --threads=x run" />
+		<Code value="sysbench fileio --threads=x --file-test-mode=seqwr run" />
+		<P>
+			The instances under test are the CPX31 for x86 and the CAX31 for ARM. They have 4 vCPU, 8 GB
+			RAM and 8 vCPU, 16 GB RAM respectively.
+		</P>
 	</Note>
 </Layout>
