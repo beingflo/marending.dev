@@ -1,4 +1,10 @@
 export const notes = {
+	'vps-benchmarks': {
+		title: 'A brief comparison of Hetzner servers',
+		subtitle: 'ARM is a viable option',
+		date: '01 Jan 2024',
+		link: '/notes/vps-benchmarks/',
+	},
 	'sqlite-benchmarks': {
 		title: 'How fast is SQLite?',
 		subtitle: 'Plenty fast',
@@ -8,7 +14,7 @@ export const notes = {
 	'league-rating': {
 		title: 'Analyzing rating systems for foosball outcomes',
 		subtitle: 'Color me disappointed',
-		date: '2 Sep 2023',
+		date: '02 Sep 2023',
 		link: '/notes/league-rating/',
 	},
 	'league-data': {
