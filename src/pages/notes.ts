@@ -1,4 +1,10 @@
 export const notes = {
+	'wasm-benchmark': {
+		title: 'Native Rust vs Webassembly performance microbenchmark',
+		subtitle: "You won't believe the outcome",
+		date: '02 Jan 2024',
+		link: '/notes/wasm-benchmark/',
+	},
 	'vps-benchmarks': {
 		title: 'A brief comparison of Hetzner servers',
 		subtitle: 'ARM is a viable option',

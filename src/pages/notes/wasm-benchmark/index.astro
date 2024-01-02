@@ -1,0 +1,58 @@
+---
+import Layout from '../../../layouts/layout.astro';
+import { A, Note, Title, P, Info, C, H2, Code, H3, Table } from '../../../components';
+import { notes } from '../../notes';
+
+const info = notes['wasm-benchmark'];
+---
+
+<Layout>
+	<Note>
+		<Title subtitle={info.subtitle}>
+			{info.title}
+		</Title>
+		<Code
+			value={`#[plugin_fn]
+pub fn run(Json(x): Json<Vec<i64>>) -> FnResult<Json<Vec<i64>>> {
+    let mut values = Vec::new();
+
+    for (idx, a) in x.iter().enumerate() {
+        for b in x.iter() {
+            if values.len() > idx {
+                values[idx] += b;
+            } else {
+                values.push(a * b);
+            }
+        }
+    }
+
+    Ok(Json(values))
+}`}
+		/>
+		<div class="md:w-full mx-auto">
+			<Table>
+				<tr class="border-b border-black dark:border-white">
+					<th class="text-left"></th>
+					<th class="text-right">Throughput</th>
+					<th class="text-right">Average duration</th>
+					<th class="text-right">90 percentile duration</th>
+				</tr>
+				<tr>
+					<td class="text-left">Native Rust</td>
+					<td class="text-right">4.85/s</td>
+					<td class="text-right">206ms</td>
+					<td class="text-right">206ms</td>
+				</tr>
+				<tr>
+					<td class="text-left">Webassembly</td>
+					<td class="text-right">4.59/s</td>
+					<td class="text-right">217ms</td>
+					<td class="text-right">218ms</td>
+				</tr>
+			</Table>
+		</div>
+		<div class="pt-4 pb-6 text-center text-gray-800 dark:text-gray-100 text-sm italic font-serif">
+			Table 1: Performance comparison of native Rust and Rust compiled to Webassembly.
+		</div>
+	</Note>
+</Layout>
