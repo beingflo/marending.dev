@@ -21,11 +21,11 @@ const info = notes['wasm-benchmark'];
 		<P>
 			In my case, I'm building a metric collection and visualization system. Think Grafana /
 			Prometheus but custom. In Prometheus you can transform your data using PromQL before it is
-			handed off to Grafana for visalization. Needless to say for my application I'm not too keen on
-			buliding my own DSL for this. Instead, I want to use Webassembly as a secure way to run user
-			provided modules that transform data to the users liking. First experiments proved successful.
-			But before I get to deep into this I want to quickly evaluate how much performance I'm leaving
-			on the table.
+			handed off to Grafana for visualization. Needless to say for my application I'm not too keen
+			on buliding my own DSL for this. Instead, I want to use Webassembly as a secure way to run
+			user provided modules that transform data to the users liking. First experiments proved
+			successful. But before I get to deep into this I want to quickly evaluate how much performance
+			I'm leaving on the table.
 		</P>
 		<P>For my microbenchmark, I compile the following snippet of Rust code into Webassembly:</P>
 		<Code
