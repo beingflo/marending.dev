@@ -1,0 +1,42 @@
+---
+import { Chart } from '../../../components';
+import { Figure } from '../../../components/Figure';
+import * as Plot from '@observablehq/plot';
+
+let results = [
+	{ arch: 'x86', threads: 1, data: 232.66 },
+	{ arch: 'x86', threads: 2, data: 355.74 },
+	{ arch: 'x86', threads: 4, data: 611.45 },
+	{ arch: 'x86', threads: 8, data: 622.6 },
+	{ arch: 'arm', threads: 1, data: 153.78 },
+	{ arch: 'arm', threads: 2, data: 257.71 },
+	{ arch: 'arm', threads: 4, data: 403.57 },
+	{ arch: 'arm', threads: 8, data: 537.34 },
+];
+---
+
+<Figure caption="Figure 3. sysbench fileio benchmark results (--file-test-mode=seqwr)">
+	<Chart
+		options={{
+			x: { grid: true, label: '→ MiB/s written' },
+			y: { inset: 2, label: null },
+			marks: [
+				Plot.frame(),
+				Plot.barX(results, {
+					x: 'data',
+					y: 'arch',
+					fy: 'threads',
+				}),
+				Plot.text(results, {
+					text: (d) => `${Math.floor(d.data)}`,
+					y: 'arch',
+					x: 'data',
+					textAnchor: 'end',
+					dx: -3,
+					fill: 'white',
+					fy: 'threads',
+				}),
+			],
+		}}
+	/>
+</Figure>

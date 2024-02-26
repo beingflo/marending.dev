@@ -2,13 +2,31 @@ export const notes = {
 	'16-hour-projects': {
 		title: '16 hour side-projects',
 		subtitle: 'An ode to the MVP',
-		date: '30 Nov 2023',
+		date: '27 Feb 2024',
 		link: '/notes/16-hour-projects/',
+	},
+	'wasm-benchmark': {
+		title: 'Native Rust vs Webassembly performance microbenchmark',
+		subtitle: "You won't believe the outcome",
+		date: '02 Jan 2024',
+		link: '/notes/wasm-benchmark/',
+	},
+	'vps-benchmarks': {
+		title: 'A brief comparison of Hetzner servers',
+		subtitle: 'ARM is a viable option',
+		date: '01 Jan 2024',
+		link: '/notes/vps-benchmarks/',
+	},
+	'sqlite-benchmarks': {
+		title: 'How fast is SQLite?',
+		subtitle: 'Plenty fast',
+		date: '31 Dec 2023',
+		link: '/notes/sqlite-benchmarks/',
 	},
 	'league-rating': {
 		title: 'Analyzing rating systems for foosball outcomes',
 		subtitle: 'Color me disappointed',
-		date: '2 Sep 2023',
+		date: '02 Sep 2023',
 		link: '/notes/league-rating/',
 	},
 	'league-data': {
