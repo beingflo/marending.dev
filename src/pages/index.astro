@@ -8,7 +8,7 @@ import { notes } from './notes';
 	<WidePage>
 		<div class="flex flex-col gap-4 w-fit xl:w-full mx-auto">
 			{
-				Object.values(notes).map((note) => (
+				Object.values(notes)?.filter(note => !note.draft || import.meta.env.DEV).map((note) => (
 					<NoteSummary
 						title={note.title}
 						summary={note.subtitle}

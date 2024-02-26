@@ -1,0 +1,48 @@
+---
+import Layout from '../../../layouts/layout.astro';
+import { A, Note, Title, P, Info, C, H2 } from '../../../components';
+import { notes } from '../../notes';
+
+const info = notes['16-hour-projects'];
+---
+
+<Layout>
+	<Note>
+		<Title subtitle={info.subtitle}>
+			{info.title}
+		</Title>
+		<P>
+			Some years ago I found myself desiring a note-taking application with a feature set that
+			seemingly no piece of software satisfied. At this point, I had developed some minor web
+			development skills at work, so I got the sudden idea to build it myself. While obvious to
+			others, I was mainly dabbling in small command line utilities and graphical simulations prior,
+			I wasn't used to the idea of making useful software to be used daily out of my own initiative.
+			Against better judgement, I jumped in and started building
+			<A href="https://write.fieldnotes.land">fieldnotes.land</A>.
+		</P>
+		<P>
+			What followed was a year-long, on-and-off odyssey that included 3 complete rewrites. At one
+			point I started hallucinating a path to commercialization. Ultimately, I used 2 different
+			backend languages, 3 databases, 1 frontend framework with 3 different state management
+			solutions. Not to mention the radical deployment changes: Raspberry Pi in a shoebox to VPS in
+			a datacenter.
+		</P>
+		<P>
+			It was an incredibly educational experience, but also a chaotic, unstructured one. I did not
+			sit down and think about a feature set, a UI concept or anything of the like, I just started
+			building. I never reflected on my time management and bike-shedding. A fixed sidebar turned 
+			into a slide-in sidebar, then a modal.
+		</P>
+		<P>
+			When I finally decided I had tweaked the UI enough and it was fine to stay as it is for the
+			foreseeable future, I needed a radical change of pace. For my next project I challenged myself
+			to stick to a strict 16 hour time budget. This short limit would have to suffice to do
+			everything from defining what features the application should have, how it should look and
+			behave, all the way to the implementation and deployment.
+		</P>
+		<H2>Enter <A href="https://rest.quest">rest.quest</A></H2>
+		<P>
+			Having wet my beak on useful, <em>personal</em>, software, I set out to build a tailor-made
+		  version of a todo list application.</P>
+	</Note>
+</Layout>
