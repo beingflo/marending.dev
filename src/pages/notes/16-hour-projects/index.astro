@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../layouts/layout.astro';
-import { A, Note, Title, P, Info, C, H2 } from '../../../components';
+import { A, Note, Title, P, H2, H3 } from '../../../components';
 import { notes } from '../../notes';
 
 const info = notes['16-hour-projects'];
@@ -41,17 +41,26 @@ const info = notes['16-hour-projects'];
 		<P>
 			For my next project (<A href="https://rest.quest">rest.quest</A>) I challenged myself to stick
 			to a strict 16 hour time budget. This short limit would have to suffice to do everything from
-			defining what features the application should have, how it should look and behave, all the way
-			to the implementation and deployment. First, I sat down and came up with a plan for what
-			needed to be done and how much time I would allocate to each. Think: 2 hours for initial
-			project setup and deployment, 2 hours for UI / UX concept, 6 hours for implementation of basic
-			features, etc.
+			defining what features the application should even have, how it should look and behave, all
+			the way to the implementation and deployment. First, I sat down and came up with a plan for
+			what needed to be done and how much time I would allocate to each: 2 hours for initial project
+			setup and deployment, 2 hours for UI / UX concept, 6 hours for implementation of basic
+			features, 4 hours for advanced features and 2 hours of reserve.
 		</P>
 		<P>
 			Then, I forced myself to follow this plan exactly. Over the course of about a month, I spent
 			approximately 18 hours total on this project. The result was very close to what I had
-			conceptualized during the design phase.
+			conceptualized during the design phase. I've been using the application every day in the one
+			and a half years since.
 		</P>
 		<H2>The unresonable effectiveness of self-imposed limits</H2>
+		<P>
+			The time limit forced me to make some trade-offs I probably wouldn't have thought of
+			otherwise. For one, the application doesn't have a backend! The data is primarily stored
+			client-side, with the option to configure object storage credentials in the web app to enable
+			sync / backup. With more time on my hands, I wouldn't even have thought about ways to save
+			time like that.
+		</P>
+		<P>Innovative UI</P>
 	</Note>
 </Layout>
