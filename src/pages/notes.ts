@@ -2,9 +2,9 @@ export const notes = {
 	'16-hour-projects': {
 		title: '16 hour side-projects',
 		subtitle: 'An ode to the MVP',
-		date: '27 Feb 2024',
+		date: '29 Feb 2024',
 		link: '/notes/16-hour-projects/',
-		draft: true,
+		draft: false,
 	},
 	'wasm-benchmark': {
 		title: 'Native Rust vs Webassembly performance microbenchmark',
