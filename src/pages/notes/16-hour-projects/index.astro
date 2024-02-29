@@ -39,13 +39,13 @@ const info = notes['16-hour-projects'];
 		</P>
 		<H2>Act II - Order</H2>
 		<P>
-			For my next project (<A href="https://rest.quest">rest.quest</A>) I challenged myself to stick
-			to a strict 16 hour time budget. This short limit would have to suffice to do everything from
-			defining what features the application should even have, how it should look and behave, all
-			the way to the implementation and deployment. First, I sat down and came up with a plan for
-			what needed to be done and how much time I would allocate to each: 2 hours for initial project
-			setup and deployment, 2 hours for UI / UX concept, 6 hours for implementation of basic
-			features, 4 hours for advanced features and 2 hours of reserve.
+			For my next project (<A href="https://rest.quest">rest.quest</A> - a todo list) I challenged myself
+			to stick to a strict 16 hour time budget. This short limit would have to suffice to do everything
+			from defining what features the application should even have, how it should look and behave, all
+			the way to the implementation and deployment. First, I sat down and came up with a plan for what
+			needed to be done and how much time I would allocate to each: 2 hours for initial project setup
+			and deployment, 2 hours for UI / UX concept, 6 hours for implementation of basic features, 4 hours
+			for advanced features and 2 hours of reserve.
 		</P>
 		<P>
 			Then, I forced myself to follow this plan exactly. Over the course of about a month, I spent
@@ -55,12 +55,32 @@ const info = notes['16-hour-projects'];
 		</P>
 		<H2>The unresonable effectiveness of self-imposed limits</H2>
 		<P>
-			The time limit forced me to make some trade-offs I probably wouldn't have thought of
-			otherwise. For one, the application doesn't have a backend! The data is primarily stored
-			client-side, with the option to configure object storage credentials in the web app to enable
-			sync / backup. With more time on my hands, I wouldn't even have thought about ways to save
-			time like that.
+			The time limit forced me to make some trade-offs. For one, the application doesn't have a
+			backend. The data is primarily stored client-side, with the option to configure object storage
+			credentials in the web app to enable sync / backup. The traditional approach would have
+			demanded a backend, database and all the complexity that comes with that. Instead, this
+			<A href="https://www.inkandswitch.com/local-first/">local-first</A> architecture was born from
+			a need to save time.
 		</P>
-		<P>Innovative UI</P>
+		<P>
+			When I was conceptualizing the UI / UX, I kept thinking that I was ready to start building,
+			that I had wasted enough time already just scribbling on a peace of paper. But as I forced
+			myself to serve my time, suddenly some unusual UI patterns emerged: Instead of a single-column
+			list of todo items, why not utilize the horizontal space of a non-mobile screen and show 4
+			columns? Instead of letting checked-off items vanish, leaving no indicator of accomplished
+			work, why not leave a gap where the item was previously?
+		</P>
+		<P>
+			I like to think subjecting myself to a fixed time budget for this project has changed the way
+			I approach writing software:
+			<ul class="list-decimal list-inside">
+				<li>Avoid complexity at all cost</li>
+				<li
+					>Exploring interfaces and interactions is orders of magnitude more efficient on paper than
+					in code</li
+				>
+				<li>The MVP is typically all you need</li>
+			</ul>
+		</P>
 	</Note>
 </Layout>
