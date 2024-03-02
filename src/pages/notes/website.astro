@@ -8,7 +8,11 @@ const info = notes['website'];
 
 <Layout>
 	<Note>
-		<Title subtitle={info.subtitle}>{info.title}</Title>
+		<Title
+			subtitle={info.subtitle}
+			date={info.date}>
+			{info.title}
+		</Title>
 		<P>
 			Some time ago I decided to build a personal website to write about technical things I'm up to.
 			If you're reading this, suprisingly, I followed through. Now, I'm under no delusion that the
