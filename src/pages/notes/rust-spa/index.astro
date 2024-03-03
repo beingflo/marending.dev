@@ -3,6 +3,7 @@ import Layout from '../../../layouts/layout.astro';
 import { A, Code, Note, Title, P, H2, C, Info } from '../../../components';
 import { notes } from '../../notes';
 import Results from './results.astro';
+import ResultsMacOs from './results-macos.astro';
 
 const info = notes['rust-spa'];
 ---
@@ -95,8 +96,23 @@ const info = notes['rust-spa'];
 		<P>
 			This is quite a satisfying finding, as I initially wanted to benchmark to understand how much
 			<em>slower</em> my idea was, compared to letting Caddy serve the SPA ((a)). It turns out that with
-			our handy embedding trick, we end up 3x faster.
+			our handy embedding trick, we end up 3x faster. Either way, I see way smaller requests per second
+			on my productive server, I suspect the real bottleneck are SSL handshakes, but this is a topic
+			for another note.
 		</P>
+		<div class="mb-48"></div>
 		<H2>Appendix</H2>
+		<P>
+			At first I was benchmarking on my Macbook Air, only to find a brutal loss of performance going
+			from native to dockerized. After some research I learned that docker on Mac is a full VM. So,
+			what I'm seeing in the benchmarks is the cost of virtualization. That's when I decided to test
+			on a Linux box instead. For completenes, here are the MacOs results anyway:
+		</P>
+		<ResultsMacOs />
+		<P>
+			Fun fact: This finding calls into question the accuracy of the benchmarks
+			<A href="/notes/performance/">here</A> as Caddy was also dockerized there. Alas, you can't win
+			them all.
+		</P>
 	</Note>
 </Layout>

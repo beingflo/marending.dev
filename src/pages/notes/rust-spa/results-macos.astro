@@ -1,0 +1,37 @@
+---
+import { Chart } from '../../../components';
+import { Figure } from '../../../components/Figure';
+import * as Plot from '@observablehq/plot';
+
+let results = [
+	{ scenario: '(a)', rps: 32000 },
+	{ scenario: '(b)', rps: 36000 },
+	{ scenario: '(c)', rps: 208000 },
+	{ scenario: '(d)', rps: 46000 },
+	{ scenario: '(e)', rps: 46000 },
+];
+---
+
+<Figure caption="Figure 2. Requests per second served. Run on local Macbook Air">
+	<Chart
+		options={{
+			x: { grid: true, label: '→ requests / second' },
+			y: { inset: 2, label: null },
+			marks: [
+				Plot.frame(),
+				Plot.barX(results, {
+					x: 'rps',
+					y: 'scenario',
+				}),
+				Plot.text(results, {
+					text: (d) => `${Math.floor(d.rps / 1000)}K`,
+					y: 'scenario',
+					x: 'rps',
+					textAnchor: 'end',
+					dx: -3,
+					fill: 'white',
+				}),
+			],
+		}}
+	/>
+</Figure>
