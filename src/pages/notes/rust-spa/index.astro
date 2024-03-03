@@ -37,7 +37,7 @@ const info = notes['rust-spa'];
 		</P>
 		<H2>Serving SPAs from the application server</H2>
 		<P>
-			The straigh-forward solution to my woes is to simply serve my static assets from the
+			The straight-forward solution to my woes is to simply serve my static assets from the
 			application server itself. So instead of just offering all the backend functionality under
 			<C>/api</C>, it also responds to <C>/</C> with the <C>index.html</C> and all the other assets that
 			are needed under their respective paths.
@@ -106,7 +106,7 @@ const info = notes['rust-spa'];
 			At first, I was benchmarking on my Macbook Air, only to find a brutal loss of performance
 			going from native to dockerized. After some research, I learned that docker on Mac is a full
 			VM. So, what I'm seeing in the benchmarks is the cost of virtualization. That's when I decided
-			to test on a Linux box instead. For completeness, here are the MacOs results anyway:
+			to test on a Linux box instead. For completeness, here are the MacOS results anyway:
 		</P>
 		<ResultsMacOs />
 		<P>
