@@ -1,7 +1,8 @@
 ---
 import Layout from '../../../layouts/layout.astro';
-import { A, Note, Title, P, H2, C, Info } from '../../../components';
+import { A, Code, Note, Title, P, H2, C, Info } from '../../../components';
 import { notes } from '../../notes';
+import Results from './results.astro';
 
 const info = notes['rust-spa'];
 ---
@@ -66,12 +67,24 @@ const info = notes['rust-spa'];
 			only as a guideline.
 		</Info>
 		<P>
-			Naturally, we have to compare how the different approaches to performance-wise. We consider
+			Naturally, we have to compare how the different approaches do performance-wise. We consider
 			the following scenarios: <b>(a)</b> Dockerized Caddy serves SPA from directory <b>(b)</b> Native
 			Rust axum server serves SPA from directory <b>(c)</b> Native Rust axum server embeds SPA and serves
 			from memory <b>(d)</b> Dockerized Rust axum server embeds SPA and serves from memory
 			<b>(e)</b> Dockerized Caddy reverse proxies server from (d). Option (d) serves as a baseline to
 			see how much performance is lost by being dockerized. Option (e) is the production-grade setup.
+		</P>
+		<P>
+			We measure requests per second to the <C>index.html</C> resource. The numbers are obtained by running
+		</P>
+		<Code value="wrk -c 1000 -d 20s -t 8 --latency http://localhost:4000/" />
+		<Results />
+		<P>
+			Notable are the improvements from (a) to (b). Considering all the extra work the full-fledged
+			web server / reverse proxy is doing, it's not surprising that a lean, purpose-built Rust
+			binary is faster. Next, (b) to (c) showcases the performance gain when all the assets are in
+			memory, versus on disk. This also shows up in a 99 percentile latency reduction from 72ms to
+			19ms.
 		</P>
 		<H2>Conclusion</H2>
 		good for small spas. calls into question /notes/performance (docker). Simpler to deploy FE and BE

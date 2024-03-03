@@ -1,0 +1,37 @@
+---
+import { Chart } from '../../../components';
+import { Figure } from '../../../components/Figure';
+import * as Plot from '@observablehq/plot';
+
+let results = [
+	{ scenario: '(a)', rps: 28000 },
+	{ scenario: '(b)', rps: 56000 },
+	{ scenario: '(c)', rps: 145000 },
+	{ scenario: '(d)', rps: 112000 },
+	{ scenario: '(e)', rps: 106000 },
+];
+---
+
+<Figure caption="Figure 1. Requests per second served. Run on Hetzner CAX31 (8 core ARM)">
+	<Chart
+		options={{
+			x: { grid: true, label: '→ requests / second' },
+			y: { inset: 2, label: null },
+			marks: [
+				Plot.frame(),
+				Plot.barX(results, {
+					x: 'rps',
+					y: 'scenario',
+				}),
+				Plot.text(results, {
+					text: (d) => `${Math.floor(d.rps / 1000)}K`,
+					y: 'scenario',
+					x: 'rps',
+					textAnchor: 'end',
+					dx: -3,
+					fill: 'white',
+				}),
+			],
+		}}
+	/>
+</Figure>
