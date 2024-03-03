@@ -86,9 +86,17 @@ const info = notes['rust-spa'];
 			memory, versus on disk. This also shows up in a 99 percentile latency reduction from 72ms to
 			19ms.
 		</P>
+		<P>
+			A surprisingly high reduction in requests per second occurs when moving from a natively
+			running application to a dockerized one ((c) to (d)). Finally, (e) indicates that Caddy is
+			significantly faster reverse proxying static assets than serving them itself.
+		</P>
 		<H2>Conclusion</H2>
-		good for small spas. calls into question /notes/performance (docker). Simpler to deploy FE and BE
-		together
-		<H2>Appendix macos</H2>
+		<P>
+			This is quite a satisfying finding, as I initially wanted to benchmark to understand how much
+			<em>slower</em> my idea was, compared to letting Caddy serve the SPA ((a)). It turns out that with
+			our handy embedding trick, we end up 3x faster.
+		</P>
+		<H2>Appendix</H2>
 	</Note>
 </Layout>
