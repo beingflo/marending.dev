@@ -4,7 +4,7 @@ export const notes = {
 		subtitle: 'Web server vs. application server',
 		date: '03 Mar 2024',
 		link: '/notes/rust-spa/',
-		draft: true,
+		draft: false,
 	},
 	'16-hour-projects': {
 		title: '16 hour side-projects',
