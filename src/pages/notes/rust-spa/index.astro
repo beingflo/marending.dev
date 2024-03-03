@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../layouts/layout.astro';
-import { A, Note, Title, P, H2, H3, C } from '../../../components';
+import { A, Note, Title, P, H2, C, Info } from '../../../components';
 import { notes } from '../../notes';
 
 const info = notes['rust-spa'];
@@ -35,16 +35,47 @@ const info = notes['rust-spa'];
 		</P>
 		<H2>Serving SPAs from the application server</H2>
 		<P>
-			The straighforward solution to my woes, is to simply serve my static assets from the
+			The straighforward solution to my woes is to simply serve my static assets from the
 			application server itself. So instead of just offering all the backend functionality under
 			<C>/api</C>, it also responds to <C>/</C> with the <C>index.html</C> and all the other assets that
 			are needed under their respective paths.
 		</P>
+		<P>
+			The result of this is a single docker image, that serves all that is needed for the project. A
+			reverse proxy can still be put in front of this for SSL termination, url rewriting or whatever
+			one may fancy. After some benchmarking, I was a bit dissapointed with the performance of
+			serving an SPA with a Rust <A href="https://github.com/tokio-rs/axum">axum</A> server. I figured
+			we can do better.
+		</P>
 		<H2>Embedding SPAs <em>in</em> the application server</H2>
-		<H2>Size</H2>
+		<P>
+			It seems like neither the web server, nor the axum server cache static assets in memory for
+			faster access. This may be a reasonable default, but I have a need for speed.
+		</P>
+		<P>
+			Instead, I embedded the static assets <em>inside</em> the Rust binary using
+			<A href="https://github.com/pyrossh/rust-embed">rust-embed</A>. As we will see later that
+			gives us a nice performance gain. Now, it is of course important to keep in mind that a huge,
+			image heavy, site maybe wouldn't be the best fit for this. You wouldn't want to have a
+			multi-gigabyte binary. My static bundles are typically sub 1 megabyte, so nothing to worry
+			about on this front.
+		</P>
 		<H2>Benchmarks</H2>
+		<Info>
+			The following benchmarks have been run on a shared VPS with noisy neighbors. Use these numbers
+			only as a guideline.
+		</Info>
+		<P>
+			Naturally, we have to compare how the different approaches to performance-wise. We consider
+			the following scenarios: <b>(a)</b> Dockerized Caddy serves SPA from directory <b>(b)</b> Native
+			Rust axum server serves SPA from directory <b>(c)</b> Native Rust axum server embeds SPA and serves
+			from memory <b>(d)</b> Dockerized Rust axum server embeds SPA and serves from memory
+			<b>(e)</b> Dockerized Caddy reverse proxies server from (d). Option (d) serves as a baseline to
+			see how much performance is lost by being dockerized. Option (e) is the production-grade setup.
+		</P>
 		<H2>Conclusion</H2>
 		good for small spas. calls into question /notes/performance (docker). Simpler to deploy FE and BE
 		together
+		<H2>Appendix macos</H2>
 	</Note>
 </Layout>
