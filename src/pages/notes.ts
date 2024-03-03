@@ -1,7 +1,7 @@
 export const notes = {
 	'rust-spa': {
 		title: 'How to host single-page applications',
-		subtitle: 'Caddy vs rust embedded',
+		subtitle: 'Web server vs application server',
 		date: '03 Mar 2024',
 		link: '/notes/rust-spa/',
 		draft: true,

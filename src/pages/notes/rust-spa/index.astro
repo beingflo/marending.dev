@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../layouts/layout.astro';
-import { A, Note, Title, P, H2, H3 } from '../../../components';
+import { A, Note, Title, P, H2, H3, C } from '../../../components';
 import { notes } from '../../notes';
 
 const info = notes['rust-spa'];
@@ -13,5 +13,38 @@ const info = notes['rust-spa'];
 			date={info.date}>
 			{info.title}
 		</Title>
+		<P>
+			Thus far, my frontend projects are mostly single-page applications (SPA). The only exception
+			is my website, the one you're looking at right now (this one is a multi-page app built with
+			Astro). Without much consideration, I've always deployed SPAs by mounting a directory
+			containing all the assets into a dockerized web server. If the project also needs a backend, I
+			would set up the web server to reverse proxy the <C>/api</C> routes to the application server.
+		</P>
+		<P>
+			This approach has served me well for some time. I have just two gripes about it. First, if,
+			god forbid, someone else wanted to deploy my software it would be a bit of a hassle. I can't
+			provide a single docker image that serves both frontend and backend, instead I would point to
+			a static bundle of assets here, a docker image for the backend there and hope they figure it
+			out. Second, I would like to get metrics on accesses of my applications. While Caddy (my web
+			server of choice) does expose aggregated metrics, it does not offer them per domain. Since I
+			host multiple applications behind the same Caddy instance, that's not very useful for me.
+		</P>
+		<P>
+			For these main reasons, I started revisiting my strategy and came up with another approach
+			that alleviates these pain points. <em>cue, me reinventing the wheel</em>
+		</P>
+		<H2>Serving SPAs from the application server</H2>
+		<P>
+			The straighforward solution to my woes, is to simply serve my static assets from the
+			application server itself. So instead of just offering all the backend functionality under
+			<C>/api</C>, it also responds to <C>/</C> with the <C>index.html</C> and all the other assets that
+			are needed under their respective paths.
+		</P>
+		<H2>Embedding SPAs <em>in</em> the application server</H2>
+		<H2>Size</H2>
+		<H2>Benchmarks</H2>
+		<H2>Conclusion</H2>
+		good for small spas. calls into question /notes/performance (docker). Simpler to deploy FE and BE
+		together
 	</Note>
 </Layout>
