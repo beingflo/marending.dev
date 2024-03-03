@@ -1,4 +1,11 @@
 export const notes = {
+	'rust-spa': {
+		title: 'How to host single-page applications',
+		subtitle: 'Caddy vs rust embedded',
+		date: '03 Mar 2024',
+		link: '/notes/rust-spa/',
+		draft: true,
+	},
 	'16-hour-projects': {
 		title: '16 hour side-projects',
 		subtitle: 'An ode to the MVP',
