@@ -1,4 +1,4 @@
-import data from './matches.json';
+import data from './_matches.json';
 
 const mapped = (data as Array<any>).map((d: any) => ({
 	...d,
