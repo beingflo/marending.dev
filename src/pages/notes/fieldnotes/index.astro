@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../layouts/layout.astro';
-import { A, Note, Title, P, H2, H3 } from '../../../components';
+import { Note, Title, P, H2, H3 } from '../../../components';
 import { notes } from '../../notes';
 
 const info = notes['fieldnotes'];
@@ -17,5 +17,20 @@ const info = notes['fieldnotes'];
 			Some years ago I was very serious about de-googling my life. From Gmail and Drive to Keep, I
 			wanted to stop giving all my data to google.
 		</P>
+		analyze notes and activity (from postgres), motivation to write this (look back on though process
+		and skills), multiple iterations (only last)
+		<H2>Features</H2>
+		fast editing, minimal ui, e2ee, sharing, (screenshots): Editor, search, formatting, settings, share
+		dialog, shared note, login
+		<H3>Non features</H3>
+		version history, full text search, collaborative editing, offline mode
+		<H2>Architecture</H2>
+		Basic Crud, e2e encryption, shares
+		<H2>Implementation</H2>
+		languages, frameworks, db schema, db migration, crypto api, state management
+		<H2>Deployment</H2>
+		docker compose, hetzner, caddy, spa
+		<H2>Learnings</H2>
+		iterative, get real about commercialization
 	</Note>
 </Layout>
