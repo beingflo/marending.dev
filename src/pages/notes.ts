@@ -1,4 +1,11 @@
 export const notes = {
+	fieldnotes: {
+		title: 'Fieldnotes: An end-to-end encrypted note taking application',
+		subtitle: 'A project review',
+		date: '01 Apr 2024',
+		link: '/notes/fieldnotes/',
+		draft: true,
+	},
 	'rust-spa': {
 		title: 'How to host single-page applications',
 		subtitle: 'Web server vs. application server',

@@ -1,0 +1,21 @@
+---
+import Layout from '../../../layouts/layout.astro';
+import { A, Note, Title, P, H2, H3 } from '../../../components';
+import { notes } from '../../notes';
+
+const info = notes['fieldnotes'];
+---
+
+<Layout>
+	<Note>
+		<Title
+			subtitle={info.subtitle}
+			date={info.date}>
+			{info.title}
+		</Title>
+		<P>
+			Some years ago I was very serious about de-googling my life. From Gmail and Drive to Keep, I
+			wanted to stop giving all my data to google.
+		</P>
+	</Note>
+</Layout>
