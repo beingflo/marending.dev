@@ -5,6 +5,11 @@ import { notes } from '../../notes';
 import textli from './textli-v1.png';
 import textliv2 from './textli-v2.png';
 import fieldnotes from './fieldnotes.png';
+import list from './fieldnotes-list.png';
+import settings from './fieldnotes-settings.png';
+import login from './fieldnotes-login.png';
+import encryption from './fieldnotes-encryption.png';
+import share from './fieldnotes-share.png';
 
 const info = notes['fieldnotes'];
 ---
@@ -44,7 +49,8 @@ const info = notes['fieldnotes'];
 				An inspiration for starting this, by the way, was
 				<A href="https://alexwlchan.net/2022/screenshots/">this blog post on taking screenshots</A>.
 				Writing these notes will force me to document my application in a format that is more likely
-				to be viewable in the future.
+				to be viewable in the future. My trouble to get an old version of fieldnotes running just to
+				take a screenshot emphasizes that point.
 			</P>
 		</Details>
 		<H2>A brief recap</H2>
@@ -66,9 +72,12 @@ const info = notes['fieldnotes'];
 			I quickly outgrew this code base and started rewriting it. This time the backend was
 			implemented in Rust with a MongoDB database. The frontend was still React, but this time
 			making use of some more sophisticated state management: Context. Also, I switched to the
-			<A href="https://ant.design/">Ant Design</A> UI component library. Trying to start this application
-			locally to get a screenshot turned out to be quite hard. So much for the longevity of frontend
-			code bases.
+			<A href="https://ant.design/">Ant Design</A> UI component library. This is also the point I started
+			hosting my applications on a VPS rented in a datacenter. So long, trusty shoebox RPi.
+		</P>
+		<P>
+			Trying to start this application locally to get a screenshot turned out to be quite hard. So
+			much for the longevity of frontend code bases.
 		</P>
 		<Img src={textliv2} />
 		<P>
@@ -81,20 +90,49 @@ const info = notes['fieldnotes'];
 		<Img src={fieldnotes} />
 		<P>
 			I find it amazing to look back on these 3 versions of the same application and reflect on my
-			progress both technically as well as visually. You can just see my minimalistic style
-			preference forming in real time.
+			progress both technically as well as visually. You can see my minimalistic style preference
+			forming in real time. And my technical preferences are materializing just as I'm using
+			different approaches and figuring out better ways.
 		</P>
 		<P>
 			In the following we will only consider the latest iteration and talk through architecture and
 			design decisions.</P
 		>
 		<H2>Features</H2>
-		fast editing, minimal ui, e2ee, sharing, (screenshots): Editor, search, formatting, settings, share
-		dialog, shared note, login
+		<P>
+			<A href="https://write.fieldnotes.land">Fieldnotes</A> currently boasts the following features:
+			Low-friction editing, minimalistic and elegant UI, end-to-end encryption and private note sharing.
+		</P>
+		<P>
+			Searching for notes (cmd+k) opens an overlay with a flat list of all notes. Due to the e2e
+			encryption, only note titles can be searched here.
+		</P>
+		<Img src={list} />
+		<P>
+			Notes can be shared privately via a share dialog. The user can choose how long the share link
+			should stay active for.
+		</P>
+		<Img src={share} />
+		<P>
+			In the settings, a list of all shares can be viewed. The backend keeps track of how many times
+			a share has been viewed.
+		</P>
+		<Img src={settings} />
+		<P>
+			Authentication is handled by the backend in a hand-rolled auth system. Only username /
+			password is supported, reset emails are not implemented.
+		</P>
+		<Img src={login} />
+		<P>
+			Upon login for the first time on a device, the user is prompted for an additional password
+			that is used to derive a key for encryption. More about this in a later section.
+		</P>
+		<Img src={encryption} />
 		<H3>Non features</H3>
 		version history, full text search, collaborative editing, offline mode
 		<H2>Architecture</H2>
 		Basic Crud, e2e encryption, shares
+		<H3>Encryption</H3>
 		<H2>Implementation</H2>
 		languages, frameworks, db schema, db migration, crypto api, state management
 		<H2>Deployment</H2>
