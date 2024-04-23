@@ -1,7 +1,8 @@
 ---
 import Layout from '../../../layouts/layout.astro';
-import { Note, Title, P, H2, H3 } from '../../../components';
+import { Note, Title, P, H2, H3, Img } from '../../../components';
 import { notes } from '../../notes';
+import textli from './textli.png';
 
 const info = notes['fieldnotes'];
 ---
@@ -16,10 +17,24 @@ const info = notes['fieldnotes'];
 		<P>
 			Some years ago I was very serious about upping my privacy game. From Gmail and Google Drive to
 			cloud based note taking applications, I wanted to stop giving all my data to companies that
-			would monetize it.
+			would monetize it. The first order of business was to replace my haphazard use of Google Keep
+			with a private note taking application.
 		</P>
-		analyze notes and activity (from postgres), motivation to write this (look back on though process
-		and skills), multiple iterations (only last)
+		<P>
+			My requirements were simple: Allow low-friction editing, a clean UI, and end-to-end
+			encryption. To my surprise I could not find a single application that fullfilled all three. So
+			instead I set out to create my own. Over the next year or so, I embarked on a tumultuous
+			journey to build my first "large-scale" fullstack application.
+		</P>
+		<H2>A brief recap</H2>
+		<P>
+			The very first version of this application I built featured a simple python server storing
+			notes as files on disk. It didn't support multiple users and protected access using hardcoded
+			basic auth. My frontend experience at this point comprised of approximately 2 months
+			on-the-job React usage. So I built the UI using React, the only way I knew how: Prop drilling.
+			Looking back at this code my eyes start to bleed. Anyhow, this is how it looked:
+		</P>
+		<Img src={textli} />
 		<H2>Features</H2>
 		fast editing, minimal ui, e2ee, sharing, (screenshots): Editor, search, formatting, settings, share
 		dialog, shared note, login
