@@ -1,8 +1,9 @@
 ---
 import Layout from '../../../layouts/layout.astro';
-import { Note, Title, P, H2, H3, Img } from '../../../components';
+import { Note, Title, P, H2, H3, Img, A, Details } from '../../../components';
 import { notes } from '../../notes';
-import textli from './textli.png';
+import textli from './textli-v1.png';
+import textliv2 from './textli-v2.png';
 import fieldnotes from './fieldnotes.png';
 
 const info = notes['fieldnotes'];
@@ -16,7 +17,7 @@ const info = notes['fieldnotes'];
 			{info.title}
 		</Title>
 		<P>
-			Some years ago I was very serious about upping my privacy game. From Gmail and Google Drive to
+			Some years ago I got very serious about upping my privacy game. From Gmail and Google Drive to
 			cloud based note taking applications, I wanted to stop giving all my data to companies that
 			would monetize it. The first order of business was to replace my haphazard use of Google Keep
 			with a private note taking application.
@@ -27,13 +28,33 @@ const info = notes['fieldnotes'];
 			instead I set out to create my own. Over the next year or so, I embarked on a tumultuous
 			journey to build my first "large-scale" fullstack application.
 		</P>
+		<Details title="What's a project report?">
+			<P>
+				I intend to start a series of notes detailing the thought process going into my applications
+				and the resulting concepts and architectures. Ideally, I would write these as I am building
+				the application, but since this one has been built way before this website even existed,
+				I'll have to do it retrospectively.
+			</P>
+			<P>
+				Hopefully, I'll be able to detail my journey from novice to experienced fullstack engineer
+				in this format. It may also serve as another change to reflect on what worked well and what
+				didn't in my various projects.
+			</P>
+			<P>
+				An inspiration for starting this, by the way, was
+				<A href="https://alexwlchan.net/2022/screenshots/">this blog post on taking screenshots</A>.
+				Writing these notes will force me to document my application in a format that is more likely
+				to be viewable in the future.
+			</P>
+		</Details>
 		<H2>A brief recap</H2>
 		<P>
 			The very first version of this application I built featured a simple python server storing
 			notes as files on disk. It didn't support multiple users and protected access using hardcoded
 			basic auth. My frontend experience at this point comprised of approximately 2 months of
 			on-the-job React usage. So I built the UI using React, the only way I knew how: Prop drilling.
-			Looking back at this code my eyes start to bleed. Anyhow, this is how it looked:
+			For UI components I used <A href="https://semantic-ui.com/">Semantic UI</A>. Looking back at
+			this code my eyes start to bleed. Anyhow, this is how it looked:
 		</P>
 		<Img src={textli} />
 		<P>
@@ -44,17 +65,29 @@ const info = notes['fieldnotes'];
 		<P>
 			I quickly outgrew this code base and started rewriting it. This time the backend was
 			implemented in Rust with a MongoDB database. The frontend was still React, but this time
-			making use of some more sophisticated state management: Context. Trying to start this
-			application locally to get a screenshot turned out to be hard, so let me just tell you it was
-			significantly prettier than the previous version. So much for the longevity of frontend code
-			bases.
+			making use of some more sophisticated state management: Context. Also, I switched to the
+			<A href="https://ant.design/">Ant Design</A> UI component library. Trying to start this application
+			locally to get a screenshot turned out to be quite hard. So much for the longevity of frontend
+			code bases.
 		</P>
+		<Img src={textliv2} />
 		<P>
 			But v2 was not even deployed when I got the itch to rewrite again. I gave in and built the
 			application using Rust and PostgreSQL in the backend and React with Jotai state management in
-			the frontend. This turned out to be the stack that stuck. This is how it looks like today:
+			the frontend. This time around I used <A href="https://tailwindcss.com/">Tailwind CSS</A>
+			with <A href="https://headlessui.com/">Headless UI</A> components. This turned out to be the stack
+			that stuck. This is how it looks like today:
 		</P>
 		<Img src={fieldnotes} />
+		<P>
+			I find it amazing to look back on these 3 versions of the same application and reflect on my
+			progress both technically as well as visually. You can just see my minimalistic style
+			preference forming in real time.
+		</P>
+		<P>
+			In the following we will only consider the latest iteration and talk through architecture and
+			design decisions.</P
+		>
 		<H2>Features</H2>
 		fast editing, minimal ui, e2ee, sharing, (screenshots): Editor, search, formatting, settings, share
 		dialog, shared note, login
