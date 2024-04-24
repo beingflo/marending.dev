@@ -177,29 +177,66 @@ const info = notes['fieldnotes'];
 			</P>
 		</Details>
 		<P>
-			At the core, the Fieldnotes backend is a simple CRUD (create, read, update, delete) app. Most
-			of the interesting logic lives in the frontend. The most interesting feature, worthwile of
-			getting into is the client-side encryption.
+			At the core, the Fieldnotes backend is a simple CRUD (create, read, update, delete) app. It
+			stores all its data in PostgreSQL. For authentication there are user and token tables that
+			store hashed credentials as well as session tokens. The frontend is a Single Page Application
+			built in React. It uses <A href="https://jotai.org/">Jotai</A> for state management. The extensive
+			features of the note editor, like advanced formatting, markdown support as you type and a floating
+			formatting bar are provided by the excellent <A href="https://tiptap.dev/">tiptap</A>. Most of
+			the standout functionality of Fieldnotes lives in the frontend. The most interesting feature,
+			worthwile of getting into is the client-side encryption.
 		</P>
-		<H3>Encryption</H3>
-		<P> The rundown of getting to an encryption key and encrypting a note looks like this: </P>
+		<H3>Deriving the main key</H3>
+		<P>
+			When a user logs into the application on a new device for the first time, they are asked to
+			provide an additional "encryption" password. This password is used to derive what I call the
+			main key using <A
+				href="https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/deriveKey#pbkdf2"
+				>PBKDF2</A
+			>. In other words, the password provides the initial key material to seed the creation of the
+			key. Now, the key is stored in the browser and can be used for encryption and decryption.
+		</P>
+		<P>
+			If the user attempts to use Fieldnotes on a different device now, entering the <em>same</em>
+			encryption password will result in the generation of the same main key, thus, allowing interoperability
+			between encrypted content from one device to the other.
+		</P>
+		<P> At no point does the key stored in one devices browser leave the device. </P>
+		<H3>Encrypting a note</H3>
+		<P> Now, let's consider what happens when a user wants to store a new note: </P>
 		<P>
 			<ul class="pb-4">
-				<Li>User enters the key-derivation password</Li>
-				<Li>Client generates a main key using PBKDF2 seeded by the password</Li>
 				<Li>User writes a note and tries saving it</Li>
-				<Li>Client generates an encryption key for the note using AES-GCM</Li>
+				<Li
+					>Client generates an encryption key for this note using <A
+						href="https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/encrypt#aes-gcm"
+						>AES-GCM</A
+					></Li
+				>
 				<Li>Client encrypts content and metadata using encryption key with AES-GCM</Li>
-				<Li>Client wraps encryption key using main key with AES-KW</Li>
+				<Li
+					>Client wraps encryption key using main key with <A
+						href="https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/wrapKey#aes-kw"
+						>AES-KW</A
+					></Li
+				>
 				<Li>Client sends cyphertext and wrapped key to backend for storage</Li>
 			</ul>
 		</P>
 		<P>
-			Notable here is the inclusion of the "per-note" key, this is useful for sharing notes without
-			exposing your main key.
+			Notable here is the inclusion of the "per-note" key, we will explore later how this is useful
+			for sharing notes without exposing your main key.
 		</P>
-		<P>Any subsequent note can skip 1 and 2 above.</P>
-		key is stored securely in web crypto api.
+		<H3>Loading metadata</H3>
+		<P>
+			When loading the list of notes into the frontend, the application receives an array of
+			objects, each containing encrypted metadata and a wrapped key for this note. Now, we
+			<A href="https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/unwrapKey">unwrap</A>
+			each notes' key using the main key, and use it to decrypt the metadata.
+		</P>
+		<H3>Decrypting a note</H3>
+		<H3>Security considerations</H3>
+		<P>tofu, non-extractable</P>
 
 		<H2>Deployment</H2>
 		docker compose, hetzner, caddy, spa, db migration
