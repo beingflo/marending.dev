@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../layouts/layout.astro';
-import { Note, Title, P, H2, H3, Img, A, Details, C } from '../../../components';
+import { Note, Title, P, H2, H3, Img, A, Details, C, Li } from '../../../components';
 import { notes } from '../../notes';
 import textli from './textli-v1.png';
 import textliv2 from './textli-v2.png';
@@ -176,11 +176,33 @@ const info = notes['fieldnotes'];
 				know that there were many.
 			</P>
 		</Details>
-		Basic Crud, e2e encryption, shares languages, frameworks, db schema, db migration, crypto api, state
-		management
+		<P>
+			At the core, the Fieldnotes backend is a simple CRUD (create, read, update, delete) app. Most
+			of the interesting logic lives in the frontend. The most interesting feature, worthwile of
+			getting into is the client-side encryption.
+		</P>
 		<H3>Encryption</H3>
+		<P> The rundown of getting to an encryption key and encrypting a note looks like this: </P>
+		<P>
+			<ul class="pb-4">
+				<Li>User enters the key-derivation password</Li>
+				<Li>Client generates a main key using PBKDF2 seeded by the password</Li>
+				<Li>User writes a note and tries saving it</Li>
+				<Li>Client generates an encryption key for the note using AES-GCM</Li>
+				<Li>Client encrypts content and metadata using encryption key with AES-GCM</Li>
+				<Li>Client wraps encryption key using main key with AES-KW</Li>
+				<Li>Client sends cyphertext and wrapped key to backend for storage</Li>
+			</ul>
+		</P>
+		<P>
+			Notable here is the inclusion of the "per-note" key, this is useful for sharing notes without
+			exposing your main key.
+		</P>
+		<P>Any subsequent note can skip 1 and 2 above.</P>
+		key is stored securely in web crypto api.
+
 		<H2>Deployment</H2>
-		docker compose, hetzner, caddy, spa
+		docker compose, hetzner, caddy, spa, db migration
 		<H2>Learnings</H2>
 		iterative, get real about commercialization
 	</Note>
