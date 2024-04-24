@@ -10,6 +10,8 @@ import settings from './fieldnotes-settings.png';
 import login from './fieldnotes-login.png';
 import encryption from './fieldnotes-encryption.png';
 import share from './fieldnotes-share.png';
+import { Code } from '../../../components';
+import { Hint } from '../../../components';
 
 const info = notes['fieldnotes'];
 ---
@@ -235,6 +237,40 @@ const info = notes['fieldnotes'];
 			each notes' key using the main key, and use it to decrypt the metadata.
 		</P>
 		<H3>Decrypting a note</H3>
+		<P>
+			To decrypt a note is very similar to loading metadata, with the exception that for this api
+			call, the backend also returns the full encrypted content of a note. This is decrypted using
+			the plain key for this note.
+		</P>
+		<H3>Sharing a note</H3>
+		<P>
+			To share a note to a thirdparty via only a link, we need to communicate all the information
+			needed to decrypt the note. This is done by embedding the <em>plain</em> key of this particular
+			note as the <A href="https://developer.mozilla.org/en-US/docs/Web/API/URL/hash">hash</A> of the
+			url. So a shared link will look something like
+		</P>
+		<Code
+			value="https://fieldnotes.land/note/uUpZgnUOeamS6SefalXjVVYb5zXChGh1#yLOOY5rCqxL0eJaZYPFrU2NzwHWqf+kkzCXNYUVLnrI="
+		/>
+		<P> or simplified: </P>
+		<Code value="https://fieldnotes.land/note/NOTE_ID#NOTE_KEY" />
+		<P>
+			The client application now requests the note with <C>NOTE_ID</C> from the backend and then goes
+			through the decryption process using the plain <C>NOTE_KEY</C> found in the hash.
+		</P>
+		<P>
+			This should motivate the existence of the note key. One might consider encrypting notes
+			directly using the main key. However, to allow a third party to decrypt a note, you'd have to
+			provide the main key to them. That would allow them to decrypt <em>any</em> note, not just the
+			one you shared, provided they can get their hands on them. By introducing a key for each note,
+			we can easily share that with the recipient of a shared link, without exposing all other notes.
+			There is also no privacy loss towards the backend, as the keys are wrapped by the mainkey before
+			ever leaving the device.
+		</P>
+		<Hint>
+			Now that I'm writing this I realize that asymmetric encryption never crossed my mind here.
+			That could also be an avenue to avoid sharing the main key directly
+		</Hint>
 		<H3>Security considerations</H3>
 		<P>tofu, non-extractable</P>
 
