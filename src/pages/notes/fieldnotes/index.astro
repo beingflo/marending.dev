@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../layouts/layout.astro';
-import { Note, Title, P, H2, H3, Img, A, Details } from '../../../components';
+import { Note, Title, P, H2, H3, Img, A, Details, C } from '../../../components';
 import { notes } from '../../notes';
 import textli from './textli-v1.png';
 import textliv2 from './textli-v2.png';
@@ -129,12 +129,56 @@ const info = notes['fieldnotes'];
 		</P>
 		<Img src={encryption} />
 		<H3>Non features</H3>
-		version history, full text search, collaborative editing, offline mode
+		<P>
+			While I now consider Fieldnotes feature complete for my purposes, it's fun to look back at
+			aspirations I had for it at one point. Looking at an ancient <C>Fieldnotes Roadmap</C> note I have
+			in Fieldnotes, I was thinking about collaborative editing, versioning of notes, image upload to
+			s3 (to avoid blobs in the DB), note cross-linking and even a hosted personal blog site powered
+			by published notes. To think I was about to reinvent a CMS by accident makes me shudder a bit.
+		</P>
+		<P>
+			In hindsight I'm happy to have cut the cord at the point I did. Arguably, even the sharing
+			functionality does not pull its own weight, I'm glad I didn't go further. Fieldnotes is
+			wonderfully functional in the state it is now.
+		</P>
 		<H2>Architecture</H2>
-		Basic Crud, e2e encryption, shares
+		<Details title="A disclaimer about completeness">
+			<P>
+				This project was such a massive learning experience, it's hard to put everything in writing.
+				Especially in retrospect. But I want to give one example to illustrate a train of thought
+				that is hard to comprehend with some experience under your belt.
+			</P>
+			<P>
+				Shortly before I started working on Fieldnotes, I was studing CS at university with a focus
+				on high-performance computing. I had no experience with web development whatsoever. When I
+				started conceptualizing the authentication system for this application, I was dumbfounded by
+				the thought of making an extra DB query every time <em>any</em> request had to be authenticated
+				(think checking validity of session token). After all, I was just yesterday spending a lot of
+				time making sure my data is efficiently preloaded into cache, and now you're telling me I have
+				to wait a relative eternity for the DB to go read from disk before I can start doing any actual
+				business logic?
+			</P>
+			<P>
+				So I was feverishly researching how other people solve this problem. I set my eyes on JWT as
+				a means to be able to keep a key in memory and verify the validity of the signed token more
+				efficiently than going to disk. Everyone on the internet is trying to tell you not to do
+				that (mainly because revocation of a token is hard), but it very very tempting.
+			</P>
+			<P>
+				Ultimately, it took an embarrasing amount of time to let it sink in that this extra round
+				trip to the DB does not matter much in such applications, and I'm fine to stick with
+				established best practises. But I'm sympathetic now when I see a novice ask a seemingly
+				insane question on a forum, probably there are some underlying assumptions that completely
+				skew their mental model.
+			</P>
+			<P>
+				There are other such detours that would make this note unnecessarily long if mentioned, just
+				know that there were many.
+			</P>
+		</Details>
+		Basic Crud, e2e encryption, shares languages, frameworks, db schema, db migration, crypto api, state
+		management
 		<H3>Encryption</H3>
-		<H2>Implementation</H2>
-		languages, frameworks, db schema, db migration, crypto api, state management
 		<H2>Deployment</H2>
 		docker compose, hetzner, caddy, spa
 		<H2>Learnings</H2>
