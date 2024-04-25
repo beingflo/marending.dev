@@ -164,14 +164,15 @@ const info = notes['fieldnotes'];
 				So I was feverishly researching how other people solve this problem. I set my eyes on JWT as
 				a means to be able to keep a key in memory and verify the validity of the signed token more
 				efficiently than going to disk. Everyone on the internet is trying to tell you not to do
-				that (mainly because revocation of a token is hard), but it very very tempting.
+				that (mainly because revocation of a token is hard), but it remained very tempting.
 			</P>
 			<P>
 				Ultimately, it took an embarrasing amount of time to let it sink in that this extra round
-				trip to the DB does not matter much in such applications, and I'm fine to stick with
-				established best practises. But I'm sympathetic now when I see a novice ask a seemingly
-				insane question on a forum, probably there are some underlying assumptions that completely
-				skew their mental model.
+				trip to the DB does not matter much in such applications, when a network roundtrip is
+				involved anyway. Turns out it's okay to stick with established best practises unless you
+				really know better. Now I'm sympathetic when I see a novice ask a seemingly insane question
+				on a forum, probably there are some underlying assumptions that completely skew their mental
+				model.
 			</P>
 			<P>
 				There are other such detours that would make this note unnecessarily long if mentioned, just
