@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../layouts/layout.astro';
-import { Note, Title, P, H2, H3, Img, A, Details, C, Li } from '../../../components';
+import { Note, Title, P, H2, H3, Img, A, Details, C, Li, Info } from '../../../components';
 import { notes } from '../../notes';
 import textli from './textli-v1.png';
 import textliv2 from './textli-v2.png';
@@ -169,10 +169,10 @@ const info = notes['fieldnotes'];
 			<P>
 				Ultimately, it took an embarrasing amount of time to let it sink in that this extra round
 				trip to the DB does not matter much in such applications, when a network roundtrip is
-				involved anyway. Turns out it's okay to stick with established best practises unless you
-				really know better. Now I'm sympathetic when I see a novice ask a seemingly insane question
-				on a forum, probably there are some underlying assumptions that completely skew their mental
-				model.
+				involved and throughput is more important than latency. Turns out it's okay to stick with
+				established best practises unless you really know better. Now I'm sympathetic when I see a
+				novice ask a seemingly insane question on a forum, probably there are some underlying,
+				unarticulated assumptions that lead to a very wrong mental model.
 			</P>
 			<P>
 				There are other such detours that would make this note unnecessarily long if mentioned, just
@@ -270,11 +270,38 @@ const info = notes['fieldnotes'];
 		</P>
 		<Hint>
 			Now that I'm writing this I realize that asymmetric encryption never crossed my mind here.
-			That could also be an avenue to avoid sharing the main key directly
+			That could also be an avenue to avoid sharing the main key directly. Although I believe
+			encryption / decryption performance is significanly worse for asymmetric cryptography.
 		</Hint>
 		<H3>Security considerations</H3>
-		<P>tofu, non-extractable</P>
-
+		<P>
+			There is a lot of well established critisism for web based application trying to achieve
+			end-to-end encryption. The main issue is that you want to be able to audit the code of the
+			application to actually trust that the encryption happens as advertised. For native
+			applications that is doable but for web applications it gets more tricky: I get to send you a
+			new application everytime you load the web app and I get to send a legitimate application to
+			the security researcher but a compromised one to you. So you just shouldn't really trust a web
+			app.
+		</P>
+		<P>
+			Nothing I did in my application changes that basic limitation. There is one thing that
+			improves the situation a bit in my opinion: Secure key handling with Web Crypto API. When you
+			have the browser generate a key for you, you can specify that the key is <A
+				href="https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/generateKey#extractable"
+				>not to be handed out</A
+			>, ever. Instead, you only get a handle to the key. With the handle you can still carry out
+			encryption and decryption operations, but you can never exfiltrate the key in plain text. In
+			my opinion as a non specialist in security questions, that means you only have to trust the
+			web app on the first use. After that, even I can not maliciously extract that key. (I can
+			still carry out decryption operations in your browser that you didn't want to happen, though)
+		</P>
+		<Info
+			>Web Crypto API is a fairly low level api and experts on the internet warn against using it if
+			you don't know what you're doing. I don't know what I'm doing. I hope it's still secure. <A
+				href="https://github.com/beingflo/write.fieldnotes/blob/main/src/components/crypto.ts"
+				>Here</A
+			> is the relevant code in my repo, do let me know if something is wrong.</Info
+		>
 		<H2>Deployment</H2>
 		docker compose, hetzner, caddy, spa, db migration
 		<H2>Learnings</H2>
