@@ -24,16 +24,16 @@ const info = notes['fieldnotes'];
 			{info.title}
 		</Title>
 		<P>
-			Some years ago I got very serious about upping my privacy game. From Gmail and Google Drive to
-			cloud based note taking applications, I wanted to stop giving all my data to companies that
+			Some years ago, I got very serious about upping my privacy game. From Gmail and Google Drive
+			to cloud-based note-taking applications, I wanted to stop giving all my data to companies that
 			would monetize it. The first order of business was to replace my haphazard use of Google Keep
-			with a private note taking application.
+			with a private note-taking application.
 		</P>
 		<P>
 			My requirements were simple: Allow low-friction editing, a clean UI, and end-to-end
-			encryption. To my surprise I could not find a single application that fullfilled all three. So
+			encryption. To my surprise, I could not find a single application that fulfilled all three. So
 			instead I set out to create my own. Over the next year or so, I embarked on a tumultuous
-			journey to build my first "large-scale" fullstack application.
+			journey to build my first "large-scale" full-stack application.
 		</P>
 		<Details title="What's a project report?">
 			<P>
@@ -57,16 +57,16 @@ const info = notes['fieldnotes'];
 		</Details>
 		<H2>A brief recap</H2>
 		<P>
-			The very first version of this application I built featured a simple python server storing
+			The very first version of this application I built featured a simple Python server storing
 			notes as files on disk. It didn't support multiple users and protected access using hardcoded
-			basic auth. My frontend experience at this point comprised of approximately 2 months of
+			basic auth. My frontend experience at this point consisted of approximately 2 months of
 			on-the-job React usage. So I built the UI using React, the only way I knew how: Prop drilling.
 			For UI components I used <A href="https://semantic-ui.com/">Semantic UI</A>. Looking back at
 			this code my eyes start to bleed. Anyhow, this is how it looked:
 		</P>
 		<Img src={textli} />
 		<P>
-			It was simple but functional, I was hosting it on a Raspberry Pi in a shoebox. At this stage
+			It was simple but functional, I was hosting it on a Raspberry Pi in a shoebox. At this stage,
 			there was no encryption. Since I was self-hosting and thus was the only person with access to
 			the data, I figured there was no point.
 		</P>
@@ -74,8 +74,8 @@ const info = notes['fieldnotes'];
 			I quickly outgrew this code base and started rewriting it. This time the backend was
 			implemented in Rust with a MongoDB database. The frontend was still React, but this time
 			making use of some more sophisticated state management: Context. Also, I switched to the
-			<A href="https://ant.design/">Ant Design</A> UI component library. This is also the point I started
-			hosting my applications on a VPS rented in a datacenter. So long, trusty shoebox RPi.
+			<A href="https://ant.design/">Ant Design</A> UI component library. This is also the point where
+			I started hosting my applications on a VPS rented in a datacenter. So long, trusty shoebox RPi.
 		</P>
 		<P>
 			Trying to start this application locally to get a screenshot turned out to be quite hard. So
@@ -87,23 +87,23 @@ const info = notes['fieldnotes'];
 			application using Rust and PostgreSQL in the backend and React with Jotai state management in
 			the frontend. This time around I used <A href="https://tailwindcss.com/">Tailwind CSS</A>
 			with <A href="https://headlessui.com/">Headless UI</A> components. This turned out to be the stack
-			that stuck. This is how it looks like today:
+			that stuck. This is what it looks like today:
 		</P>
 		<Img src={fieldnotes} />
 		<P>
 			I find it amazing to look back on these 3 versions of the same application and reflect on my
 			progress both technically as well as visually. You can see my minimalistic style preference
-			forming in real time. And my technical preferences are materializing just as I'm using
+			forming in real-time. And my technical preferences are materializing just as I'm using
 			different approaches and figuring out better ways.
 		</P>
 		<P>
-			In the following we will only consider the latest iteration and talk through architecture and
+			In the following, we will only consider the latest iteration and talk through architecture and
 			design decisions.</P
 		>
 		<H2>Features</H2>
 		<P>
 			<A href="https://write.fieldnotes.land">Fieldnotes</A> currently boasts the following features:
-			Low-friction editing, minimalistic and elegant UI, end-to-end encryption and private note sharing.
+			Low-friction editing, minimalistic and elegant UI, end-to-end encryption, and private note sharing.
 		</P>
 		<P>
 			Searching for notes (cmd+k) opens an overlay with a flat list of all notes. Due to the e2e
@@ -130,16 +130,16 @@ const info = notes['fieldnotes'];
 			that is used to derive a key for encryption. More about this in a later section.
 		</P>
 		<Img src={encryption} />
-		<H3>Non features</H3>
+		<H3>Non-features</H3>
 		<P>
 			While I now consider Fieldnotes feature complete for my purposes, it's fun to look back at
 			aspirations I had for it at one point. Looking at an ancient <C>Fieldnotes Roadmap</C> note I have
 			in Fieldnotes, I was thinking about collaborative editing, versioning of notes, image upload to
-			s3 (to avoid blobs in the DB), note cross-linking and even a hosted personal blog site powered
+			s3 (to avoid blobs in the DB), note cross-linking, and even a hosted personal blog site powered
 			by published notes. To think I was about to reinvent a CMS by accident makes me shudder a bit.
 		</P>
 		<P>
-			In hindsight I'm happy to have cut the cord at the point I did. Arguably, even the sharing
+			In hindsight, I'm happy to have cut the cord at the point I did. Arguably, even the sharing
 			functionality does not pull its own weight, I'm glad I didn't go further. Fieldnotes is
 			wonderfully functional in the state it is now.
 		</P>
@@ -181,13 +181,13 @@ const info = notes['fieldnotes'];
 		</Details>
 		<P>
 			At the core, the Fieldnotes backend is a simple CRUD (create, read, update, delete) app. It
-			stores all its data in PostgreSQL. For authentication there are user and token tables that
-			store hashed credentials as well as session tokens. The frontend is a Single Page Application
+			stores all its data in PostgreSQL. For authentication, there are user and token tables that
+			store hashed credentials as well as session tokens. The frontend is a single-page application
 			built in React. It uses <A href="https://jotai.org/">Jotai</A> for state management. The extensive
-			features of the note editor, like advanced formatting, markdown support as you type and a floating
+			features of the note editor, like advanced formatting, markdown support as you type, and a floating
 			formatting bar are provided by the excellent <A href="https://tiptap.dev/">tiptap</A>. Most of
 			the standout functionality of Fieldnotes lives in the frontend. The most interesting feature,
-			worthwile of getting into is the client-side encryption.
+			worthwhile of getting into is the client-side encryption.
 		</P>
 		<H3>Deriving the main key</H3>
 		<P>
@@ -204,7 +204,7 @@ const info = notes['fieldnotes'];
 			encryption password will result in the generation of the same main key, thus, allowing interoperability
 			between encrypted content from one device to the other.
 		</P>
-		<P> At no point does the key stored in one devices browser leave the device. </P>
+		<P> At no point does the key stored in one device's browser leave the device. </P>
 		<H3>Encrypting a note</H3>
 		<P> Now, let's consider what happens when a user wants to store a new note: </P>
 		<P>
@@ -235,20 +235,20 @@ const info = notes['fieldnotes'];
 			When loading the list of notes into the frontend, the application receives an array of
 			objects, each containing encrypted metadata and a wrapped key for this note. Now, we
 			<A href="https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/unwrapKey">unwrap</A>
-			each notes' key using the main key, and use it to decrypt the metadata.
+			each note's key using the main key and use it to decrypt the metadata.
 		</P>
 		<H3>Decrypting a note</H3>
 		<P>
-			To decrypt a note is very similar to loading metadata, with the exception that for this api
+			To decrypt a note is very similar to loading metadata, with the exception that for this API
 			call, the backend also returns the full encrypted content of a note. This is decrypted using
 			the plain key for this note.
 		</P>
 		<H3>Sharing a note</H3>
 		<P>
-			To share a note to a thirdparty via only a link, we need to communicate all the information
+			To share a note to a third party via only a link, we need to communicate all the information
 			needed to decrypt the note. This is done by embedding the <em>plain</em> key of this particular
 			note as the <A href="https://developer.mozilla.org/en-US/docs/Web/API/URL/hash">hash</A> of the
-			url. So a shared link will look something like
+			URL. So a shared link will look something like
 		</P>
 		<Code
 			value="https://fieldnotes.land/note/uUpZgnUOeamS6SefalXjVVYb5zXChGh1#yLOOY5rCqxL0eJaZYPFrU2NzwHWqf+kkzCXNYUVLnrI="
@@ -265,21 +265,21 @@ const info = notes['fieldnotes'];
 			provide the main key to them. That would allow them to decrypt <em>any</em> note, not just the
 			one you shared, provided they can get their hands on them. By introducing a key for each note,
 			we can easily share that with the recipient of a shared link, without exposing all other notes.
-			There is also no privacy loss towards the backend, as the keys are wrapped by the mainkey before
+			There is also no privacy loss towards the backend, as the keys are wrapped by the main key before
 			ever leaving the device.
 		</P>
 		<Hint>
 			Now that I'm writing this I realize that asymmetric encryption never crossed my mind here.
 			That could also be an avenue to avoid sharing the main key directly. Although I believe
-			encryption / decryption performance is significanly worse for asymmetric cryptography.
+			encryption / decryption performance is significantly worse for asymmetric cryptography.
 		</Hint>
 		<H3>Security considerations</H3>
 		<P>
-			There is a lot of well established critisism for web based application trying to achieve
+			There is a lot of well-established criticism for web-based applications trying to achieve
 			end-to-end encryption. The main issue is that you want to be able to audit the code of the
 			application to actually trust that the encryption happens as advertised. For native
 			applications that is doable but for web applications it gets more tricky: I get to send you a
-			new application everytime you load the web app and I get to send a legitimate application to
+			new application every time you load the web app and I get to send a legitimate application to
 			the security researcher but a compromised one to you. So you just shouldn't really trust a web
 			app.
 		</P>
@@ -289,14 +289,14 @@ const info = notes['fieldnotes'];
 			have the browser generate a key for you, you can specify that the key is <A
 				href="https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/generateKey#extractable"
 				>not to be handed out</A
-			>, ever. Instead, you only get a handle to the key. With the handle you can still carry out
+			>, ever. Instead, you only get a handle on the key. With the handle, you can still carry out
 			encryption and decryption operations, but you can never exfiltrate the key in plain text. In
-			my opinion as a non specialist in security questions, that means you only have to trust the
+			my opinion as a non-specialist in security questions, that means you only have to trust the
 			web app on the first use. After that, even I can not maliciously extract that key. (I can
 			still carry out decryption operations in your browser that you didn't want to happen, though)
 		</P>
 		<Info
-			>Web Crypto API is a fairly low level api and experts on the internet warn against using it if
+			>Web Crypto API is a fairly low-level API and experts on the internet warn against using it if
 			you don't know what you're doing. I don't know what I'm doing. I hope it's still secure. <A
 				href="https://github.com/beingflo/write.fieldnotes/blob/main/src/components/crypto.ts"
 				>Here</A
@@ -305,14 +305,14 @@ const info = notes['fieldnotes'];
 		<H2>Deployment</H2>
 		<P>
 			Fieldnotes is deployed using docker-compose to a small Hetzner VPS. SSL for the domain is
-			handled by Caddy. It also serves as a web server for the static frontend bundle as well as as
-			proxy for the backend api.
+			handled by Caddy. It also serves as a web server for the static frontend bundle as well as a
+			proxy for the backend API.
 		</P>
 		<H2>Learnings</H2>
 		<P>
 			Building this application (or rather 3 applications that happen to do the same thing) has been
 			an educational roller coaster. It helped me develop skills significantly faster than if I only
-			did engineering on the job. But most importantly, it kick started my appetite for side
+			did engineering on the job. But most importantly, it kick-started my appetite for side
 			projects!
 		</P>
 		<P>
@@ -324,8 +324,8 @@ const info = notes['fieldnotes'];
 		</P>
 		<P>
 			Lastly, when the application started to be pretty useful and fun to use, I started imagining a
-			path towards commercialization. I even started building functionality in this direction. It
-			took some time for the illusion to wear off, when I realized that the value proposition for
+			path toward commercialization. I even started building functionality in this direction. It
+			took some time for the illusion to wear off when I realized that the value proposition for
 			such a simple tool in such a crowded market simply wasn't there. Now I'm more conscious that I
 			build for myself. If I ever create something that other people find useful, I can always
 			revisit commercializing it.

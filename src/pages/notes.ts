@@ -4,7 +4,7 @@ export const notes = {
 		subtitle: 'A project report',
 		date: '28 Apr 2024',
 		link: '/notes/fieldnotes/',
-		draft: true,
+		draft: false,
 	},
 	'rust-spa': {
 		title: 'How to host single-page applications',
