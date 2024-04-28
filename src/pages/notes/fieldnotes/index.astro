@@ -303,8 +303,32 @@ const info = notes['fieldnotes'];
 			> is the relevant code in my repo, do let me know if something is wrong.</Info
 		>
 		<H2>Deployment</H2>
-		docker compose, hetzner, caddy, spa, db migration
+		<P>
+			Fieldnotes is deployed using docker-compose to a small Hetzner VPS. SSL for the domain is
+			handled by Caddy. It also serves as a web server for the static frontend bundle as well as as
+			proxy for the backend api.
+		</P>
 		<H2>Learnings</H2>
-		iterative, get real about commercialization
+		<P>
+			Building this application (or rather 3 applications that happen to do the same thing) has been
+			an educational roller coaster. It helped me develop skills significantly faster than if I only
+			did engineering on the job. But most importantly, it kick started my appetite for side
+			projects!
+		</P>
+		<P>
+			To also mention some concrete lessons: By the third iteration of Fieldnotes I learned that I
+			should deploy a "Hello world" application first things first. Building things locally and
+			waiting for the right moment to deploy is futile: That moment never arrives. Now I'm firmly in
+			the MVP camp. My applications got significantly leaner and I really ponder if a feature pulls
+			its own weight.
+		</P>
+		<P>
+			Lastly, when the application started to be pretty useful and fun to use, I started imagining a
+			path towards commercialization. I even started building functionality in this direction. It
+			took some time for the illusion to wear off, when I realized that the value proposition for
+			such a simple tool in such a crowded market simply wasn't there. Now I'm more conscious that I
+			build for myself. If I ever create something that other people find useful, I can always
+			revisit commercializing it.
+		</P>
 	</Note>
 </Layout>
