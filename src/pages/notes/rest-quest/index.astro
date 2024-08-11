@@ -1,0 +1,45 @@
+---
+import Layout from '../../../layouts/layout.astro';
+import { Note, Title, P, H2, H3, Img, A, Details, C, Li, Info } from '../../../components';
+import { notes } from '../../notes';
+import { Code } from '../../../components';
+import { Hint } from '../../../components';
+import ux1 from './ux1.jpg';
+import ux2 from './ux2.jpg';
+import ux3 from './ux3.jpg';
+import ux4 from './ux4.jpg';
+import ux5 from './ux5.jpg';
+import ux6 from './ux6.jpg';
+import ux7 from './ux7.jpg';
+import ux8 from './ux8.jpg';
+
+const info = notes['rest-quest'];
+---
+
+<Layout>
+	<Note>
+		<Title
+			subtitle={info.subtitle}
+			date={info.date}>
+			{info.title}
+		</Title>
+		<P>
+			After building <A href="/notes/fieldnotes">Fieldnotes</A>, I was hooked on side-projects.
+		</P>
+		<div class="md:w-1/2 w-full mx-auto">
+			<Img src={ux3} />
+		</div>
+		<Details title="Full UX concept">
+			<div class="md:w-1/2 w-full mx-auto">
+				<Img src={ux1} />
+				<Img src={ux2} />
+				<Img src={ux3} />
+				<Img src={ux4} />
+				<Img src={ux5} />
+				<Img src={ux6} />
+				<Img src={ux7} />
+				<Img src={ux8} />
+			</div>
+		</Details>
+	</Note>
+</Layout>

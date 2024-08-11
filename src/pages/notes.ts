@@ -1,4 +1,11 @@
 export const notes = {
+	'rest-quest': {
+		title: 'rest.quest: An opinionated to-do list',
+		subtitle: 'A project report',
+		date: '11 Aug 2024',
+		link: '/notes/rest-quest/',
+		draft: true,
+	},
 	fieldnotes: {
 		title: 'Fieldnotes: An end-to-end encrypted note-taking application',
 		subtitle: 'A project report',
