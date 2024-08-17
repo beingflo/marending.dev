@@ -12,6 +12,10 @@ import ux5 from './ux5.jpg';
 import ux6 from './ux6.jpg';
 import ux7 from './ux7.jpg';
 import ux8 from './ux8.jpg';
+import app1 from './app1.png';
+import app2 from './app2.png';
+import app3 from './app3.png';
+import app4 from './app4.png';
 
 const info = notes['rest-quest'];
 ---
@@ -29,12 +33,36 @@ const info = notes['rest-quest'];
 			the scope creep that overwhelmed me with Fieldnotes made me a bit wary to just repeat the same
 			thing. Instead, I set myself up for a much more structured journey this time. You can read a
 			synopsys about this <A href="/notes/16-hour-projects">here</A>. But in this note I'll showcase
-			<A href="https://rest.quest">rest.quest</A> specifically, outline in more detail the design process,
+			<A href="https://rest.quest">rest.quest</A> specifically, outline in more detail the design process
 			and elaborate on the learnings.
 		</P>
+		<H2>Features</H2>
+		<P>
+			<A href="https://rest.quest">rest.quest</A> is a tiny, opinionated to-do list. There is no backend
+			component, hence also no sign up. It primarily stores data in the browser. The user can optionally
+			provide credentials for an S3-compatible object storage bucket to synchronize the state directly
+			from the browser to the bucket.</P
+		>
+		<Img src={app1} />
+		<P>
+			On the left, vertically centered, is a list of projects. All the to-do items (or
+			<em>quests</em> if you will) in the selected project are layed out in a 2d grid taking up the rest
+			of the screen. Already you can gauge the vibe of this application: It's downright
+			<em>brutalist</em> in design. There is no distraction in sight. Only relevant information.
+		</P>
+		<P>
+			The application is highly keyboard-driven: By hitting <b>n</b> on the keyboard, a new text input
+			field appears in the next available spot at the end of the list. Checking off an item is a matter
+			of clicking on the text of the item itself. An items description can be editing by clicking on
+			the <b>Edit</b> button that appears next to it on hover.
+		</P>
+		<P>
+			When items are checked off, they leave a gap to visualize the progress you've made in working
+			through your list.
+		</P>
 		<H2>Motivation</H2>
-		<P
-			>I'm a forgetful person. For a long time I would just surrender to that fact and, you know,
+		<P>
+			I'm a forgetful person. For a long time I would just surrender to that fact and, you know,
 			forget stuff all the time. At some point I decided to take matters into my own hands and start
 			using to-do lists seriously. With Todoist as my application of choice, I quickly realized how
 			much better it feels to not just let random thoughts fall through the cracks. As the initial
