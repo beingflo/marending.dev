@@ -2,7 +2,7 @@ export const notes = {
 	'rest-quest': {
 		title: 'rest.quest: An opinionated to-do list',
 		subtitle: 'A project report',
-		date: '11 Aug 2024',
+		date: '17 Aug 2024',
 		link: '/notes/rest-quest/',
 		draft: true,
 	},
