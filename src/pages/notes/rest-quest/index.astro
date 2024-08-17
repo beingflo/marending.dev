@@ -135,6 +135,24 @@ const info = notes['rest-quest'];
 			problems and overall improves the quality of the work.
 		</P>
 		<H2>Architecture</H2>
+		<P>
+			The application is frontend-only, originally as a consequence of the time constraint. As I
+			started sketching out how this could work without a backend, I fell in love with the
+			simplicity and elegance of this approach. The way I built it now, it comes with a number of
+			advantages:
+		</P>
+		<ul class="pb-4">
+			<LiD>Implementation effort is drastically lower</LiD>
+			<LiD>The software is vastly more accessible as there is no sign up</LiD>
+			<LiD>Offline functionality comes practically for free</LiD>
+			<LiD>The user gets to bring their own storage backend</LiD>
+		</ul>
+		<P>There are disadvantages too, of course. This approach does not suit all applications:</P>
+		<ul class="pb-4">
+			<LiD>Non-technical user doesn't know what an S3 bucket is</LiD>
+			<LiD>Advanced features like sharing a list with a third-party would be hard to pull off</LiD>
+			<LiD>Less efficient synchronization (more data being sent and received)</LiD>
+		</ul>
 		<H3>Deployment</H3>
 		<H2>Learnings</H2>
 		<P>Explorative quality of paper as a medium</P>
