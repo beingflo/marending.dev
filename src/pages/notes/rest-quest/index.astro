@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../layouts/layout.astro';
-import { Note, Title, P, H2, H3, Img, A, Details, LiD } from '../../../components';
+import { Note, Title, P, H2, H3, Img, A, Details, LiD, Li, C } from '../../../components';
 import { notes } from '../../notes';
 import ux1 from './ux1.jpg';
 import ux2 from './ux2.jpg';
@@ -149,10 +149,58 @@ const info = notes['rest-quest'];
 		</ul>
 		<P>There are disadvantages too, of course. This approach does not suit all applications:</P>
 		<ul class="pb-4">
-			<LiD>Non-technical user doesn't know what an S3 bucket is</LiD>
+			<LiD>Non-technical users don't know what an S3 bucket is</LiD>
 			<LiD>Advanced features like sharing a list with a third-party would be hard to pull off</LiD>
 			<LiD>Less efficient synchronization (more data being sent and received)</LiD>
 		</ul>
+		<P>
+			One topic that is worth discussing a bit further is the synchronization. In the original
+			implementation described here, the application would only ever upload or download the full
+			state in one big json file. To determine whether the local state or the remote state is newer,
+			there was a separate version file in S3 that contains a version of the state (i.e. a simple
+			number). Whenever a mutation happens on the state, like creating a new item, the webapp would
+			increment the version. When synchronizing the state it would first check the version of the
+			remote state and compare it against the local version. If the remote version is newer, the app
+			downloads the remote state and wholly replaces the local state. Otherwise, it uploads the
+			local state.
+		</P>
+		<P>
+			This works for simple use cases: If this feature is only used to backup the state, it works
+			fine. If you use the app on two devices, but only ever one at a time, it also works. If,
+			however, two mutations happen simultaneously, one will be overwritten. Imagine the following
+			scenario:
+		</P>
+		<ul class="pb-4">
+			<Li>State on device A, B and S3 is in sync at version X</Li>
+			<Li>User modifies state on device A (local state @ version X+1)</Li>
+			<Li>User modifies state on device B (local state @ version X+1)</Li>
+			<Li>
+				User synchronizes state on device A against S3 (local state ahead, so S3 now @ version X+1)
+			</Li>
+			<Li>
+				User synchronizes state on device B against S3 (local and remote state both @ version X+1)
+			</Li>
+		</ul>
+		<P>
+			At this point the application either has to overwrite the local state with the remote state
+			(losing modification on device B) or overwrite the state on S3 (losing modification on device
+			A). Either is wrong. At the time this was a risk I was willing to take in order to get this
+			implemented quickly.
+		</P>
+		<P>
+			Some months (or years) later I revisited this to make it a bit more robust. Now the
+			application treats each item and project as an entity with a unique id and modification
+			timestamp. When synchronizing the state, the application first downloads the remote state and
+			then intelligently merges the items from remote and local into a new state that is both stored
+			locally as well as uploaded to S3. This merging works by identifying matching items by id and
+			comparing their modification timestamp. The only situation where data can be lost now is if
+			the same item is modified on both devices before they sync with remote. For new items or other
+			changes, the application can merge the changes together without an issue. The only non-trival
+			case here is the deletion of a project or item: How to ensure that a locally deleted item
+			doesn't get added back by the remote state? The answer is simply to maintain an object with a
+			<C>deletedAt</C> property to instruct the merging algorithm that the local state isn't unaware
+			of this item, but consciously deleted it.
+		</P>
 		<H3>Deployment</H3>
 		<H2>Learnings</H2>
 		<P>Explorative quality of paper as a medium</P>
