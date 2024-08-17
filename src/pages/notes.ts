@@ -4,7 +4,7 @@ export const notes = {
 		subtitle: 'A project report',
 		date: '17 Aug 2024',
 		link: '/notes/rest-quest/',
-		draft: true,
+		draft: false,
 	},
 	fieldnotes: {
 		title: 'Fieldnotes: An end-to-end encrypted note-taking application',
