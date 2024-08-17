@@ -1,9 +1,7 @@
 ---
 import Layout from '../../../layouts/layout.astro';
-import { Note, Title, P, H2, H3, Img, A, Details, C, Li, Info } from '../../../components';
+import { Note, Title, P, H2, H3, Img, A, Details, LiD } from '../../../components';
 import { notes } from '../../notes';
-import { Code } from '../../../components';
-import { Hint } from '../../../components';
 import ux1 from './ux1.jpg';
 import ux2 from './ux2.jpg';
 import ux3 from './ux3.jpg';
@@ -92,6 +90,25 @@ const info = notes['rest-quest'];
 			to my needs jumped out at me.
 		</P>
 		<H2>Process</H2>
+		<P>First, I set up a schedule for this project:</P>
+		<ul class="pb-4">
+			<LiD>2 hours for the initial technical setup and deployment</LiD>
+			<LiD>2 hours for the UI/UX concept (including feature set)</LiD>
+			<LiD>6 hours for implementation of basic features</LiD>
+			<LiD>4 hours for implementation of advanced features</LiD>
+			<LiD>2 hours of reserve</LiD>
+		</ul>
+		<P>
+			Notably, I set the schedule <em>before</em> I even knew what features I would want. The scope would
+			have to fit the available time.
+		</P>
+		<P>
+			First, I set up a <A href="https://www.solidjs.com/">SolidJS</A> (new to me at this point) project
+			and deployed it to Github Pages (later I would migrate it to my Hetzner VPS). Getting a "Hello
+			world" version of a project deployed first is something I always do since that time a version of
+			Fieldnotes didn't even get deployed before it was obsoleted by the next version.
+		</P>
+		<P>The UI</P>
 		<div class="md:w-1/2 w-full mx-auto">
 			<Img src={ux3} />
 		</div>

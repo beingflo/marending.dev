@@ -17,3 +17,4 @@ export { WidePage } from './WidePage';
 export { Table } from './Table';
 export { default as Img } from './Img.astro';
 export { Li } from './Li';
+export { LiD } from './LiD';
