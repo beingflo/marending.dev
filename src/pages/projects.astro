@@ -7,6 +7,23 @@ import Layout from '../layouts/layout.astro';
 	<Page>
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-y-2 md:gap-y-24">
 			<div>
+				<A href="https://ledger.rest.quest">ledger</A>
+			</div>
+			<div class="col-span-2 mb-8 md:mb-0 flex flex-col">
+				<span>
+					Ledger is a small transaction analysis tool. The user can import bank transaction dumps in
+					csv format from <A href="https://www.neon-free.ch/en/">Neon</A>. A small query language
+					allows quickly searching for transactions and getting aggregations at a glance. Automated
+					filters categorize transactions for analysis. Charts give insight into spending or income
+					by category and over time. As with other applications in this series, ledger runs locally
+					in the browser and offers the ability for sync and backup via S3 credentials.
+				</span>
+				<div class="mt-2 text-sm text-stone-600">
+					<span>Technologies involved:</span>
+					<span>Typescript, SolidJS, S3, Caddy</span>
+				</div>
+			</div>
+			<div>
 				<A href="https://jour.rest.quest">jour</A>
 			</div>
 			<div class="col-span-2 mb-8 md:mb-0 flex flex-col">
