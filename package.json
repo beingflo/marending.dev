@@ -10,10 +10,10 @@
 		"astro": "astro"
 	},
 	"dependencies": {
-		"@astrojs/solid-js": "^4.0.0",
+		"@astrojs/solid-js": "^4.4.1",
 		"@astrojs/tailwind": "^5.1.0",
 		"@observablehq/plot": "^0.6.11",
-		"astro": "^4.4.0",
+		"astro": "^4.15.4",
 		"canvas": "^2.11.2",
 		"jsdom": "^24.0.0",
 		"solid-js": "^1.7.7",
