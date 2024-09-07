@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../layouts/layout.astro';
-import { A, Note, Title, P, H2, H3 } from '../../../components';
+import { A, Note, Title, P, H2, H3, C } from '../../../components';
 import { notes } from '../../notes';
 
 const info = notes['unstructured-data'];
@@ -13,6 +13,29 @@ const info = notes['unstructured-data'];
 			date={info.date}>
 			{info.title}
 		</Title>
-		<P>hello</P>
+		<P>
+			To store metrics I have a Grafana and Prometheus deployment on my server. I'm primarily
+			feeding IoT sensor data from various sensors around the house into that system. Lately, I've
+			craved a more customized, lean solution that would serve as my central place to chuck any data
+			for later analysis. Instead of utilizing an existing stack, I'm setting out to build my own.
+			It's going to be worse in every conceivable way, but it'll be mine.
+		</P>
+		<H2>Requirements</H2>
+		<P>
+			The system I'm envisioning (let's call it <C>metis</C>) should be push-based unlike
+			Prometheus, which expects to be able to scrape a metrics endpoint. This makes sense for
+			allways-on backend services, not so much for battery powered IoT devices.
+		</P>
+		<P>
+			It should not impose any strict schema on the data it's receiving. One use-case will be to
+			store structured logs of backend services. A new field being added to a logged event must
+			obviously not require a schema migration in metis.
+		</P>
+		<P>
+			To simplify the hosting, metis should use an embedded database and also contain a visualizing
+			frontend. (I just want to experiment with SQLite to be honest)
+		</P>
+		<H2>Challenges</H2>
+		<P> First, I want to briefly mention a requirement I've all but abandoned. </P>
 	</Note>
 </Layout>
