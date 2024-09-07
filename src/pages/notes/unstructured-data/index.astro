@@ -36,6 +36,18 @@ const info = notes['unstructured-data'];
 			frontend. (I just want to experiment with SQLite to be honest)
 		</P>
 		<H2>Challenges</H2>
-		<P> First, I want to briefly mention a requirement I've all but abandoned. </P>
+		<P>
+			I've already abandoned the idea of making metis a general observability and metrics stack
+			including user-provided data queries and customizable visualizations in favor of a monolith
+			that serves exactly my usecases. That means dashboards are hardcoded, queries known ahead of
+			time. You can get a glimpse of the original vision in
+			<A href="/notes/wasm-benchmark/">this note</A>.
+		</P>
+		<P>
+			With the hard part descoped, I'm now primarily concerned with how to store data of unknown
+			shape in a way that we can efficiently query it later. Traditional databases expect to know
+			the schema ahead of time, in return they give us lots of mechanisms to speed up querying
+			later.
+		</P>
 	</Note>
 </Layout>
