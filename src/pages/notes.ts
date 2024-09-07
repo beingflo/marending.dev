@@ -1,4 +1,11 @@
 export const notes = {
+	'unstructured-data': {
+		title: 'How to store and query unstructured data',
+		subtitle: 'Reinventing the wheel',
+		date: '7 Sep 2024',
+		link: '/notes/unstructured-data/',
+		draft: true,
+	},
 	'rest-quest': {
 		title: 'rest.quest: An opinionated to-do list',
 		subtitle: 'A project report',
