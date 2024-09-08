@@ -53,7 +53,7 @@ const info = notes['unstructured-data'];
 		<H2>Scenario</H2>
 		<P>
 			To evaluate possible approaches I have to get a bit more specific. So let's consider the
-			following use cases that metis should handle nicely.
+			following use cases that metis should handle nicely:
 		</P>
 		<P>
 			GPS location data sent by <A href="https://github.com/aaronpk/Overland-iOS">Overland</A>. This
@@ -70,7 +70,7 @@ const info = notes['unstructured-data'];
   "span_id": "1287394",
   "level": "ERROR",
   "user": "Bobby Tables",
-  "message": "User not found"
+  "message": "Dropping database failed"
 }`
 		/>
 		<P>
@@ -79,11 +79,21 @@ const info = notes['unstructured-data'];
 		</P>
 		<P>CO2 sensor data coming from an ESP32-based IoT device.</P>
 		<H2>Approaches</H2>
-		<H3>JSON column in RDBMS</H3>
+		<H3>JSON column in DB</H3>
 		<P>
 			The most straightforward approach is clearly to just chuck the JSON body that is sent metis'
-			way into a column. Insertion is very fast, querying data on the other hand comes with quite an
-			overhead.
+			way into a column. Insertion is very fast, the system has to do very little work here.
+			Querying data on the other hand comes with quite an overhead. Running a query that reaches
+			into the JSON body, like say averaging CO2 values by month, is quite a bit slower than if the
+			values were numeric columns. Implementation effort is quite low for this approach.
 		</P>
+		<H3>Entity–attribute–value model</H3>
+		<H3>Schema evolution</H3>
+		<H3>periodically transform data into strict tables / parquet</H3>
+		<H3>log structured merge trees / parquet</H3>
+		<H2>Choices choices</H2>
+		<P>do work at query time or in batches, reminds me of event sourcing</P>
+		<H2>Optimisations</H2>
+		<P>Time-based partitioning, maybe parquet (duckdb, polars, datafusion)</P>
 	</Note>
 </Layout>
