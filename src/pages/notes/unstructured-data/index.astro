@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../layouts/layout.astro';
-import { A, Note, Title, P, H2, H3, C } from '../../../components';
+import { A, Note, Title, P, H2, H3, C, Li, LiD, Code } from '../../../components';
 import { notes } from '../../notes';
 
 const info = notes['unstructured-data'];
@@ -27,7 +27,7 @@ const info = notes['unstructured-data'];
 			allways-on backend services, not so much for battery powered IoT devices.
 		</P>
 		<P>
-			It should not impose any strict schema on the data it's receiving. One use-case will be to
+			It should not impose any strict schema on the data it's receiving. One use case will be to
 			store structured logs of backend services. A new field being added to a logged event must
 			obviously not require a schema migration in metis.
 		</P>
@@ -39,7 +39,7 @@ const info = notes['unstructured-data'];
 		<P>
 			I've already abandoned the idea of making metis a general observability and metrics stack
 			including user-provided data queries and customizable visualizations in favor of a monolith
-			that serves exactly my usecases. That means dashboards are hardcoded, queries known ahead of
+			that serves exactly my usecases. That means dashboards are hardcoded, queries known at build
 			time. You can get a glimpse of the original vision in
 			<A href="/notes/wasm-benchmark/">this note</A>.
 		</P>
@@ -47,7 +47,43 @@ const info = notes['unstructured-data'];
 			With the hard part descoped, I'm now primarily concerned with how to store data of unknown
 			shape in a way that we can efficiently query it later. Traditional databases expect to know
 			the schema ahead of time, in return they give us lots of mechanisms to speed up querying
-			later.
+			later. It boils down to a trade off between work spent when storing data and work spent when
+			querying data.
+		</P>
+		<H2>Scenario</H2>
+		<P>
+			To evaluate possible approaches I have to get a bit more specific. So let's consider the
+			following use cases that metis should handle nicely.
+		</P>
+		<P>
+			GPS location data sent by <A href="https://github.com/aaronpk/Overland-iOS">Overland</A>. This
+			data comes in predefined structure. I wouldn't want to have to hardcode the schema into metis
+			however, to simplify migrating to a different GPS logger App for instance.
+		</P>
+		<P>
+			Structured logs from various backend services I'm operating. A sample log could look like
+			this:
+		</P>
+		<Code
+			value=`{
+  "timestamp": "2069-09-08T09:06:45.944Z",
+  "span_id": "1287394",
+  "level": "ERROR",
+  "user": "Bobby Tables",
+  "message": "User not found"
+}`
+		/>
+		<P>
+			Now consider a new event being emitted that includes a new field of origin IP address.
+			Naturally, these logs must still be handled gracefully by metis.
+		</P>
+		<P>CO2 sensor data coming from an ESP32-based IoT device.</P>
+		<H2>Approaches</H2>
+		<H3>JSON column in RDBMS</H3>
+		<P>
+			The most straightforward approach is clearly to just chuck the JSON body that is sent metis'
+			way into a column. Insertion is very fast, querying data on the other hand comes with quite an
+			overhead.
 		</P>
 	</Note>
 </Layout>
