@@ -87,13 +87,30 @@ const info = notes['unstructured-data'];
 			into the JSON body, like say averaging CO2 values by month, is quite a bit slower than if the
 			values were numeric columns. Implementation effort is quite low for this approach.
 		</P>
-		<H3>Entity–attribute–value model</H3>
+		<H3>Entity-attribute-value model</H3>
+		<P>
+			In the EAV model, the idea is to have a single table that contains entity, attribute and value
+			columns. In particular, the attribute column stores the name of the attribute that the value
+			describes. Say "CO2" in our example. See
+			<A href="https://en.wikipedia.org/wiki/Entity%E2%80%93attribute%E2%80%93value_model">
+				the wikipedia page
+			</A> for more information. This brings the much desired flexibility: We don't need to know attributes
+			up front. However, I'm unclear on how you would store the structured log example. Here, you have
+			multiple attribute-value pairs that should stay in relation. If you want to query the error rate
+			of your application over time, it might be sufficient to just have <C>level: "ERROR"</C> entries
+			in the DB, but if you want to query which user causes errors, these attributes must be linked.
+			I suppose you could do that via the entity column.
+		</P>
 		<H3>Schema evolution</H3>
+		<P>
+			Another idea I've had, where I couldn't find much prior art (probably for good reason) is
+			automatic schema evolution.
+		</P>
 		<H3>periodically transform data into strict tables / parquet</H3>
 		<H3>log structured merge trees / parquet</H3>
 		<H2>Choices choices</H2>
 		<P>do work at query time or in batches, reminds me of event sourcing</P>
 		<H2>Optimisations</H2>
-		<P>Time-based partitioning, maybe parquet (duckdb, polars, datafusion)</P>
+		<P>buckets, Time-based partitioning, maybe parquet (duckdb, polars, datafusion)</P>
 	</Note>
 </Layout>
