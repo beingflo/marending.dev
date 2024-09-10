@@ -104,7 +104,12 @@ const info = notes['unstructured-data'];
 		<H3>Schema evolution</H3>
 		<P>
 			Another idea I've had, where I couldn't find much prior art (probably for good reason) is
-			automatic schema evolution.
+			automatic schema evolution. Imagine a system that automatically migrates a tables schema to
+			fit the incoming data: Queries would be fast as the data is stored in an efficient format,
+			inserts would be fast if the data conforms to the existing schema. The moment a datum comes
+			your way that deviates from the schema all hell breakes loose. The overhead of migrating the
+			DB in the middle of normal operation could be detrimental. I think this could be managed to
+			some degree, for instance by buffering data in memory while the DB sorts itself out.
 		</P>
 		<H3>periodically transform data into strict tables / parquet</H3>
 		<H3>log structured merge trees / parquet</H3>
