@@ -133,7 +133,14 @@ const info = notes['unstructured-data'];
 			consider them here as I'll be writing the system myself, I want to avoid such complexity.
 		</P>
 		<H2>Choices choices</H2>
-		<P>do work at query time or in batches, reminds me of event sourcing</P>
+		<P>
+			When we line up the approaches on a axis from "all the work happens on insert" to "all the
+			works happens on query", the simple JSON column is all the way to the right. But somehow I
+			enjoy that. It makes a lot of sense to only extract data from the json we actually need at
+			query time, it frees us to start chucking data into the system immediately and figure out what
+			kind of queries we want to run on the data later. It reminds me of event sourcing in that
+			regard. The fact that it is the simplest to implement doesn't hurt its case either.
+		</P>
 		<H2>Optimisations</H2>
 		<P
 			>mirror into materialized views, buckets, Time-based partitioning, maybe parquet (duckdb,
