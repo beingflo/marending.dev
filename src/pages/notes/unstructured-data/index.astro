@@ -14,7 +14,7 @@ const info = notes['unstructured-data'];
 			{info.title}
 		</Title>
 		<P>
-			To store metrics I have a Grafana and Prometheus deployment on my server. I'm primarily
+			To store metrics, I have a Grafana and Prometheus deployment on my server. I'm primarily
 			feeding IoT sensor data from various sensors around the house into that system. Lately, I've
 			craved a more customized, lean solution that would serve as my central place to chuck any data
 			for later analysis. Instead of utilizing an existing stack, I'm setting out to build my own.
@@ -22,9 +22,9 @@ const info = notes['unstructured-data'];
 		</P>
 		<H2>Requirements</H2>
 		<P>
-			The system I'm envisioning (let's call it <C>metis</C>) should be push-based unlike
+			The system I'm envisioning (let's call it <C>metis</C>) should be push-based, unlike
 			Prometheus, which expects to be able to scrape a metrics endpoint. This makes sense for
-			allways-on backend services, not so much for battery powered IoT devices.
+			always-on backend services, not so much for battery-powered IoT devices.
 		</P>
 		<P>
 			It should not impose any strict schema on the data it's receiving. One use case will be to
@@ -33,19 +33,19 @@ const info = notes['unstructured-data'];
 		</P>
 		<P>
 			To simplify the hosting, metis should use an embedded database and also contain a visualizing
-			frontend. (I just want to experiment with SQLite to be honest)
+			frontend. (I just want to experiment with an embedded DB to be honest.)
 		</P>
 		<H2>Scenario</H2>
 		<P>
-			To evaluate possible approaches I have to get a bit more specific. So let's consider the
+			To evaluate possible approaches, I have to get a bit more specific. So let's consider the
 			following use cases that metis should handle nicely:
 		</P>
 		<P>
 			GPS location data sent by <A href="https://github.com/aaronpk/Overland-iOS">Overland</A>. This
-			data comes in predefined structure. I wouldn't want to have to hardcode the schema into metis
-			however, to simplify migrating to a different GPS logger App for instance. Queries might be
-			all coordinates visited in the last 30 days or number of distinct times a certain geo fence
-			has been visited.
+			data comes in a predefined structure. I wouldn't want to have to hardcode the schema into
+			metis however, to simplify migrating to a different GPS logger app, for instance. Queries
+			might be all coordinates visited in the last 30 days or number of distinct times a certain geo
+			fence has been visited.
 		</P>
 		<P>
 			Structured logs from various backend services I'm operating. A sample log could look like
@@ -63,8 +63,8 @@ const info = notes['unstructured-data'];
 		<P>
 			Now consider a new event being emitted that includes a new field of origin IP address.
 			Naturally, these logs must still be handled gracefully by metis. Here, a query might be the
-			ongoing error rate of all requests to a specific service, or the average response time of an
-			endpoint (granted I have span entry and exit timestamps).
+			ongoing error rate of all requests to a specific service or the average response time of an
+			endpoint (granted, I have span entry and exit timestamps).
 		</P>
 		<P
 			>CO2 sensor data coming from an ESP32-based IoT device. A query of interest might be the
@@ -74,24 +74,24 @@ const info = notes['unstructured-data'];
 		<P>
 			I've already abandoned the idea of making metis a general observability and metrics stack
 			including user-provided data queries and customizable visualizations in favor of a monolith
-			that serves exactly my usecases. That means dashboards are hardcoded, queries known at build
-			time. You can get a glimpse of the original vision in
+			that serves exactly my usecases. That means dashboards are hardcoded with queries known at
+			build time. You can get a glimpse of the original vision in
 			<A href="/notes/wasm-benchmark/">this note</A>.
 		</P>
 		<P>
 			With the hard part descoped, I'm now primarily concerned with how to store data of unknown
 			shape in a way that we can efficiently query it later. Traditional databases expect to know
-			the schema ahead of time, in return they give us lots of mechanisms to speed up querying
-			later. It boils down to a trade off between work spent when storing data and work spent when
+			the schema ahead of time; in return, they give us lots of mechanisms to speed up querying
+			later. It boils down to a trade-off between work spent when storing data and work spent when
 			querying data.
 		</P>
 		<P>
 			In particular, combining metrics and structured logs has been throwing me for a loop.
-			Traditional time series data has known approaches to speed up querying, I'm not very concerned
-			about this use case. Log data on the other hand is usually accessed by label and over an
+			Traditional time series data has known approaches to speed up querying; I'm not very concerned
+			about this use case. Log data, on the other hand, is usually accessed by label and over an
 			interval to, say, track down an error in an application. As far as I'm aware, it's rare to
-			generate metrics from logs, which is what I effectively want: Given a stream of logs I want to
-			generate error rates and much more. Normally, people "pre-aggregate" these metrics in the
+			generate metrics from logs, which is what I effectively want: Given a stream of logs, I want
+			to generate error rates and much more. Normally, people "pre-aggregate" these metrics in the
 			application and expose metrics directly.
 		</P>
 		<Info>Why not just expose metrics for my structured logs use case then?</Info>
@@ -100,17 +100,17 @@ const info = notes['unstructured-data'];
 		<P>
 			The most straightforward approach is clearly to just chuck the JSON body that is sent metis'
 			way into a column. Insertion is very fast, the system has to do very little work here.
-			Querying data on the other hand comes with quite an overhead. Running a query that reaches
-			into the JSON body, like say averaging CO2 values by month, is quite a bit slower than if the
+			Querying data, on the other hand, comes with quite an overhead. Running a query that reaches
+			into the JSON body, like say, averaging CO2 values by month, is quite a bit slower than if the
 			values were numeric columns. Implementation effort is quite low for this approach.
 		</P>
 		<H3>Entity-attribute-value model</H3>
 		<P>
-			In the EAV model, the idea is to have a single table that contains entity, attribute and value
-			columns. In particular, the attribute column stores the name of the attribute that the value
-			describes. Say "CO2" in our example. See
+			In the EAV model, the idea is to have a single table that contains entity, attribute, and
+			value columns. In particular, the attribute column stores the name of the attribute that the
+			value describes. Say "CO2" in our example. See
 			<A href="https://en.wikipedia.org/wiki/Entity%E2%80%93attribute%E2%80%93value_model">
-				the wikipedia page
+				the Wikipedia page
 			</A> for more information. This brings the much desired flexibility: We don't need to know attributes
 			up front. However, I'm unclear on how you would store the structured log example. Here, you have
 			multiple attribute-value pairs that should stay in relation. If you want to query the error rate
@@ -120,41 +120,42 @@ const info = notes['unstructured-data'];
 		</P>
 		<H3>Schema evolution</H3>
 		<P>
-			Another idea I've had, where I couldn't find much prior art (probably for good reason) is
-			automatic schema evolution. Imagine a system that automatically migrates a tables schema to
-			fit the incoming data: Queries would be fast as the data is stored in an efficient format,
-			inserts would be fast if the data conforms to the existing schema. The moment a datum comes
-			your way that deviates from the schema all hell breaks loose. The overhead of migrating the DB
-			in the middle of normal operation could be detrimental. I think this could be managed to some
-			degree, for instance by buffering data in memory while the DB sorts itself out.
+			Another idea I've had, where I couldn't find much prior art (probably for good reason), is
+			automatic schema evolution. Imagine a system that automatically migrates a table schema to fit
+			the incoming data: Queries would be fast as the data is stored in an efficient format, inserts
+			would be fast if the data conforms to the existing schema. The moment a datum comes your way
+			that deviates from the schema, all hell breaks loose. The overhead of migrating the DB in the
+			middle of normal operation could be detrimental. I think this could be managed to some degree,
+			for instance by buffering data in memory while the DB sorts itself out.
 		</P>
 		<P>
-			There are many more approaches, specifically for time series data there are log-structured
-			merge-trees, time-structured merge trees and many more hierarchical data structures. I won't
+			There are many more approaches, specifically for time series data, there are log-structured
+			merge trees, time-structured merge trees and many more hierarchical data structures. I won't
 			consider them here as I'll be writing the system myself, I want to avoid such complexity.
 		</P>
 		<H2>Choices choices</H2>
 		<P>
 			When we line up the approaches on an axis from "all the work happens on insert" to "all the
-			works happens on query", the simple JSON column is all the way to the right. But somehow I
-			enjoy that. It makes a lot of sense to only extract data from the json we actually need at
+			work happens on query", the simple JSON column is all the way to the right. But somehow I
+			enjoy that. It makes a lot of sense to only extract data from the JSON we actually need at
 			query time, it frees us to start chucking data into the system immediately and figure out what
 			kind of queries we want to run on the data later. It reminds me of event sourcing in that
 			regard. The fact that it is the simplest to implement doesn't hurt its case either.
 		</P>
-		<H2>Optimisations</H2>
+		<H2>Optimizations</H2>
 		<P>
 			The simple JSON approach also has the advantage of starting simple but allowing seamless
-			optimisations on top. For instance, most DBMS allow adding indexes into JSON fields. So once
+			optimizations on top. For instance, most DBMS allow adding indexes into JSON fields. So once
 			it is clear which queries are desirable, indices can be added to speed them up. Also, the raw
-			json data could be materialized into a shape that makes it more efficient to query. Whether
+			JSON data could be materialized into a shape that makes it more efficient to query. Whether
 			this is done in real time or in batches lagging behind is up to the user.
 		</P>
 		<P>
 			Going further, to keep the size of the database in check (logs might blow it up quickly), one
 			can segment the data easily into time chunks. Serializing older data (with known shape at this
-			point, since no new data gets added here) into e.g. Parquet files and uploading them to object
-			storage might be a fancy way to keep all the data around, if at more costly access latency.
+			point, since no new data gets added here) into, e.g., Parquet files and uploading them to
+			object storage might be a fancy way to keep all the data around, if at more costly access
+			latency.
 		</P>
 	</Note>
 </Layout>
