@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../layouts/layout.astro';
-import { A, Note, Title, P, H2, H3, C, Li, LiD, Code } from '../../../components';
+import { A, Note, Title, P, H2, H3, C, Code, Info } from '../../../components';
 import { notes } from '../../notes';
 
 const info = notes['unstructured-data'];
@@ -94,6 +94,7 @@ const info = notes['unstructured-data'];
 			generate error rates and much more. Normally, people "pre-aggregate" these metrics in the
 			application and expose metrics directly.
 		</P>
+		<Info>Why not just expose metrics for my structured logs use case then?</Info>
 		<H2>Approaches</H2>
 		<H3>JSON column in DB</H3>
 		<P>
@@ -123,9 +124,9 @@ const info = notes['unstructured-data'];
 			automatic schema evolution. Imagine a system that automatically migrates a tables schema to
 			fit the incoming data: Queries would be fast as the data is stored in an efficient format,
 			inserts would be fast if the data conforms to the existing schema. The moment a datum comes
-			your way that deviates from the schema all hell breakes loose. The overhead of migrating the
-			DB in the middle of normal operation could be detrimental. I think this could be managed to
-			some degree, for instance by buffering data in memory while the DB sorts itself out.
+			your way that deviates from the schema all hell breaks loose. The overhead of migrating the DB
+			in the middle of normal operation could be detrimental. I think this could be managed to some
+			degree, for instance by buffering data in memory while the DB sorts itself out.
 		</P>
 		<P>
 			There are many more approaches, specifically for time series data there are log-structured
@@ -134,7 +135,7 @@ const info = notes['unstructured-data'];
 		</P>
 		<H2>Choices choices</H2>
 		<P>
-			When we line up the approaches on a axis from "all the work happens on insert" to "all the
+			When we line up the approaches on an axis from "all the work happens on insert" to "all the
 			works happens on query", the simple JSON column is all the way to the right. But somehow I
 			enjoy that. It makes a lot of sense to only extract data from the json we actually need at
 			query time, it frees us to start chucking data into the system immediately and figure out what
@@ -142,9 +143,18 @@ const info = notes['unstructured-data'];
 			regard. The fact that it is the simplest to implement doesn't hurt its case either.
 		</P>
 		<H2>Optimisations</H2>
-		<P
-			>mirror into materialized views, buckets, Time-based partitioning, maybe parquet (duckdb,
-			polars, datafusion)</P
-		>
+		<P>
+			The simple JSON approach also has the advantage of starting simple but allowing seamless
+			optimisations on top. For instance, most DBMS allow adding indexes into JSON fields. So once
+			it is clear which queries are desirable, indices can be added to speed them up. Also, the raw
+			json data could be materialized into a shape that makes it more efficient to query. Whether
+			this is done in real time or in batches lagging behind is up to the user.
+		</P>
+		<P>
+			Going further, to keep the size of the database in check (logs might blow it up quickly), one
+			can segment the data easily into time chunks. Serializing older data (with known shape at this
+			point, since no new data gets added here) into e.g. Parquet files and uploading them to object
+			storage might be a fancy way to keep all the data around, if at more costly access latency.
+		</P>
 	</Note>
 </Layout>
