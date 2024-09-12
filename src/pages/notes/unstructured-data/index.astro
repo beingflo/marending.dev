@@ -35,21 +35,6 @@ const info = notes['unstructured-data'];
 			To simplify the hosting, metis should use an embedded database and also contain a visualizing
 			frontend. (I just want to experiment with SQLite to be honest)
 		</P>
-		<H2>Challenges</H2>
-		<P>
-			I've already abandoned the idea of making metis a general observability and metrics stack
-			including user-provided data queries and customizable visualizations in favor of a monolith
-			that serves exactly my usecases. That means dashboards are hardcoded, queries known at build
-			time. You can get a glimpse of the original vision in
-			<A href="/notes/wasm-benchmark/">this note</A>.
-		</P>
-		<P>
-			With the hard part descoped, I'm now primarily concerned with how to store data of unknown
-			shape in a way that we can efficiently query it later. Traditional databases expect to know
-			the schema ahead of time, in return they give us lots of mechanisms to speed up querying
-			later. It boils down to a trade off between work spent when storing data and work spent when
-			querying data.
-		</P>
 		<H2>Scenario</H2>
 		<P>
 			To evaluate possible approaches I have to get a bit more specific. So let's consider the
@@ -58,7 +43,9 @@ const info = notes['unstructured-data'];
 		<P>
 			GPS location data sent by <A href="https://github.com/aaronpk/Overland-iOS">Overland</A>. This
 			data comes in predefined structure. I wouldn't want to have to hardcode the schema into metis
-			however, to simplify migrating to a different GPS logger App for instance.
+			however, to simplify migrating to a different GPS logger App for instance. Queries might be
+			all coordinates visited in the last 30 days or number of distinct times a certain geo fence
+			has been visited.
 		</P>
 		<P>
 			Structured logs from various backend services I'm operating. A sample log could look like
@@ -75,9 +62,38 @@ const info = notes['unstructured-data'];
 		/>
 		<P>
 			Now consider a new event being emitted that includes a new field of origin IP address.
-			Naturally, these logs must still be handled gracefully by metis.
+			Naturally, these logs must still be handled gracefully by metis. Here, a query might be the
+			ongoing error rate of all requests to a specific service, or the average response time of an
+			endpoint (granted I have span entry and exit timestamps).
 		</P>
-		<P>CO2 sensor data coming from an ESP32-based IoT device.</P>
+		<P
+			>CO2 sensor data coming from an ESP32-based IoT device. A query of interest might be the
+			average CO2 concentration per month over the last year.</P
+		>
+		<H2>Challenges</H2>
+		<P>
+			I've already abandoned the idea of making metis a general observability and metrics stack
+			including user-provided data queries and customizable visualizations in favor of a monolith
+			that serves exactly my usecases. That means dashboards are hardcoded, queries known at build
+			time. You can get a glimpse of the original vision in
+			<A href="/notes/wasm-benchmark/">this note</A>.
+		</P>
+		<P>
+			With the hard part descoped, I'm now primarily concerned with how to store data of unknown
+			shape in a way that we can efficiently query it later. Traditional databases expect to know
+			the schema ahead of time, in return they give us lots of mechanisms to speed up querying
+			later. It boils down to a trade off between work spent when storing data and work spent when
+			querying data.
+		</P>
+		<P>
+			In particular, combining metrics and structured logs has been throwing me for a loop.
+			Traditional time series data has known approaches to speed up querying, I'm not very concerned
+			about this use case. Log data on the other hand is usually accessed by label and over an
+			interval to, say, track down an error in an application. As far as I'm aware, it's rare to
+			generate metrics from logs, which is what I effectively want: Given a stream of logs I want to
+			generate error rates and much more. Normally, people "pre-aggregate" these metrics in the
+			application and expose metrics directly.
+		</P>
 		<H2>Approaches</H2>
 		<H3>JSON column in DB</H3>
 		<P>
@@ -111,11 +127,17 @@ const info = notes['unstructured-data'];
 			DB in the middle of normal operation could be detrimental. I think this could be managed to
 			some degree, for instance by buffering data in memory while the DB sorts itself out.
 		</P>
-		<H3>periodically transform data into strict tables / parquet</H3>
-		<H3>log structured merge trees / parquet</H3>
+		<P>
+			There are many more approaches, specifically for time series data there are log-structured
+			merge-trees, time-structured merge trees and many more hierarchical data structures. I won't
+			consider them here as I'll be writing the system myself, I want to avoid such complexity.
+		</P>
 		<H2>Choices choices</H2>
 		<P>do work at query time or in batches, reminds me of event sourcing</P>
 		<H2>Optimisations</H2>
-		<P>buckets, Time-based partitioning, maybe parquet (duckdb, polars, datafusion)</P>
+		<P
+			>mirror into materialized views, buckets, Time-based partitioning, maybe parquet (duckdb,
+			polars, datafusion)</P
+		>
 	</Note>
 </Layout>
