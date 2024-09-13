@@ -1,0 +1,18 @@
+---
+import Layout from '../../../layouts/layout.astro';
+import { A, Note, Title, P, H2, H3, C, Code, Info } from '../../../components';
+import { notes } from '../../notes';
+
+const info = notes['sqlite-vs-duckdb'];
+---
+
+<Layout>
+	<Note>
+		<Title
+			subtitle={info.subtitle}
+			date={info.date}>
+			{info.title}
+		</Title>
+		<P>hello</P>
+	</Note>
+</Layout>

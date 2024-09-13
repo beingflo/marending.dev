@@ -1,4 +1,11 @@
 export const notes = {
+	'sqlite-vs-duckdb': {
+		title: 'SQLite and DuckDB for analytics workload',
+		subtitle: 'Row or column, that is the question',
+		date: '13 Sep 2024',
+		link: '/notes/sqlite-vs-duckdb/',
+		draft: true,
+	},
 	'unstructured-data': {
 		title: 'How to store and query unstructured data',
 		subtitle: 'Reinventing the wheel',
