@@ -1,0 +1,47 @@
+---
+import { Chart } from '../../../components';
+import { Figure } from '../../../components/Figure';
+import * as Plot from '@observablehq/plot';
+
+let results = [
+	{ db: 'duckdb', scenario: 'no index', test: 'avg-co2', value: 35 },
+	{ db: 'duckdb', scenario: 'no index', test: 'logs', value: 133 },
+	{ db: 'duckdb', scenario: 'no index', test: 'gps', value: 100 },
+	{ db: 'duckdb', scenario: 'timestamp idx', test: 'avg-co2', value: 35 },
+	{ db: 'duckdb', scenario: 'timestamp idx', test: 'logs', value: 129 },
+	{ db: 'duckdb', scenario: 'timestamp idx', test: 'gps', value: 99 },
+	{ db: 'duckdb', scenario: 'bucket idx', test: 'avg-co2', value: 34 },
+	{ db: 'duckdb', scenario: 'bucket idx', test: 'logs', value: 120 },
+	{ db: 'duckdb', scenario: 'bucket idx', test: 'gps', value: 91 },
+];
+---
+
+<Figure caption="Figure 1. DuckDB benchmark results">
+	<Chart
+		options={{
+			x: { grid: true, label: '→ requests / second' },
+			y: { inset: 2, label: null },
+			fy: { label: null },
+			marginLeft: 50,
+			marginRight: 78,
+			marks: [
+				Plot.frame(),
+				Plot.barX(results, {
+					x: 'value',
+					y: 'test',
+					fy: 'scenario',
+					sort: { fy: null },
+				}),
+				Plot.text(results, {
+					text: (d) => d.value,
+					y: 'test',
+					x: 'value',
+					textAnchor: 'end',
+					dx: -3,
+					fill: 'white',
+					fy: 'scenario',
+				}),
+			],
+		}}
+	/>
+</Figure>

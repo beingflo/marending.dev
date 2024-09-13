@@ -2,6 +2,8 @@
 import Layout from '../../../layouts/layout.astro';
 import { A, Note, Title, P, H2, H3, C, Code, Info } from '../../../components';
 import { notes } from '../../notes';
+import DuckDBResults from './DuckDBResults.astro';
+import SQLiteResults from './SQLiteResults.astro';
 
 const info = notes['sqlite-vs-duckdb'];
 ---
@@ -13,6 +15,10 @@ const info = notes['sqlite-vs-duckdb'];
 			date={info.date}>
 			{info.title}
 		</Title>
-		<P>hello</P>
+		<DuckDBResults />
+		<SQLiteResults />
+		<P>duckdb takes a long time to open db when WAL file large, checkpoint can keep it in check</P>
+		<P>index per connection?</P>
+		<P>sqlite with WAL and synchro normal</P>
 	</Note>
 </Layout>

@@ -1,0 +1,48 @@
+---
+import { Chart } from '../../../components';
+import { Figure } from '../../../components/Figure';
+import * as Plot from '@observablehq/plot';
+
+let results = [
+	{ db: 'sqlite', scenario: 'no index', test: 'avg-co2', value: 2.5 },
+	{ db: 'sqlite', scenario: 'no index', test: 'logs', value: 16 },
+	{ db: 'sqlite', scenario: 'no index', test: 'gps', value: 18 },
+	{ db: 'sqlite', scenario: 'timestamp idx', test: 'avg-co2', value: 2.5 },
+	{ db: 'sqlite', scenario: 'timestamp idx', test: 'logs', value: 45 },
+	{ db: 'sqlite', scenario: 'timestamp idx', test: 'gps', value: 18 },
+	{ db: 'sqlite', scenario: 'bucket idx', test: 'avg-co2', value: 2.5 },
+	{ db: 'sqlite', scenario: 'bucket idx', test: 'logs', value: 22 },
+	{ db: 'sqlite', scenario: 'bucket idx', test: 'gps', value: 23 },
+	{ db: 'sqlite', scenario: 'combined idx', test: 'avg-co2', value: 2.5 },
+	{ db: 'sqlite', scenario: 'combined idx', test: 'logs', value: 80 },
+	{ db: 'sqlite', scenario: 'combined idx', test: 'gps', value: 23 },
+];
+---
+
+<Figure caption="Figure 2. SQLite benchmark results">
+	<Chart
+		options={{
+			x: { grid: true, label: '→ requests / second', domain: [0, 133] },
+			y: { inset: 2, label: null },
+			fy: { label: null },
+			marginLeft: 50,
+			marginRight: 78,
+			marks: [
+				Plot.frame(),
+				Plot.barX(results, {
+					x: 'value',
+					y: 'test',
+					fy: 'scenario',
+					sort: { fy: null },
+				}),
+				Plot.text(results, {
+					text: (d) => d.value,
+					y: 'test',
+					x: 'value',
+					dx: 8,
+					fy: 'scenario',
+				}),
+			],
+		}}
+	/>
+</Figure>
