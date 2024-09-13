@@ -15,10 +15,30 @@ const info = notes['sqlite-vs-duckdb'];
 			date={info.date}>
 			{info.title}
 		</Title>
+		<P>Context</P>
+		<H2>Methodology</H2>
+		<P>test data</P>
+		<H3>Queries</H3>
+		<P>Structured logs:</P>
+		<Code
+			value=`SELECT count(*), data ->> '$.endpoint' FROM metrics WHERE bucket = 'logs' AND data ->> '$.level' = 'error' AND timestamp > DATE('2024-01-01', '-90 day') GROUP BY data ->> '$.endpoint' ORDER BY count(*);`
+		/>
+		<P>Average CO2:</P>
+		<Code
+			value=`SELECT strftime('%m', timestamp) as timestamp, avg(data -> '$.co2') as avg FROM metrics WHERE bucket = 'co2' GROUP BY strftime('%m', timestamp);`
+		/>
+		<P>GPS coordinates:</P>
+		<Code
+			value=`SELECT data ->> '$.longitude', data ->> '$.latitude' FROM metrics WHERE bucket = 'location' AND data ->> '$.longitude' > 6 AND data ->> '$.longitude' < 10 AND data ->> '$.latitude' > 45 AND data ->> '$.latitude' < 50;`
+		/>
 		<DuckDBResults />
 		<SQLiteResults />
+		<H2>Inserts</H2>
+		<P>DuckDB around 4k req/s, SQLite around 30k to 40k depending on indices.</P>
+		<H2>DB Size</H2>
+		<P>DuckDB 20 MB, SQLite 60 - 80 MB.</P>
+		<H2>Other considerations</H2>
 		<P>duckdb takes a long time to open db when WAL file large, checkpoint can keep it in check</P>
-		<P>index per connection?</P>
 		<P>sqlite with WAL and synchro normal</P>
 	</Note>
 </Layout>
