@@ -2,7 +2,7 @@ export const notes = {
 	'sqlite-vs-duckdb': {
 		title: 'SQLite and DuckDB for analytics workload',
 		subtitle: 'The impact of column orientation',
-		date: '13 Sep 2024',
+		date: '15 Sep 2024',
 		link: '/notes/sqlite-vs-duckdb/',
 		draft: true,
 	},

@@ -15,7 +15,13 @@ const info = notes['sqlite-vs-duckdb'];
 			date={info.date}>
 			{info.title}
 		</Title>
-		<P>Context</P>
+		<P>
+			I've been yearning to build my own observability / time series system. You can get some more
+			background on this <A href="/notes/unstructured-data/">here</A>. After establishing
+			<em>how</em> I'm going to store data, the question remaining is what DB I'm going to be using.
+			In this note I'll evaluate two embedded databases, the venerable SQLite and the newcomer in this
+			space, DuckDB.
+		</P>
 		<H2>Methodology</H2>
 		<P>test data</P>
 		<H3>Queries</H3>
@@ -34,7 +40,10 @@ const info = notes['sqlite-vs-duckdb'];
 		<DuckDBResults />
 		<SQLiteResults />
 		<H2>Inserts</H2>
-		<P>DuckDB around 4k req/s, SQLite around 30k to 40k depending on indices.</P>
+		<P
+			>DuckDB around 4k req/s, SQLite around 30k to 40k depending on indices., can be remedied with
+			appender</P
+		>
 		<H2>DB Size</H2>
 		<P>DuckDB 20 MB, SQLite 60 - 80 MB.</P>
 		<H2>Other considerations</H2>
