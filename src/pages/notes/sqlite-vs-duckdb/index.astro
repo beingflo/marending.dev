@@ -122,18 +122,37 @@ await Throttle.all(queued, { maxInProgress: 10 });`
 			/>
 		</Details>
 		<H3>Queries</H3>
-		<P>Structured logs:</P>
-		<Code
-			value=`SELECT count(*), data ->> '$.endpoint' FROM metrics WHERE bucket = 'logs' AND data ->> '$.level' = 'error' AND timestamp > DATE('2024-01-01', '-90 day') GROUP BY data ->> '$.endpoint' ORDER BY count(*);`
-		/>
-		<P>Average CO2:</P>
-		<Code
-			value=`SELECT strftime('%m', timestamp) as timestamp, avg(data -> '$.co2') as avg FROM metrics WHERE bucket = 'co2' GROUP BY strftime('%m', timestamp);`
-		/>
+		<P
+			>Next, to exercise the DB, I'm querying the three categories of data with fairly intensive
+			queries.</P
+		>
 		<P>GPS coordinates:</P>
 		<Code
 			value=`SELECT data ->> '$.longitude', data ->> '$.latitude' FROM metrics WHERE bucket = 'location' AND data ->> '$.longitude' > 6 AND data ->> '$.longitude' < 10 AND data ->> '$.latitude' > 45 AND data ->> '$.latitude' < 50;`
 		/>
+		<P>
+			This checks how many location entries are within a certain longitude and latitude rectangle.
+		</P>
+		<P>CO2:</P>
+		<Code
+			value=`SELECT strftime('%m', timestamp) as timestamp, avg(data -> '$.co2') as avg FROM metrics WHERE bucket = 'co2' GROUP BY strftime('%m', timestamp);`
+		/>
+		<P>
+			Possibly the most intensive query: This aggregates CO2 measurements by month and computes the
+			respective averages.
+		</P>
+		<P>Structured logs:</P>
+		<Code
+			value=`SELECT count(*), data ->> '$.endpoint' FROM metrics WHERE bucket = 'logs' AND data ->> '$.level' = 'error' AND timestamp > DATE('2024-01-01', '-90 day') GROUP BY data ->> '$.endpoint' ORDER BY count(*);`
+		/>
+		<P>
+			This groups the entries indicating an error by <C>endpoint</C> and checks which one has the highest
+			error count. It does so over the data of the last 90 days.
+		</P>
+		<P>
+			Note that the queries look slightly different between SQLite and DuckDB, in particular with
+			date functions and json field access patterns.
+		</P>
 		<DuckDBResults />
 		<SQLiteResults />
 		<H2>Inserts</H2>
