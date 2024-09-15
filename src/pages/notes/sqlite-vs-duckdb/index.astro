@@ -153,8 +153,22 @@ await Throttle.all(queued, { maxInProgress: 10 });`
 			Note that the queries look slightly different between SQLite and DuckDB, in particular with
 			date functions and json field access patterns.
 		</P>
+		<H2>Results</H2>
 		<DuckDBResults />
 		<SQLiteResults />
+		<P>
+			Clearly, DuckDB is faster across the board. Interestingly, unlike SQLite, DuckDB doesn't
+			benefit from indices at all, they even seem to hurt performance. The structured logs query
+			benefits particularly from the timestamp index on SQLite, as it is the only query that filters
+			data based on the timestamp.
+		</P>
+		<P>
+			While not surprising at first glance that a column-oriented DB is faster in such workloads,
+			one has to keep in mind that most of the computation happens on fields within a JSON blob. I
+			would expect that most of the benefit of neat data alignment, ready for vectorized
+			computation, is forfeit in this situation. But clearly DuckDB still manages to eke out some
+			performance benefits.
+		</P>
 		<H2>Inserts</H2>
 		<P
 			>DuckDB around 4k req/s, SQLite around 30k to 40k depending on indices., can be remedied with
