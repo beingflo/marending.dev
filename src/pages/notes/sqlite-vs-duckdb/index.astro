@@ -197,9 +197,27 @@ await Throttle.all(queued, { maxInProgress: 10 });`
 			has the added advantage of being able to soak up peaks of around 100k inserts per second.
 		</P>
 		<H2>DB Size</H2>
-		<P>DuckDB 20 MB, SQLite 60 - 80 MB.</P>
+		<P>
+			DuckDB is storing the data significantly more compactly, too. 20 MB for the database file
+			versus 60 - 80 MB with SQLite depending on indices.
+		</P>
 		<H2>Other considerations</H2>
-		<P>duckdb takes a long time to open db when WAL file large, checkpoint can keep it in check</P>
-		<P>sqlite with WAL and synchro normal</P>
+		<P>
+			Overall, I'm quite satisified with DuckDB. It has a bunch of other nice to have features that
+			might come in handy later. Say, I want to segment the data into time chunks and writing older
+			data out to Parquet files. DuckDB do this natively. It can then even read Parquet files
+			efficiently from remote S3 storage. Or I might want to explore the
+			<A href="https://duckdb.org/docs/sql/data_types/map.html">Map datatype</A> specifically for structured
+			logs. I suspect this could speed up queries quite a bit over naive JSON.
+		</P>
+		<P>
+			Something I've noticed is that DuckDB takes a long time to open a DB when the corresponding
+			WAL file is large. This can be remedied by periodically checkpointing to fold the WAL file
+			back into the main DB.
+		</P>
+		<P>
+			In the end, I can't bring myself to leave that much performance on the table, so I'll go ahead
+			with DuckDB even though SQLite has its allures.
+		</P>
 	</Note>
 </Layout>
