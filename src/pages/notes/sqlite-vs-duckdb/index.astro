@@ -121,6 +121,23 @@ const queued = payloads.map((p, idx) => () => doRequest(p, idx));
 await Throttle.all(queued, { maxInProgress: 10 });`
 			/>
 		</Details>
+		<P>
+			SQLite is operated in WAL mode with synchronization <C>Normal</C>, while DuckDB uses no
+			special configuration as WAL mode is enabled by default.
+		</P>
+		<P>
+			The schema used in the tests looks as follows:
+			<Code
+				value=`CREATE TABLE IF NOT EXISTS metrics (
+	id integer primary key,
+	timestamp TIMESTAMP NOT NULL,
+	bucket TEXT NOT NULL,
+	data JSON NOT NULL
+);`
+			/>
+			Notably, due to SQLite version shenanigans I couldn't use
+			<A href="https://sqlite.org/draft/jsonb.html">JSONB</A>.
+		</P>
 		<H3>Queries</H3>
 		<P>
 			Next, to exercise the DB, I'm querying the three categories of data with fairly intensive
