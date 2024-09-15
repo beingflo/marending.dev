@@ -122,10 +122,10 @@ await Throttle.all(queued, { maxInProgress: 10 });`
 			/>
 		</Details>
 		<H3>Queries</H3>
-		<P
-			>Next, to exercise the DB, I'm querying the three categories of data with fairly intensive
-			queries.</P
-		>
+		<P>
+			Next, to exercise the DB, I'm querying the three categories of data with fairly intensive
+			queries.
+		</P>
 		<P>GPS coordinates:</P>
 		<Code
 			value=`SELECT data ->> '$.longitude', data ->> '$.latitude' FROM metrics WHERE bucket = 'location' AND data ->> '$.longitude' > 6 AND data ->> '$.longitude' < 10 AND data ->> '$.latitude' > 45 AND data ->> '$.latitude' < 50;`
