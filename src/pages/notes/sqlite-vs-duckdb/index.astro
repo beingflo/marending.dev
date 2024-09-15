@@ -187,10 +187,15 @@ await Throttle.all(queued, { maxInProgress: 10 });`
 			performance benefits.
 		</P>
 		<H2>Inserts</H2>
-		<P
-			>DuckDB around 4k req/s, SQLite around 30k to 40k depending on indices., can be remedied with
-			appender</P
-		>
+		<P>
+			DuckDB is not all sunshine and roses though. From what I'm gathering, their design goal is
+			primarily focused on bulk operations, not so much individual transactions. This shows in the
+			insert rate: DuckDB achieves around 4k naive inserts per second, while SQLite manages around
+			30k to 40k depending on indices. This can be remedied somewhat with the
+			<A href="https://duckdb.org/docs/data/appender.html">Appender API</A> though. Alternatively I've
+			been working around it by buffering writes in memory and doing batched inserts "off-thread". This
+			has the added advantage of being able to soak up peaks of around 100k inserts per second.
+		</P>
 		<H2>DB Size</H2>
 		<P>DuckDB 20 MB, SQLite 60 - 80 MB.</P>
 		<H2>Other considerations</H2>
