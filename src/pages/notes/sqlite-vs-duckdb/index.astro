@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../layouts/layout.astro';
-import { A, Note, Title, P, H2, H3, C, Code, Info } from '../../../components';
+import { A, Note, Title, P, H2, H3, C, Code, Info, Details } from '../../../components';
 import { notes } from '../../notes';
 import DuckDBResults from './DuckDBResults.astro';
 import SQLiteResults from './SQLiteResults.astro';
@@ -23,7 +23,104 @@ const info = notes['sqlite-vs-duckdb'];
 			space, DuckDB.
 		</P>
 		<H2>Methodology</H2>
-		<P>test data</P>
+		<P>
+			I'm populating the DB under test with mock data of three types: Location, CO2 and structured
+			logs. This mirrors the scenarios from <A href="/notes/unstructured-data/">the last note</A>.
+			The dataset includes around 50k location entries, 500k CO2 values and 90k structured logs with
+			their timestamps nicely spread out over one year.
+		</P>
+		<Details title="Full population script for reference">
+			<Code
+				respectMargin
+				value=`import { faker } from "@faker-js/faker";
+import * as Throttle from "promise-parallel-throttle";
+
+console.log("deleting ...");
+await fetch("http://localhost:3000/delete", {
+  method: "POST",
+});
+console.log("deleted");
+
+faker.seed(123);
+
+const startDate = new Date("01/01/2023");
+const endDate = new Date("12/31/2023");
+let curDate = structuredClone(startDate);
+
+const payloads: Array<any> = [];
+
+// Location - 10m
+while (curDate.getTime() < endDate.getTime()) {
+  const payload = {
+    data: {
+      longitude: faker.location.longitude(),
+      latitude: faker.location.latitude(),
+    },
+    bucket: "location",
+    timestamp: curDate.toISOString(),
+  };
+  payloads.push(payload);
+  curDate = new Date(curDate.getTime() + 600_000);
+}
+
+// CO2 - 1m
+curDate = structuredClone(startDate);
+
+while (curDate.getTime() < endDate.getTime()) {
+  const payload = {
+    data: {
+      co2: faker.number.float({ min: 0, max: 5000 }),
+    },
+    bucket: "co2",
+    timestamp: curDate.toISOString(),
+  };
+  payloads.push(payload);
+  curDate = new Date(curDate.getTime() + 60_000);
+}
+
+// Structured logs - 1h bursty
+curDate = structuredClone(startDate);
+
+while (curDate.getTime() < endDate.getTime()) {
+  let count = 10;
+  const user = faker.internet.userName();
+  const endpoint = faker.internet.url();
+  while (count > 0) {
+    const payload = {
+      data: {
+        span_id: faker.number.int(),
+        level: faker.datatype.boolean(0.95) ? "success" : "error",
+        user,
+        message: faker.company.buzzPhrase(),
+        endpoint,
+      },
+      bucket: "logs",
+      timestamp: curDate.toISOString(),
+    };
+    payloads.push(payload);
+    curDate = new Date(curDate.getTime() + 100);
+    count -= 1;
+  }
+  curDate = new Date(curDate.getTime() + 3_600_000);
+}
+
+payloads.sort(
+  (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+);
+
+const doRequest = async (payload, idx) => {
+  await fetch("http://localhost:3000", {
+    method: "POST",
+    body: JSON.stringify(payload),
+    headers: { "Content-Type": "application/json" },
+  });
+};
+
+const queued = payloads.map((p, idx) => () => doRequest(p, idx));
+
+await Throttle.all(queued, { maxInProgress: 10 });`
+			/>
+		</Details>
 		<H3>Queries</H3>
 		<P>Structured logs:</P>
 		<Code
