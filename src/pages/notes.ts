@@ -4,7 +4,7 @@ export const notes = {
 		subtitle: 'The impact of column orientation',
 		date: '15 Sep 2024',
 		link: '/notes/sqlite-vs-duckdb/',
-		draft: true,
+		draft: false,
 	},
 	'unstructured-data': {
 		title: 'How to store and query unstructured data',
