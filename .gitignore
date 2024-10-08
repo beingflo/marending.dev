@@ -1,5 +1,7 @@
 # build output
 **/dist/
+**/target/
+service/ui
 
 # generated types
 **/.astro/
