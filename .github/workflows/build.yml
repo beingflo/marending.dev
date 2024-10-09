@@ -21,7 +21,9 @@ jobs:
         with:
           node-version: 18
       - run: npm ci
+        working-directory: ./ui
       - run: npm run build
+        working-directory: ./ui
       - name: Deploy to prod server
         uses: easingthemes/ssh-deploy@main
         env:
