@@ -19,14 +19,12 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 22
       - run: npm ci
       - run: npm run build
-      - name: Deploy to prod server
-        uses: easingthemes/ssh-deploy@main
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.OMNI_GH_KEY }}
-          SOURCE: 'dist/'
-          REMOTE_HOST: ${{ secrets.OMNI_HOST }}
-          REMOTE_USER: ${{ secrets.OMNI_USER }}
-          TARGET: '~/caddy/site/marending.dev/'
+      - name: Build image
+        run: docker build . --tag marending-dev
+      - name: Tag image
+        run: docker tag marending-dev:latest ghcr.io/${{ github.actor }}/marending-dev:latest
+      - name: Push image to GitHub Container Registry
+        run: docker push ghcr.io/${{ github.actor }}/marending-dev:latest
