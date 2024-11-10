@@ -1,4 +1,11 @@
 export const notes = {
+	'co2-loft': {
+		title: 'The air quality impact of living in a loft apartment',
+		subtitle: 'Now without doors',
+		date: '10 Nov 2024',
+		link: '/notes/co2-loft/',
+		draft: true,
+	},
 	'sqlite-vs-duckdb': {
 		title: 'SQLite and DuckDB for analytics workload',
 		subtitle: 'The impact of column orientation',

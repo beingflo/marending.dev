@@ -1,0 +1,40 @@
+---
+import Layout from '../../../layouts/layout.astro';
+import Chart from '../../../components/Chart.astro';
+import { A, Note, Title, P, Info } from '../../../components';
+import * as Plot from '@observablehq/plot';
+import { data } from './data';
+import { notes } from '../../notes';
+import 'src/style.css';
+
+const info = notes['co2-loft'];
+---
+
+<Layout>
+	<Note>
+		<Title
+			subtitle={info.subtitle}
+			date={info.date}>
+			{info.title}
+		</Title>
+		<div class="my-4">
+			<Chart
+				options={{
+					y: { label: '↑ co2 (ppm)', domain: [0, 1050] },
+					x: { type: 'time' },
+					marginLeft: 60,
+					marks: [
+						Plot.lineY(
+							data?.map(({ date, value }) => ({
+								date: new Date(date),
+								value,
+							})),
+							{ x: 'date', y: 'value' }
+						),
+						Plot.ruleY([1000], { stroke: 'orange', strokeDasharray: 2 }),
+					],
+				}}
+			/>
+		</div>
+	</Note>
+</Layout>
