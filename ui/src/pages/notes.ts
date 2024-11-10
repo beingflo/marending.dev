@@ -4,7 +4,7 @@ export const notes = {
 		subtitle: 'Now without doors',
 		date: '10 Nov 2024',
 		link: '/notes/co2-loft/',
-		draft: true,
+		draft: false,
 	},
 	'sqlite-vs-duckdb': {
 		title: 'SQLite and DuckDB for analytics workload',
