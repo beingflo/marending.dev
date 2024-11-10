@@ -22,31 +22,30 @@ const info = notes['unstructured-data'];
 		</P>
 		<H2>Requirements</H2>
 		<P>
-			The system I'm envisioning (let's call it <C>metis</C> for the greek word for wisdom and its closeness
-			to metrics) should be push-based, unlike Prometheus, which expects to be able to scrape a metrics
-			endpoint. This makes sense for always-on backend services, not so much for battery-powered IoT
-			devices.
+			The system I'm envisioning (let's call it <C>observatory</C> for, you know, reasons) should be
+			push-based, unlike Prometheus, which expects to be able to scrape a metrics endpoint. This makes
+			sense for always-on backend services, not so much for battery-powered IoT devices.
 		</P>
 		<P>
 			It should not impose any strict schema on the data it's receiving. One use case will be to
 			store structured logs of backend services. A new field being added to a logged event must
-			obviously not require a schema migration in metis.
+			obviously not require a schema migration in observatory.
 		</P>
 		<P>
-			To simplify the hosting, metis should use an embedded database and also contain a visualizing
-			frontend. (I just want to experiment with an embedded DB to be honest.)
+			To simplify the hosting, observatory should use an embedded database and also contain a
+			visualizing frontend. (I just want to experiment with an embedded DB to be honest.)
 		</P>
 		<H2>Scenario</H2>
 		<P>
 			To evaluate possible approaches, I have to get a bit more specific. So let's consider the
-			following use cases that metis should handle nicely:
+			following use cases that observatory should handle nicely:
 		</P>
 		<P>
 			GPS location data sent by <A href="https://github.com/aaronpk/Overland-iOS">Overland</A>. This
 			data comes in a predefined structure. I wouldn't want to have to hardcode the schema into
-			metis however, to simplify migrating to a different GPS logger app, for instance. Queries
-			might be all coordinates visited in the last 30 days or number of distinct times a certain geo
-			fence has been visited.
+			observatory however, to simplify migrating to a different GPS logger app, for instance.
+			Queries might be all coordinates visited in the last 30 days or number of distinct times a
+			certain geo fence has been visited.
 		</P>
 		<P>
 			Structured logs from various backend services I'm operating. A sample log could look like
@@ -63,9 +62,9 @@ const info = notes['unstructured-data'];
 		/>
 		<P>
 			Now consider a new event being emitted that includes a new field of origin IP address.
-			Naturally, these logs must still be handled gracefully by metis. Here, a query might be the
-			ongoing error rate of all requests to a specific service or the average response time of an
-			endpoint (granted, I have span entry and exit timestamps).
+			Naturally, these logs must still be handled gracefully by observatory. Here, a query might be
+			the ongoing error rate of all requests to a specific service or the average response time of
+			an endpoint (granted, I have span entry and exit timestamps).
 		</P>
 		<P
 			>CO2 sensor data coming from an ESP32-based IoT device. A query of interest might be the
@@ -73,10 +72,10 @@ const info = notes['unstructured-data'];
 		>
 		<H2>Challenges</H2>
 		<P>
-			I've already abandoned the idea of making metis a general observability and metrics stack
-			including user-provided data queries and customizable visualizations in favor of a monolith
-			that serves exactly my usecases. That means dashboards are hardcoded with queries known at
-			build time. You can get a glimpse of the original vision in
+			I've already abandoned the idea of making observatory a general observability and metrics
+			stack including user-provided data queries and customizable visualizations in favor of a
+			monolith that serves exactly my usecases. That means dashboards are hardcoded with queries
+			known at build time. You can get a glimpse of the original vision in
 			<A href="/notes/wasm-benchmark/">this note</A>.
 		</P>
 		<P>
@@ -105,11 +104,11 @@ const info = notes['unstructured-data'];
 		<H2>Approaches</H2>
 		<H3>JSON column in DB</H3>
 		<P>
-			The most straightforward approach is clearly to just chuck the JSON body that is sent metis'
-			way into a column. Insertion is very fast, the system has to do very little work here.
-			Querying data, on the other hand, comes with quite an overhead. Running a query that reaches
-			into the JSON body, like say, averaging CO2 values by month, is quite a bit slower than if the
-			values were numeric columns. Implementation effort is quite low for this approach.
+			The most straightforward approach is clearly to just chuck the JSON body that is sent
+			observatorys way into a column. Insertion is very fast, the system has to do very little work
+			here. Querying data, on the other hand, comes with quite an overhead. Running a query that
+			reaches into the JSON body, like say, averaging CO2 values by month, is quite a bit slower
+			than if the values were numeric columns. Implementation effort is quite low for this approach.
 		</P>
 		<H3>Entity-attribute-value model</H3>
 		<P>
@@ -145,8 +144,8 @@ const info = notes['unstructured-data'];
 			<A href="https://clickhouse.com/blog/a-new-powerful-json-data-type-for-clickhouse">
 				a nice article
 			</A>
-			on how their new JSON storage format. It's an interesting read and kind of confirms the intuition
-			that there isn't an <em>easy</em> way to do this.
+			on their new JSON storage format. It's an interesting read and kind of confirms the intuition that
+			there isn't an <em>easy</em> way to do this.
 		</Info>
 		<H2>Choices choices</H2>
 		<P>
