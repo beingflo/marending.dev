@@ -1,4 +1,11 @@
 export const notes = {
+	go: {
+		title: 'go: An opinionated bookmark aggregator',
+		subtitle: 'A project report',
+		date: '23 Dec 2024',
+		link: '/notes/go-rest-quest/',
+		draft: true,
+	},
 	'co2-loft': {
 		title: 'The air quality impact of living in a loft apartment',
 		subtitle: 'Now without doors',
