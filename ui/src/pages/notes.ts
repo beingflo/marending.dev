@@ -4,7 +4,7 @@ export const notes = {
 		subtitle: 'Saving you very little trouble',
 		date: '21 Apr 2025',
 		link: '/notes/responsive-plots/',
-		draft: true,
+		draft: false,
 	},
 	go: {
 		title: 'go: An opinionated bookmark aggregator',
