@@ -1,17 +1,17 @@
 export const notes = {
+	go: {
+		title: 'go: An opinionated bookmark aggregator',
+		subtitle: 'A project report',
+		date: '01 May 2025',
+		link: '/notes/go-rest-quest/',
+		draft: true,
+	},
 	'responsive-plots': {
 		title: 'Responsive plots in SolidJS',
 		subtitle: 'Saving you very little trouble',
 		date: '21 Apr 2025',
 		link: '/notes/responsive-plots/',
 		draft: false,
-	},
-	go: {
-		title: 'go: An opinionated bookmark aggregator',
-		subtitle: 'A project report',
-		date: '23 Dec 2024',
-		link: '/notes/go-rest-quest/',
-		draft: true,
 	},
 	'co2-loft': {
 		title: 'The air quality impact of living in a loft apartment',
