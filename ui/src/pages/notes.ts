@@ -1,10 +1,10 @@
 export const notes = {
 	'responsive-plots': {
-		title: 'Responsive plots with Observable Plot',
-		subtitle: 'Saving you the trouble',
+		title: 'Responsive plots in SolidJS',
+		subtitle: 'Saving you very little trouble',
 		date: '21 Apr 2025',
 		link: '/notes/responsive-plots/',
-		draft: false,
+		draft: true,
 	},
 	go: {
 		title: 'go: An opinionated bookmark aggregator',
