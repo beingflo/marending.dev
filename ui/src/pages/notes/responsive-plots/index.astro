@@ -1,0 +1,18 @@
+---
+import Layout from '../../../layouts/layout.astro';
+import { A, Note, Title, P, H2 } from '../../../components';
+import { notes } from '../../notes';
+
+const info = notes['responsive-plots'];
+---
+
+<Layout>
+	<Note>
+		<Title
+			subtitle={info.subtitle}
+			date={info.date}>
+			{info.title}
+		</Title>
+		<P> I enjoy using Observable Plot. </P>
+	</Note>
+</Layout>

@@ -1,4 +1,11 @@
 export const notes = {
+	'responsive-plots': {
+		title: 'Responsive plots with Observable Plot',
+		subtitle: 'Saving you the trouble',
+		date: '21 Apr 2025',
+		link: '/notes/responsive-plots/',
+		draft: false,
+	},
 	go: {
 		title: 'go: An opinionated bookmark aggregator',
 		subtitle: 'A project report',
