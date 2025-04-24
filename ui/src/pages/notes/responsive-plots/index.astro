@@ -19,10 +19,11 @@ const info = notes['responsive-plots'];
 			automatically use all the space available to render a plot. You need to specify the width and height
 			of a plot. Doing that manually is a pain, especially once you throw responsiveness into the mix.
 			You really don't want to just resize the SVG plot to fit the container either, as that undoes a
-			lot of the nice features of Plot, like automatic axis ticks based on the available space.
+			lot of the nice features of Plot, like automatic axis ticks based on the available space. And don't
+			even get me started on font size.
 		</P>
 		<P>
-			All that is to say is that I needed to find a way to rerender plots to fit their container. As
+			All that is to say that I needed to find a way to rerender plots to fit their container. As
 			I'm building most of my UIs with <A href="https://solidjs.com/">SolidJS</A>, neither the JS
 			framework nor the plotting library are so widely used as to have a solution ready for that
 			combination. I've had to tinker a bit to find a convenient way to achieve this, learning about
