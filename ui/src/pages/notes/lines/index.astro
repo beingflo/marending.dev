@@ -90,9 +90,9 @@ const info = notes['lines'];
 			</P>
 			<ChaosWrong client:only="solid-js" />
 			<P>
-				The problem here is the the origin of the rotational transform. You see, drawing a line that
-				is not horizontal in an <C>SVG</C> could be accomplished by providing the start and endpoint
-				(which do not have the same <C>y</C>
+				The problem here is the origin of the rotational transform. You see, drawing a line that is
+				not horizontal in an <C>SVG</C> could be accomplished by providing the start and endpoint (which
+				do not have the same <C>y</C>
 				coordinate) explicitly. When generating lots of randomly rotated lines of the same length, we
 				have to do some trigonometry to figure out one of those points. And I for one don't have time
 				to use my brain like that.
