@@ -1,0 +1,18 @@
+---
+import Layout from '../../../layouts/layout.astro';
+import { A, Note, Title, P, H2, Code } from '../../../components';
+import { notes } from '../../notes';
+
+const info = notes['deployment-scripts'];
+---
+
+<Layout>
+	<Note>
+		<Title
+			subtitle={info.subtitle}
+			date={info.date}>
+			{info.title}
+		</Title>
+		<P> hello </P>
+	</Note>
+</Layout>

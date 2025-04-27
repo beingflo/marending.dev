@@ -6,6 +6,13 @@ export const notes = {
 		link: '/notes/go-rest-quest/',
 		draft: true,
 	},
+	'deployment-scripts': {
+		title: 'Deploying software with a bash script',
+		subtitle: 'Choosing boring technology',
+		date: '27 Apr 2025',
+		link: '/notes/deployment-scripts/',
+		draft: true,
+	},
 	'responsive-plots': {
 		title: 'Responsive plots in SolidJS',
 		subtitle: 'Saving you very little trouble',
