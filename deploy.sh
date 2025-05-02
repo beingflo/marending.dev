@@ -17,13 +17,13 @@ new_version=${new_version:-${next_version}}
 
 cd service; cargo set-version "${new_version}" || die "Failed to set version in Cargo.toml"; cd ..
 
-docker buildx build --platform=linux/amd64 -t "ghcr.io/beingflo/marending-dev:${new_version}" . || die "Failed to build docker image"
+docker buildx build -t "ghcr.io/beingflo/marending-dev:${new_version}" . || die "Failed to build docker image"
 docker push "ghcr.io/beingflo/marending-dev:${new_version}" || die "Failed to push docker image"
 
 sed -i '' -e "s/image: \"ghcr.io\/beingflo\/marending-dev:${version}\"/image: \"ghcr.io\/beingflo\/marending-dev:${new_version}\"/" ./docker-compose.prod.yml || die "Failed to write new version to docker compose file"
 
-docker --context omni compose --file docker-compose.prod.yml pull || die "Failed to pull new image"
-docker --context omni compose --file docker-compose.prod.yml up -d || die "Failed to bring compose up"
+docker --context arm compose --file docker-compose.prod.yml pull || die "Failed to pull new image"
+docker --context arm compose --file docker-compose.prod.yml up -d || die "Failed to bring compose up"
 
 git commit -am "Release ${new_version}"
 git tag "${new_version}"
