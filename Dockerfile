@@ -5,6 +5,7 @@ WORKDIR /usr/src/marending-dev/service
 FROM node:23-bookworm AS ui-builder
 WORKDIR /usr/src/marending-dev/ui
 RUN apt update && apt install -y python3 && apt install -y libsdl-pango-dev
+ENV TZ="Europe/Zurich"
 
 COPY ui/package.json ui/package-lock.json ./
 
