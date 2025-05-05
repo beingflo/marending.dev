@@ -2,15 +2,15 @@ export const notes = {
 	go: {
 		title: 'go: An opinionated bookmark aggregator',
 		subtitle: 'A project report',
-		date: '01 May 2025',
+		date: '01 Jun 2025',
 		link: '/notes/go-rest-quest/',
 		draft: true,
 	},
-	'deployment-scripts': {
-		title: 'Deploying software with a bash script',
+	'server-setup': {
+		title: 'A hassle-free setup for home-made software',
 		subtitle: 'Choosing boring technology',
-		date: '27 Apr 2025',
-		link: '/notes/deployment-scripts/',
+		date: '5 May 2025',
+		link: '/notes/server-setup/',
 		draft: true,
 	},
 	'responsive-plots': {
