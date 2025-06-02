@@ -1,0 +1,95 @@
+---
+title: 'Native Rust vs Webassembly performance microbenchmark'
+subtitle: "You won't believe the outcome"
+date: '02 Jan 2024'
+link: '/notes/wasm-benchmark/'
+layout: 'src/layouts/NoteLayout.astro'
+draft: false
+---
+
+import { A, Note, Title, P, Info, C, H2, Code, H3, Table } from 'src/components';
+
+<Title
+	subtitle={frontmatter.subtitle}
+	date={frontmatter.date}>
+	{frontmatter.title}
+</Title>
+
+[WebAssembly](https://developer.mozilla.org/en-US/docs/WebAssembly) has recently caught
+my eye to be used in a plugin system. Imagine this: You want to allow your users to augment the
+behaviour of your system at predefined points. Say, structure a payload of data before your system
+calls a webhook endpoint. Or perform some evaluation to determine if your system should send a
+notification email about some event.
+
+In my case, I'm building a metric collection and visualization system. Think Grafana /
+Prometheus but custom. In Prometheus you can transform your data using PromQL before it is
+handed off to Grafana for visualization. Needless to say for my application I'm not too keen
+on buliding my own DSL for this. Instead, I want to use Webassembly as a secure way to run
+user provided modules that transform data to the users liking. First experiments proved
+successful. But before I get to deep into this I want to quickly evaluate how much performance
+I'm leaving on the table.
+
+For my microbenchmark, I compile the following snippet of Rust code into Webassembly:
+
+<Code
+	value={`
+pub fn run(Json(x): Json<Vec<i64>>) -> FnResult<Json<Vec<i64>>> {
+		let mut values = Vec::new();
+
+    for (idx, a) in x.iter().enumerate() {
+    		for b in x.iter() {
+    				if values.len() > idx {
+    						values[idx] += b;
+    				} else {
+    						values.push(a * b);
+    				}
+    		}
+    }
+
+    Ok(Json(values))
+
+}`}
+/>
+
+Don't try to make sense of it, I just came up with some random computation. Notice by the way that
+the inputs and outputs have to be serialized / deserialized to JSON. That's an unfortunate
+limitation of Webassembly currently for more complex types, like vectors here.
+
+Next, I use [extism](https://github.com/extism/extism) (which internally uses
+[wasmtime](https://github.com/bytecodealliance/wasmtime)) to load this plugin and run it.
+I then run this same code also natively in Rust. Below you find the results.
+
+<div class="md:w-full mx-auto">
+	<Table>
+		<tr class="border-b border-black dark:border-white">
+			<th class="text-left"></th>
+			<th class="text-right">Throughput</th>
+			<th class="text-right">Average duration</th>
+			<th class="text-right">90 percentile duration</th>
+		</tr>
+		<tr>
+			<td class="text-left">Native Rust</td>
+			<td class="text-right">4.85/s</td>
+			<td class="text-right">206ms</td>
+			<td class="text-right">206ms</td>
+		</tr>
+		<tr>
+			<td class="text-left">Webassembly</td>
+			<td class="text-right">4.59/s</td>
+			<td class="text-right">217ms</td>
+			<td class="text-right">218ms</td>
+		</tr>
+	</Table>
+</div>
+<div class="pt-4 pb-6 text-center text-gray-800 dark:text-gray-100 text-sm italic font-serif">
+	Table 1: Performance comparison of native Rust and Rust compiled to Webassembly.
+</div>
+
+At first I was sure I was making a mistake, no way the Webassembly is so close in performance to
+the native code, right? I'm starting to believe it's actually correct. What's incredible, this
+difference has to account for JSON serialization and deserialization of the inputs and outputs,
+the invocation overhead of spinning up wasmtime and running the plugin as well as the actual
+difference in execution speed.
+
+The astounding performance of Webassembly is just another reason for it being an excellent choice
+in a plugin system.

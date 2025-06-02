@@ -5,7 +5,7 @@ import Layout from '../layouts/Layout.astro';
 import { notes } from './notes';
 
 const posts = (await getCollection('notes')).sort(
-	(a: any, b: any) => b.data.date.valueOf() - a.data.date.valueOf()
+	(a: any, b: any) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf()
 );
 ---
 
