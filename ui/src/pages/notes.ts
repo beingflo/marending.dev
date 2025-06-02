@@ -139,11 +139,4 @@ export const notes = {
 		link: '/notes/lines/',
 		draft: false,
 	},
-	website: {
-		title: 'About this website',
-		subtitle: 'There are many like it, but this one is mine',
-		date: '27 Nov 2022',
-		link: '/notes/website/',
-		draft: false,
-	},
 };
