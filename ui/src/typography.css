@@ -1,0 +1,13 @@
+@import 'tailwindcss';
+
+:where(p):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+	padding-bottom: 1rem;
+}
+
+:where(h2):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+	@apply text-xl font-semibold mb-3 mt-6;
+}
+
+:where(h3):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+	@apply text-lg font-semibold mb-2 mt-2;
+}
