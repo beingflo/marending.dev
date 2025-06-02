@@ -34,13 +34,6 @@ export const notes = {
 		link: '/notes/sqlite-vs-duckdb/',
 		draft: false,
 	},
-	'unstructured-data': {
-		title: 'How to store and query unstructured data',
-		subtitle: 'Reinventing the wheel',
-		date: '12 Sep 2024',
-		link: '/notes/unstructured-data/',
-		draft: false,
-	},
 	'rest-quest': {
 		title: 'rest.quest: An opinionated to-do list',
 		subtitle: 'A project report',
