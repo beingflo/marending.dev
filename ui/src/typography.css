@@ -11,3 +11,11 @@
 :where(h3):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
 	@apply text-lg font-semibold mb-2 mt-2;
 }
+
+:where(code):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+	@apply font-mono bg-gray-200 dark:bg-gray-700 p-0.5 rounded-sm;
+}
+
+:where(a):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+	@apply underline decoration-1 border-dashed;
+}

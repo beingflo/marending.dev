@@ -7,7 +7,7 @@ layout: '../../../layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { A, C, Code, Title } from '../../../components';
+import { Code, Title } from '../../../components';
 
 <Title
 	subtitle={frontmatter.subtitle}
@@ -20,11 +20,11 @@ you're reading this, suprisingly, I followed through. Now, I'm under no delusion
 have to share will not be world shattering. Instead, I primarily want to write about projects to
 motivate myself, force a more rigorous thought process and document stuff for future reference. If
 the occasional internet user who happens to find their way to my little corner of the internet
-learns something, <em>anything</em>, that's just the cherry on top.
+learns something, _anything_, that's just the cherry on top.
 
 I'm generally bad at putting stuff out there due to a case of perfectionism induced procrastination.
 So to counteract this tendency, I'm trying to write notes and publish projects even if they are not
-finished yet. In this spirit, you could call this space a <em>digital garden</em>.
+finished yet. In this spirit, you could call this space a _digital garden_.
 
 As such, notes on this website should never be considered finished. I will amend them if I see
 fit, rephrase if necessary or even delete them if proven not to stand the test of time. They
@@ -58,7 +58,7 @@ max-width behaviour. The following snippet shows the code that generates the abo
 	value={`<Code value={\`<article class="p-4 py-8 md:py-12 max-w-4xl mx-auto"><slot /></article>\`} />`}
 />
 
-Inside the <C>Code</C> component is some complexity related to code highlighting that would be
+Inside the `Code` component is some complexity related to code highlighting that would be
 unnecessary to unpack here.
 
 ### Deployment
@@ -69,7 +69,7 @@ proxy to route the requests to the other applications I have running.
 
 ## Update July 2023
 
-In the meantime I've ported this page to <A href="https://astro.build">Astro</A>. I know, I
+In the meantime I've ported this page to [Astro](https://astro.build). I know, I
 know, but rewriting a website is just excellent procrastination instead of actually writing
 notes.
 
@@ -78,9 +78,9 @@ geared towards full stack apps, including backend apis and what have you. To jus
 static site with statically generated graphs felt like going against the flow.
 
 So I chose a more appropriate technology. Astro is built for static content and optionally
-allows sprinkling some interactivity into pages using its <em>island architecture</em>. It
+allows sprinkling some interactivity into pages using its _island architecture_. It
 works really well so far.
 
 An additional benefit is that components from any major framework can be rendered, statically
 at build time or on the client. This made porting extremely easy as I could use the Svelte
-component as is in <C>.astro</C> files. Gradually, I switched them over to <A href="https://www.solidjs.com/">SolidJS</A>.
+component as is in `.astro` files. Gradually, I switched them over to [SolidJS](https://www.solidjs.com/).
