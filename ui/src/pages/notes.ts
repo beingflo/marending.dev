@@ -69,13 +69,6 @@ export const notes = {
 		link: '/notes/16-hour-projects/',
 		draft: false,
 	},
-	'vps-benchmarks': {
-		title: 'A brief comparison of Hetzner servers',
-		subtitle: 'ARM is a viable option',
-		date: '01 Jan 2024',
-		link: '/notes/vps-benchmarks/',
-		draft: false,
-	},
 	'sqlite-benchmarks': {
 		title: 'How fast is SQLite?',
 		subtitle: 'Plenty fast',
