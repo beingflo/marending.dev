@@ -1,0 +1,70 @@
+---
+title: 'Responsive plots in SolidJS'
+subtitle: 'Saving you very little trouble'
+date: '21 Apr 2025'
+link: '/notes/responsive-plots/'
+layout: 'src/layouts/NoteLayout.astro'
+draft: false,
+---
+
+import { Title, Code } from 'src/components';
+
+<Title
+	subtitle={frontmatter.subtitle}
+	date={frontmatter.date}>
+	{frontmatter.title}
+</Title>
+
+I enjoy using [Observable Plot](https://observablehq.com/plot/) for my odd visualization
+needs. It has a nice API and looks great out of the box. But for better or worse, Plot does not
+automatically use all the space available to render a plot. You need to specify the width and height
+of a plot. Doing that manually is a pain, especially once you throw responsiveness into the mix.
+You really don't want to just resize the SVG plot to fit the container either, as that undoes a
+lot of the nice features of Plot, like automatic axis ticks based on the available space. And don't
+even get me started on font size.
+
+All that is to say that I needed to find a way to rerender plots to fit their container. As
+I'm building most of my UIs with [SolidJS](https://solidjs.com/), neither the JS
+framework nor the plotting library are so widely used as to have a solution ready for that
+combination. I've had to tinker a bit to find a convenient way to achieve this, learning about
+ResizeObserver in the process. Here is the result for posterity:
+
+<Code
+value={`import { createSignal, onCleanup, onMount, Show } from 'solid-js';
+
+import * as Plot from '@observablehq/plot';
+
+export type ChartProps = {
+  plot: Plot.PlotOptions;
+  id: string;
+};
+
+export const Chart = (props: ChartProps) => {
+  const [width, setWidth] = createSignal(0);
+  const [height, setHeight] = createSignal(0);
+
+const onResize = (entries: ResizeObserverEntry[]) => {
+setWidth(entries[0].contentRect.width);
+setHeight(entries[0].contentRect.height);
+};
+
+const observer = new ResizeObserver(onResize);
+
+onMount(() => {
+observer.observe(document.getElementById(props.id)!);
+});
+
+onCleanup(() => {
+observer.disconnect();
+});
+
+return (
+
+<div
+	id={props.id}
+	class="w-full h-80">
+	{Plot.plot({ width: width(), height: height(), ...props.plot })}
+</div>
+);
+
+};`} />

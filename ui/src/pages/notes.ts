@@ -6,13 +6,6 @@ export const notes = {
 		link: '/notes/go-rest-quest/',
 		draft: true,
 	},
-	'responsive-plots': {
-		title: 'Responsive plots in SolidJS',
-		subtitle: 'Saving you very little trouble',
-		date: '21 Apr 2025',
-		link: '/notes/responsive-plots/',
-		draft: false,
-	},
 	'co2-loft': {
 		title: 'The air quality impact of living in a loft apartment',
 		subtitle: 'Now without doors',
