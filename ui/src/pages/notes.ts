@@ -20,11 +20,4 @@ export const notes = {
 		link: '/notes/co2-bedroom/',
 		draft: false,
 	},
-	'esp-power': {
-		title: 'Measuring power consumption of ESP32 development boards',
-		subtitle: 'First forays into embedded devices',
-		date: '25 Feb 2023',
-		link: '/notes/esp-power/',
-		draft: false,
-	},
 };
