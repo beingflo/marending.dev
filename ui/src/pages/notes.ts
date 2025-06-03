@@ -27,13 +27,6 @@ export const notes = {
 		link: '/notes/16-hour-projects/',
 		draft: false,
 	},
-	'league-rating': {
-		title: 'Analyzing rating systems for foosball outcomes',
-		subtitle: 'Color me disappointed',
-		date: '02 Sep 2023',
-		link: '/notes/league-rating/',
-		draft: false,
-	},
 	'league-data': {
 		title: '9 years worth of company foosball data analyzed',
 		subtitle: 'Nobody tell management',
