@@ -20,13 +20,6 @@ export const notes = {
 		link: '/notes/co2-loft/',
 		draft: false,
 	},
-	'rest-quest': {
-		title: 'rest.quest: An opinionated to-do list',
-		subtitle: 'A project report',
-		date: '17 Aug 2024',
-		link: '/notes/rest-quest/',
-		draft: false,
-	},
 	fieldnotes: {
 		title: 'Fieldnotes: An end-to-end encrypted note-taking application',
 		subtitle: 'A project report',
