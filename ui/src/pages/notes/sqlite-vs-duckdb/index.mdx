@@ -7,7 +7,7 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false,
 ---
 
-import { A, Note, Title, P, H2, H3, C, Code, Info, Details } from '../../../components';
+import { Note, Title, Code, Info, Details } from 'src/components';
 import DuckDBResults from './DuckDBResults.astro';
 import SQLiteResults from './SQLiteResults.astro';
 
@@ -170,7 +170,7 @@ Structured logs:
 	value={`SELECT count(*), data ->> '$.endpoint' FROM metrics WHERE bucket = 'logs' AND data ->> '$.level' = 'error' AND timestamp > DATE('2024-01-01', '-90 day') GROUP BY data ->> '$.endpoint' ORDER BY count(\*);`}
 />
 
-This groups the entries indicating an error by <C>endpoint</C> and checks which one has the
+This groups the entries indicating an error by `endpoint` and checks which one has the
 highest error count. It does so over the data of the last 90 days.
 
 Note that the queries look slightly different between SQLite and DuckDB, in particular with date

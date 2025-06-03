@@ -55,13 +55,6 @@ export const notes = {
 		link: '/notes/16-hour-projects/',
 		draft: false,
 	},
-	'sqlite-benchmarks': {
-		title: 'How fast is SQLite?',
-		subtitle: 'Plenty fast',
-		date: '31 Dec 2023',
-		link: '/notes/sqlite-benchmarks/',
-		draft: false,
-	},
 	'league-rating': {
 		title: 'Analyzing rating systems for foosball outcomes',
 		subtitle: 'Color me disappointed',
