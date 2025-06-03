@@ -1,11 +1,4 @@
 export const notes = {
-	'co2-loft': {
-		title: 'The air quality impact of living in a loft apartment',
-		subtitle: 'Now without doors',
-		date: '10 Nov 2024',
-		link: '/notes/co2-loft/',
-		draft: false,
-	},
 	'16-hour-projects': {
 		title: '16 hour side-projects',
 		subtitle: 'An ode to the MVP',

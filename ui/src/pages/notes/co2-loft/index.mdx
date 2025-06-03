@@ -1,0 +1,54 @@
+---
+title: 'The air quality impact of living in a loft apartment'
+subtitle: 'Now without doors'
+date: '10 Nov 2024'
+link: '/notes/co2-loft/'
+layout: 'src/layouts/NoteLayout.astro'
+draft: false
+---
+
+import Chart from 'src/components/Chart.astro';
+import { Title, Info } from 'src/components';
+import * as Plot from '@observablehq/plot';
+import { data } from './data';
+
+<Title
+	subtitle={frontmatter.subtitle}
+	date={frontmatter.date}>
+	{frontmatter.title}
+</Title>
+
+In [a previous note](/notes/co2-bedroom) I explored how closing the bedroom door affects
+CO2 levels during sleep. Since then, we've moved into a new place that is effectively one big open
+space. The total air volume is probably slightly smaller.
+
+As I just set up my CO2 sensor again (after having it lie around in a box for a couple of
+months), I couldn't help but try reproducing the experiment. This time, by nature of the
+living space, there is no door to open or close.
+
+<div class="my-4">
+	<Chart
+		options={{
+			y: { label: '↑ co2 (ppm)', domain: [400, 1400] },
+			x: { type: 'time' },
+			marginLeft: 60,
+			marks: [
+				Plot.lineY(
+					data?.map(({ date, value }) => ({
+						date: new Date(date),
+						value,
+					})),
+					{ x: 'date', y: 'value' }
+				),
+				Plot.ruleY([1000], { stroke: 'orange', strokeDasharray: 2 }),
+			],
+		}}
+	/>
+</div>
+
+You can observe that the CO2 level develops somewhere in between the closed and the open door
+scenario from the last apartment: Not nearly as bad as the 3500ppm with the door closed, but
+also not as good as the flat 800ppm with the door open.
+
+Apart from the smaller volume for the CO2 to disperse into, I also blame the new apartment
+being more modern and thus probably more air-tight than the last one.
