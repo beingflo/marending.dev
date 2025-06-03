@@ -34,13 +34,6 @@ export const notes = {
 		link: '/notes/fieldnotes/',
 		draft: false,
 	},
-	'rust-spa': {
-		title: 'How to host single-page applications',
-		subtitle: 'Web server vs. application server',
-		date: '03 Mar 2024',
-		link: '/notes/rust-spa/',
-		draft: false,
-	},
 	'16-hour-projects': {
 		title: '16 hour side-projects',
 		subtitle: 'An ode to the MVP',

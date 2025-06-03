@@ -1,0 +1,114 @@
+---
+title: 'How to host single-page applications'
+subtitle: 'Web server vs. application server'
+date: '03 Mar 2024'
+link: '/notes/rust-spa/'
+layout: 'src/layouts/NoteLayout.astro'
+draft: false
+---
+
+import { Code, Title, Info } from 'src/components';
+import Results from './results.astro';
+import ResultsMacOs from './results-macos.astro';
+
+<Title
+	subtitle={frontmatter.subtitle}
+	date={frontmatter.date}>
+	{frontmatter.title}
+</Title>
+
+Thus far, my frontend projects are mostly single-page applications (SPA). The only exception
+is my website, the one you're looking at right now (this one is a multi-page app built with
+Astro). Without much consideration, I've always deployed SPAs by mounting a directory
+containing all the assets into a dockerized web server. If the project also needs a backend, I
+would set up the web server to reverse proxy the `/api` routes to the application server.
+
+This approach has served me well for some time. I have just two gripes about it. First, if,
+god forbid, someone else wanted to deploy my software, it would be a bit of a hassle. I can't
+provide a single docker image that serves both frontend and backend; instead, I would point to
+a static bundle of assets here, a docker image for the backend there, and hope they figure it
+out. Second, I would like to get metrics on accesses to my applications. While Caddy (my web
+server of choice) does expose aggregated metrics, it does not offer them per domain. Since I
+host multiple applications behind the same Caddy instance, that's not very useful for me.
+
+For these main reasons, I started revisiting my strategy and came up with another approach
+that alleviates these pain points. _cue, me reinventing the wheel_
+
+## Serving SPAs from the application server
+
+The straight-forward solution to my woes is to simply serve my static assets from the
+application server itself. So instead of just offering all the backend functionality under
+`/api`, it also responds to `/` with the `index.html` and all the other assets
+that are needed under their respective paths.
+
+The result of this is a single docker image that serves all that is needed for the project. A
+reverse proxy can still be put in front of this for SSL termination, URL rewriting, or
+whatever one may fancy. After some benchmarking, I was a bit disapointed with the performance
+of serving an SPA with a Rust [axum](https://github.com/tokio-rs/axum) server. I
+figured we could do better.
+
+## Embedding SPAs _in_ the application server
+
+It seems like neither the web server nor the axum server cache static assets in memory for
+faster access. This may be a reasonable default, but I have a need for speed.
+
+Instead, I embedded the static assets _inside_ the Rust binary using
+[rust-embed](https://github.com/pyrossh/rust-embed). As we will see later, that
+gives us a nice performance gain. Now, it is of course important to keep in mind that a huge,
+image-heavy site maybe wouldn't be the best fit for this. You wouldn't want to have a
+multi-gigabyte binary. My static bundles are typically sub-1 megabyte, so nothing to worry
+about on this front.
+
+## Benchmarks
+
+<Info>
+	The following benchmarks have been run on a shared VPS with noisy neighbors. Use these numbers
+	only as a guideline.
+</Info>
+
+Naturally, we have to compare how the different approaches do performance-wise. We consider
+the following scenarios: **(a)** Dockerized Caddy serves SPA from directory; **(b)**
+Native Rust axum server serves SPA from directory; **(c)** Native Rust axum server embeds
+SPA and serves from memory; **(d)** Dockerized Rust axum server embeds SPA and serves from
+memory; **(e)** Dockerized Caddy reverse proxies server from (d). Option (d) serves as a baseline to see
+how much performance is lost by being dockerized. Option (e) is the production-grade setup.
+
+We measure requests per second to the `index.html` resource. The numbers are obtained by
+running
+
+<Code value="wrk -c 1000 -d 20s -t 8 --latency http://localhost:4000/" />
+<Results />
+
+Notable are the improvements from (a) to (b). Considering all the extra work the full-fledged
+web server / reverse proxy is doing, it's not surprising that a lean, purpose-built Rust
+binary is faster. Next, (b) to (c) showcases the performance gain when all the assets are in
+memory versus on disk. This also shows up in a 99 percentile latency reduction from 72 ms to
+19 ms.
+
+A surprisingly high reduction in requests per second occurs when moving from a natively
+running application to a dockerized one ((c) to (d)). Finally, (e) indicates that Caddy is
+significantly faster at reverse proxying static assets than serving them itself.
+
+## Conclusion
+
+This is quite a satisfying finding, as I initially wanted to benchmark to understand how much
+_slower_ my idea was compared to letting Caddy serve the SPA ((a)). It turns out that
+with our handy embedding trick, we end up 3x faster. Either way, I see way smaller requests
+per second on my productive server, I suspect the real bottleneck is SSL handshakes, but this
+is a topic for another note.
+
+<div class="mb-48"></div>
+
+## Appendix
+
+At first, I was benchmarking on my Macbook Air, only to find a brutal loss of performance
+going from native to dockerized. After some research, I learned that docker on Mac is a full
+VM. So, what I'm seeing in the benchmarks is the cost of virtualization. That's when I decided
+to test on a Linux box instead. For completeness, here are the MacOS results anyway:
+
+<ResultsMacOs />
+
+Fun fact: This finding calls into question the accuracy of the benchmarks
+[here](/notes/performance/), as Caddy was also dockerized there. Notice the eerie
+similarity between the numbers at the end there and option (d) and (e) here. Alas, you can't
+win them all.
