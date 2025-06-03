@@ -62,11 +62,4 @@ export const notes = {
 		link: '/notes/esp-power/',
 		draft: false,
 	},
-	lines: {
-		title: 'A study of lines',
-		subtitle: 'Some schmuck tries his hands at generative art',
-		date: '03 Dec 2022',
-		link: '/notes/lines/',
-		draft: false,
-	},
 };

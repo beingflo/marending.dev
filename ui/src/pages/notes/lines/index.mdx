@@ -1,0 +1,166 @@
+---
+title: 'A study of lines'
+subtitle: 'Some schmuck tries his hands at generative art'
+date: '03 Dec 2022'
+link: '/notes/lines/'
+layout: 'src/layouts/NoteLayout.astro'
+draft: false
+---
+
+import { Info, Code, Details, Hint, Title } from 'src/components';
+import { Circle } from './_Circle';
+import { SimpleLine } from './_SimpleLine';
+import { Chaos } from './_Chaos';
+import { ChaosWrong } from './_ChaosWrong';
+import { ChaosAngles } from './_ChaosAngles';
+import { ChaosAngles90 } from './_ChaosAngles90';
+import { CircularDisturbance } from './_CircularDisturbance';
+import { FeatheredEpicenter } from './_FeatheredEpicenter';
+
+<Title
+	subtitle={frontmatter.subtitle}
+	date={frontmatter.date}>
+	{frontmatter.title}
+</Title>
+
+After moving into a bigger apartment, I've found the walls of our office to be a bit naked.
+While I'm a hobby photographer and would like to get more into printing my work, for this
+space I have something else in mind.
+
+It started with finding out about _generative art_ via
+[Tyler Hobbs' Fidenza](https://tylerxhobbs.com/fidenza). I found the look of this type of
+art very appealing. Maybe because I lack artistic talent, I like the idea of _guiding_ randomness
+towards aestethic order, rather than _create_ from scratch.
+
+On this page I want to systematically explore techniques and patterns to generate interesting
+structures. To prevent myself from getting lost in the endless possibilities, I will restrict
+myself to straight lines.
+
+<Details title="How do I go about generating my lines?">
+Initially I had two programming languages in mind: `Rust` or `Javascript`. `Rust` being my
+favorite language was an obvious choice. However, the dynamic nature of ` JS ` lends itself to a
+problem like this. No sense in fighting `Rusts` borrow-checker for interactive code, and the
+upsides you get in turn don't really come into play here. What further seals the deal for me is
+that `JS`-based code can be natively embedded right here, on this page.
+
+Next, I was exploring libraries that would make the whole ordeal easier. Top contenders include
+[p5js](https://p5js.org/), [Pts.js](https://ptsjs.org/) and [Paper.js](http://paperjs.org/).
+Ultimately, I came to the conclusion that I don't need the extensive feature sets of any of these
+libraries. Animation, physics and geometry utilities are nice-to-haves but unlikely to see any use
+in my use-case. Instead, all I really need is a way to programatically draw lines, ideally in a
+way that I can get a high-resolution image out of it somehow for print. And what better way to do
+this than with our good old friend, the `SVG`. So I just directly construct `SVGs` in my `SolidJS`
+components.
+
+</Details>
+
+So without further ado, let's draw some lines!
+
+<Circle />
+
+Wait, that's not a straight line! I just wanted to make sure you're paying attention.
+"Many infinitesimally small straight lines can approximate a curve", you might say.
+"That violates the spirit of the exercise, you silly goose", I would retort.
+
+<SimpleLine />
+
+Much better, we're checking all the boxes. Well, the one. If I was a famous artist already, I
+would hang this on the wall and have critics say clever sounding things about it. Alas, I need
+to try a bit harder. Let's try to bring some repetition into the mix, and while we're at it,
+some randomness.
+
+<Info>
+	Note that all the pieces on this page that contain randomness are uniquely generated for each page
+	view. Consider yourself special!
+</Info>
+
+<Chaos client:only="solid-js" />
+
+Now we're getting somewhere! It's no masterpiece, but I don't hate it.
+
+<Details title="Excursion into wrong transforms">
+Before I arrived at the above piece, my makeshift `SVG` rendering blessed me with this
+abomination:
+
+<ChaosWrong client:only="solid-js" />
+
+The problem here is the origin of the rotational transform. You see, drawing a line that is
+not horizontal in an `SVG` could be accomplished by providing the start and endpoint
+(which do not have the same `y`
+coordinate) explicitly. When generating lots of randomly rotated lines of the same length,
+we have to do some trigonometry to figure out one of those points. And I for one don't have
+time to use my brain like that.
+
+Instead, I want to draw my line horizontally, and then rotate it using the `rotate`{' '}
+transform that `SVG` provides.
+
+<Code
+	respectMargin
+	value={`<svg width="600" height="400" xmlns="http://www.w3.org/2000/svg">
+<line x1={x} y1={y} x2={x + 50} y2={y} transform="rotate(rand())" stroke="black" />
+</svg>`}
+/>
+
+This way I don't have to do any math, just generate random numbers for the rotation. As it
+turns out, this doesn't work correctly as we have seen above. The lines are rotated about
+the
+`(0, 0)` origin instead of the center point of the line. To fix it, we either set the
+`transform-origin` property on the `SVG` correctly, or we get fancy:
+
+<Code
+	respectMargin
+	value={`<svg width="600" height="400" xmlns="http://www.w3.org/2000/svg">
+<line x1="-25" y1="0" x2="25" y2="0"
+transform="rotate(rand()), translate(rand(), rand())" stroke="black" />
+</svg>`}
+/>
+
+We draw lines with center points on the origin and use the `transform` both for
+rotation
+_and for translation_. This way we don't have to set the origin of transformation.
+Note the order of the transforms: They are applied from right to left. If we first
+translated, we would have the wrong transform origin again.
+
+</Details>
+
+While the above piece starts to look interesting, we have a bad case of
+_untamed randomness_. We might get more visually appealing structures by restricting
+e.g. the angle of the lines.
+
+<ChaosAngles client:only="solid-js" />
+
+At this point I'm not sure if there is an optical illusion with all these
+specs-of-dust-looking things between the lines or my monitor is dirty. We will never know.
+
+<ChaosAngles90 client:only="solid-js" />
+
+Adding more, smaller lines and rotating them around by 90 degrees makes this look a bit like
+rain. What if we try segmenting our piece into multiple regions with distinct handling of
+rotations? Let's say we keep all the angles at exactly 0 degrees, unless the midpoints of the
+lines are within a given distance of some random point. For these, we generate rotations
+between 80 and 100 degrees. We expect to see some area of _disturbance_ around our
+chosen point.
+
+<CircularDisturbance client:only="solid-js" />
+
+That's quite nice! But that sharp transition between horizontal and vertical lines is almost
+screaming for a nicely feathered approach. What if we use the distance between the center
+point of a line and our `epicenter` to tune the rotation of the line? Say, the closer the
+line, the more upright, i.e. 90 degrees, the line is.
+
+<FeatheredEpicenter client:only="solid-js" />
+<Info>
+	Fun fact: At this point in writing this note, the `/notes/lines` page you're currently viewing can
+	be server-side rendered approximately 40 times per second. Compare that to 1000 times per second
+	for the landing page! All that `SVG` generation already takes its toll on my little server. I
+	think I'll have your browser do all the work instead and turn off server-side rendering for this
+	page.
+</Info>
+
+Alright, that turned out less interesting than expected. Maybe we're overdoing it with the
+randomness a bit. Currently there is nothing really of interest to see, everything is kind of
+the same, _arbitrary_. When we look at other works of generative art, we can often see
+artist driven "macro features". Only the details are left to chance. They feel a lot more
+deliberate than what I've been pumping out here. So let's give that a shot instead.
+
+<Hint>Work in progress</Hint>
