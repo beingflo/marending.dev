@@ -1,0 +1,207 @@
+---
+title: '9 years worth of company foosball data analyzed'
+subtitle: 'Nobody tell management'
+date: '13 Jul 2023'
+link: '/notes/league-data/'
+layout: 'src/layouts/NoteLayout.astro'
+draft: false
+---
+
+import { Title, Details } from 'src/components';
+import MatchesHeatmap from './MatchesHeatmap.astro';
+import MatchesBar from './MatchesBar.astro';
+import MatchesDayOfWeek from './MatchesDayOfWeek.astro';
+import MatchesHeatmapMe from './MatchesHeatmapMe.astro';
+import MatchesPerPlayer from './MatchesPerPlayer.astro';
+import MatchesTimeOfDay from './MatchesTimeOfDay.astro';
+import GoalsVsMatches from './GoalsVsMatches.astro';
+import MatchesVsGoalsPerMatch from './MatchesVsGoalsPerMatch.astro';
+import OffensiveGoalRate from './OffensiveGoalRate.astro';
+import WinStreakMe from './WinStreakMe.astro';
+import PlayerInvolvement from './PlayerInvolvement.astro';
+import PlayerInvolvementWins from './PlayerInvolvementWins.astro';
+
+<Title
+	subtitle={frontmatter.subtitle}
+	date={frontmatter.date}>
+	{frontmatter.title}
+</Title>
+
+About 4 years ago I graduated from university and started my first job at a company. About two
+weeks into my employment I was asked to join a game of foosball (also known as table soccer or
+_töggele_ if you care for some swiss german) by some colleagues. It was fun!
+
+Anyway, so my career took off, I enjoyed the craft very much and developed some solid skills.
+I'd even say I made one or the other valuable contribution to the people around me and their
+success. So much so, that today I can proudly call myself Senior
+~~Foosball Player~~ _\*cough\*_ Software Engineer.
+
+All jokes aside, I did spend most of my time writing software (sitting in meetings) and far
+too little playing foosball. Luckily a colleague built a web app that has been used to
+meticulously track every match played at work, so I _could_ give you the exact time I spent
+playing foosball. But I won't without a lawyer in the room. Thinking about this now, you'd assume
+someone going through the trouble of building an app where people willingly record their slacking
+off would be out to blackmail you later. I'm reasonably certain that's not the case. Especially
+because the author is also the most prolific player.
+
+So this is the deal: For the past nine years employees of my company have played foosball and
+tracked every match. The data includes timestamps of the start and end of every match, who
+played, in what constellation and who scored goals. The app also implements a ranking based on
+an [Elo rating system](https://en.wikipedia.org/wiki/Elo_rating_system). A typical
+pilgrimage to the foosball table would include 4 matches to 5 goals each. The players are
+arranged in a specific way and permutated between matches. For instance, among 4 players and 4
+matches, everyone needs to play with someone twice. The app would ensure that the top and
+bottom rated players play together twice to even out the playing field.
+
+Naturally, this treasure trove of company time embezzlement data deserves a thorough look.
+First, I want to run some analysis on the data and produce some nice visualizations. That's
+the note you're looking at right now. In the data and the plots you'll see below, I have
+anonymized the company-internal shortnames to protect the innocent (or rather the guilty). In
+a follow-up, I will compare different ranking algorithms and hopefully improve on the current
+implementation. Lastly, the goal is to implement V2 of this app as the old one is showing its
+age.
+
+<Details title="How are these plots generated?">
+I'm using an excellent JS library called [Observable Plot](https://observablehq.com/plot/). 
+It's highly configurable but still fairly ergonomic to use. In fact, the library is written 
+by the same author as D3, _the_ data viz library.
+
+The plots are generated statically at build-time and shipped as SVGs in the HTML. This leads
+to quite a heavy page at around half a megabyte. Still better than shipping 12 megabytes of
+match data and having the client render the plots though.
+
+</Details>
+
+In total the data set contains around 25'000 matches spanning over 9 years! This works out to
+about 8 matches played per day (or over 10 per working day). I, for instance, was personally
+involved in 1'048 of them. There are a total of 254 players represented, scoring a collective
+188'027 goals. No wonder the metal plates behind the goals are so banged up. The average
+duration of a game is approximately 4 and a half minutes (remember it's just 5 goals).
+
+Let's see how these games are distributed over the years:
+
+<MatchesHeatmap />
+
+What's immediately evident is the general decline in eagerness to play over the years. When I
+joined at the end of 2019 the company was already in a pitiful state. And of course, COVID-19
+has immortalized itself in yet another dataset. During mandatory home-office periods there is
+a disturbing lack of matches visible.
+
+What's somewhat less obvious are the heroic actions of a single team (nay, single _player_)
+in reviving the foosball culture. In 2022, as the matches start trickling in again, you'll
+notice that most games are played on Thursdays. This happens to be the day where my team would
+come together in the office to socialize. And following my call, some people would reluctantly
+join for a match. And so it would begin.
+
+There is still a long way to go of course, the golden age of ~60 games per day in 2014 and
+2015 is long gone. But one day we shall ring in the days of bountiful matches again. When we
+look at the number of matches played by quarter we can see that we are at least at
+pre-COVID-19 levels.
+
+<MatchesBar />
+
+Overall, the matches are distributed quite evenly across all weekdays. A few games have been
+played on Saturday, this might have been at some company events. And not a single game on
+Sunday, almost as if people consider foosball work and god-fearingly refuse to do it on
+_that_ day. No, that can't be it.
+
+<MatchesDayOfWeek />
+
+If we plotted the day of week distribution over time we'd see that lately it has been very
+hard to find enough players on a Friday, as visible in Figure 1.
+
+Most matches are played in the 2 hours around lunch. Maybe that's when people are unlikely to
+have meetings. Though some mad people have the nerve to show up to the office at 7 and go
+straight for the foosball table.
+
+<MatchesTimeOfDay />
+
+In a small personal detour, let's look at the distribution of matches I played. A fun fact
+about this is that of all games played in the last two years, I was involved in 78% of them.
+Did I already mention you shouldn't bring this to the attention of my companies management?
+
+<MatchesHeatmapMe />
+
+In the grand scheme of things I'm not that bad though. Let's see how many games other people
+have played:
+
+<MatchesPerPlayer />
+
+Now, one does not play a game alone, that would be boring. But one also isn't equally likely
+to play a game with just anyone. A delicate process of inter-personal team dynamics (and
+meeting schedules) probably forms clusters of people that more often come together to ~~worship~~ play.
+
+To see this, I've plotted a 2d grid where each axis are all players who played at least 1'000
+matches. Each cell is colored according to how many matches the corresponding players have
+shared. In this case only matches where the two players are on the same team count.
+
+<PlayerInvolvement />
+
+The players are sorted (ascending towards top and left) by total number of matches played. I'm
+player #251 in this anonymized permutation. With my 1'048 matches I barely make the cut. Due
+to being a relatively new player - missing out during COVID, too - I haven't played a single
+game with the majority of these prolific players. Some people on here have surely already left
+the company.
+
+How #39 and #161 managed to play with themselves is a mystery to me by the way. All I know is
+that they should get a room when they do.
+
+There would probably be some correlation between higher density in ones row on this plot and
+seniority at the company. But I'm not about to enrich this already risky endeavour with
+personally identifiable data.
+
+Let's turn our attention towards goals. We're playing to win, not just for fun, right?
+
+<GoalsVsMatches />
+
+The red line is a linear regression fitted to all the players. There is a surprising
+consistency to this. No extreme outliers at least among the more prolific players.
+
+When we plot this more explicitly as goals per match vs matches played, we see that among
+rookie players there is a lot more spread than more seasoned ones:
+
+<MatchesVsGoalsPerMatch />
+
+I'm just glad I'm in the upper half.
+
+Next, I wondered how consistent people are in scoring goals from different positions. There
+are some notorious players that can produce some real bangers from the defensive position,
+while others almost exclusively score goals in the offensive.
+
+<OffensiveGoalRate />
+
+There is a lot more spread here. If we don't exclude players with less than 100 matches we
+even get some that score more in the defence than the offence. Some would say that makes them
+very balanced players, others that they suck in the offensive. It all depends on which team
+you're on.
+
+Maybe some duos of players complement each others skills particularly well. To see this, I've
+plotted - similar to Figure 7 above - all combinations of players. The color of each cell
+indicates the win rate when the corresponding players join up. To exclude unrepresentative
+results, I'm not showing a color at all when the match-up has not played at least 10 games
+together.
+
+<PlayerInvolvementWins />
+The darker squares now indicate particularly well functioning teams. Neat!
+
+Lastly, I leave you with a plot that looks kind of funny: The current win streak
+(consecutively won matches) at every match I played.
+
+<WinStreakMe />
+
+If this plot was really wide we would see a sawtooth pattern: With every won match, the streak
+would increase, only to drop down to zero instantly when I loose. The longer the win streak,
+the more rare of an occurrence it is. Clearly, the longest streak was 10 matches for me. The
+longest streak across all players is 23 by the way.
+
+### What's next?
+
+There are of course many more interesting visualizations left untouched here. If you have a
+great idea make sure to let me know in the feedback box on the bottom right of the page.
+
+The thing we're really interested in however, is who's the best. After all, at least half the
+enjoyment (according to me) of a competitive activity is being able to tell others they suck
+if you win. But how do we know who is the best? A simple measure like the ratio of wins to
+matches played has shortcomings. Luckily this is a well established problem with interesting
+solutions. In a [follow up note](/notes/league-rating) we will compare different ranking
+algorithms by their ability to predict the outcome of future matches.
