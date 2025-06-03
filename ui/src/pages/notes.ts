@@ -6,13 +6,6 @@ export const notes = {
 		link: '/notes/go-rest-quest/',
 		draft: true,
 	},
-	'server-setup': {
-		title: 'A hassle-free setup for home-made software',
-		subtitle: 'Choosing boring technology',
-		date: '5 May 2025',
-		link: '/notes/server-setup/',
-		draft: true,
-	},
 	'responsive-plots': {
 		title: 'Responsive plots in SolidJS',
 		subtitle: 'Saving you very little trouble',
