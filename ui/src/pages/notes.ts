@@ -62,13 +62,6 @@ export const notes = {
 		link: '/notes/esp-power/',
 		draft: false,
 	},
-	performance: {
-		title: 'Performance tuning a specific SvelteKit application',
-		subtitle: `Making sure my website can handle all those page views it isn't getting`,
-		date: '29 Dec 2022',
-		link: '/notes/performance/',
-		draft: false,
-	},
 	lines: {
 		title: 'A study of lines',
 		subtitle: 'Some schmuck tries his hands at generative art',
