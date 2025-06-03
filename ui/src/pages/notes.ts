@@ -6,13 +6,6 @@ export const notes = {
 		link: '/notes/co2-loft/',
 		draft: false,
 	},
-	fieldnotes: {
-		title: 'Fieldnotes: An end-to-end encrypted note-taking application',
-		subtitle: 'A project report',
-		date: '28 Apr 2024',
-		link: '/notes/fieldnotes/',
-		draft: false,
-	},
 	'16-hour-projects': {
 		title: '16 hour side-projects',
 		subtitle: 'An ode to the MVP',
