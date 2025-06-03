@@ -1,16 +1,12 @@
 export { A } from './A';
-export { C } from './C';
 export { default as Chart } from './Chart.astro';
 export { Code } from './Code';
 export { Details } from './Details';
 export { GithubSVG } from './GithubSVG';
-export { H2 } from './H2';
-export { H3 } from './H3';
 export { Hint } from './Hint';
 export { Info } from './Info';
 export { Note } from './Note';
 export { NoteSummary } from './NoteSummary';
-export { P } from './P';
 export { Page } from './Page';
 export { Title } from './Title';
 export { WidePage } from './WidePage';

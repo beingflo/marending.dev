@@ -2,7 +2,6 @@
 import { NoteSummary, WidePage } from '../components';
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
-import { notes } from './notes';
 
 const posts = (await getCollection('notes')).sort(
 	(a: any, b: any) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf()
@@ -12,19 +11,6 @@ const posts = (await getCollection('notes')).sort(
 <Layout>
 	<WidePage>
 		<div class="flex flex-col gap-4 w-fit xl:w-full mx-auto">
-			{
-				Object.values(notes)
-					?.filter((note) => !note.draft || import.meta.env.DEV)
-					.map((note) => (
-						<NoteSummary
-							title={note.title}
-							summary={note.subtitle}
-							date={note.date}
-							link={note.link}
-						/>
-					))
-			}
-			<div>---</div>
 			{
 				posts
 					?.filter((post: any) => !post.data.draft || import.meta.env.DEV)
