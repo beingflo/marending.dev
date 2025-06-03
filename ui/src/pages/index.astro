@@ -24,6 +24,7 @@ const posts = (await getCollection('notes')).sort(
 						/>
 					))
 			}
+			<div>---</div>
 			{
 				posts
 					?.filter((post: any) => !post.data.draft || import.meta.env.DEV)

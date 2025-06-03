@@ -27,13 +27,6 @@ export const notes = {
 		link: '/notes/co2-loft/',
 		draft: false,
 	},
-	'sqlite-vs-duckdb': {
-		title: 'SQLite and DuckDB for analytics workload',
-		subtitle: 'The impact of column orientation',
-		date: '15 Sep 2024',
-		link: '/notes/sqlite-vs-duckdb/',
-		draft: false,
-	},
 	'rest-quest': {
 		title: 'rest.quest: An opinionated to-do list',
 		subtitle: 'A project report',
