@@ -20,13 +20,6 @@ export const notes = {
 		link: '/notes/co2-bedroom/',
 		draft: false,
 	},
-	'esp-protocol': {
-		title: 'A comparison of wireless protocols for battery powered embedded devices',
-		subtitle: 'Trying to sleep as much as possible',
-		date: '17 Apr 2023',
-		link: '/notes/esp-protocol/',
-		draft: false,
-	},
 	'esp-power': {
 		title: 'Measuring power consumption of ESP32 development boards',
 		subtitle: 'First forays into embedded devices',
