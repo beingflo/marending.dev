@@ -7,7 +7,7 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Info, Code, Details } from 'src/components';
+import { Info, Details } from 'src/components';
 import { ResultsEspNow } from './_results-esp-now';
 import { ResultsWifi } from './_results-wifi';
 
@@ -83,34 +83,36 @@ reconnect, which makes it hard to observe the output. I'm sure this could be fix
 wasn't a complete novice. I would assume it's not much different considering it has a chip in
 the same family. Once we get to the protocols we'll see if this assumption makes sense.
 
-<Code
-caption="Code 1: Script to test deep sleep wakeup time"
-value={`#include "Arduino.h"
+```cpp
+#include "Arduino.h"
 
 RTC_DATA_ATTR int value = 0;
 
 void setup()
 {
-Serial.begin(115200);
+	Serial.begin(115200);
 
-Serial.println(value);
-value += 1;
+	Serial.println(value);
+	value += 1;
 
-esp_sleep_enable_timer_wakeup(1);
+	esp_sleep_enable_timer_wakeup(1);
 
-esp_deep_sleep_start();
+	esp_deep_sleep_start();
 }
 
 void loop()
 {
-// This is not going to be called
-}`}
-/>
+	// This is not going to be called
+}
+```
+<p class="caption">Code 1: Script to test deep sleep wakeup time</p>
 
 This is quite promising for deep sleep wakeup! If we can keep the Modem startup and
 transmission time on a reasonable scale we'll have pretty good battery life.
 
-<Code value={`WiFi.mode(WIFI_STA);`} />
+```
+WiFi.mode(WIFI_STA);
+```
 
 When we add the above snippet to the test script we measure a total cycle time of **312 ms**.
 Starting the modem (at least I suspect this doesn't just set the mode considering the time
@@ -124,9 +126,8 @@ First let's test the obvious choice. We want to resume from deep sleep, start th
 connect to the Access Point, send a packet to my metric collection system which is hosted in
 the cloud and then finally go back to sleep.
 
-<Code
-caption="Code 2: Test script to measure time from deep sleep to successful data transmission with WiFi"
-value={`#include <WiFi.h>
+```cpp
+#include <WiFi.h>
 #include <HTTPClient.h>
 
 RTC_DATA_ATTR int counter = 0;
@@ -138,53 +139,54 @@ String endpoint = "ENDPOINT";
 
 void setup()
 {
-Serial.begin(115200);
-WiFi.begin(ssid, password);
+	Serial.begin(115200);
+	WiFi.begin(ssid, password);
 
-Serial.println("Connecting");
-while (WiFi.status() != WL_CONNECTED)
-{
-delay(200);
-Serial.print(".");
-}
+	Serial.println("Connecting");
+	while (WiFi.status() != WL_CONNECTED)
+	{
+		delay(200);
+		Serial.print(".");
+	}
 
-Serial.print("Connected!");
-Serial.println(WiFi.localIP());
+	Serial.print("Connected!");
+	Serial.println(WiFi.localIP());
 }
 
 void loop()
 {
-if (WiFi.status() == WL_CONNECTED)
-{
-HTTPClient http;
+	if (WiFi.status() == WL_CONNECTED)
+	{
+		HTTPClient http;
 
-String body = "#TYPE some_metric gauge\\nsome_metric " + String(counter) + "\\n";
+		String body = "#TYPE some_metric gauge\\nsome_metric " + String(counter) + "\\n";
 
-http.begin(endpoint.c_str());
+		http.begin(endpoint.c_str());
 
-int responseCode = http.POST(body);
+		int responseCode = http.POST(body);
 
-if (responseCode > 0)
-{
-Serial.print("HTTP Response: ");
-Serial.println(responseCode);
+		if (responseCode > 0)
+		{
+			Serial.print("HTTP Response: ");
+			Serial.println(responseCode);
+		}
+		else
+		{
+			Serial.print("Error: ");
+			Serial.println(responseCode);
+		}
+
+		http.end();
+	}
+
+	counter += 1;
+
+	esp_sleep_enable_timer_wakeup(1);
+	Serial.println("Enter sleep");
+	esp_deep_sleep_start();
 }
-else
-{
-Serial.print("Error: ");
-Serial.println(responseCode);
-}
-
-http.end();
-}
-
-counter += 1;
-
-esp_sleep_enable_timer_wakeup(1);
-Serial.println("Enter sleep");
-esp_deep_sleep_start();
-}`}
-/>
+```
+<p class='caption'>Code 2: Test script to measure time from deep sleep to successful data transmission with WiFi</p>
 
 In the above snippet we send an incrementing counter to a
 [Prometheus PushGateway](https://github.com/prometheus/pushgateway), that's where
@@ -207,13 +209,13 @@ distance to the AP and walls in-between. It turns out the numbers look exactly t
 I had read that we can cut the WiFi connection time short by providing a static IP, thus
 skipping DHCP entirely. To do this one simply configures values in the WiFi setup like so:
 
-<Code
-	value={`IPAddress ip(192, 168, 178, 48);
+```
+IPAddress ip(192, 168, 178, 48);
 IPAddress gw(192, 168, 178, 1);
 IPAddress dns(192, 168, 178, 1);
 IPAddress sn(255, 255, 255, 0);
-WiFi.config(ip, gw, sn, dns);`}
-/>
+WiFi.config(ip, gw, sn, dns);
+```
 
 Interestingly this didn't do much at all, arguably just noise in the measurements. I'm not
 sure if I did something wrong or if there are other factors, such as the WiFi router being
@@ -246,196 +248,193 @@ So ultimately I did not proceed with timing the code, below you will find my ser
 scripts anyway if you need inspiration.
 
 <Details title="BLE server code">
-<Code
-respectMargin
-value={`#include <BLEDevice.h>
-#include <BLEUtils.h>
-#include <BLEServer.h>
-#include <BLE2902.h>
+	```cpp
+	#include <BLEDevice.h>
+	#include <BLEUtils.h>
+	#include <BLEServer.h>
+	#include <BLE2902.h>
 
-#define SERVICE_UUID "3fff1c98-3055-45b2-838e-b384b6fc1125"
-#define CHARACTERISTIC_UUID "a36e7c55-6bd4-4c3c-a003-8fe819de260a"
+	#define SERVICE_UUID "3fff1c98-3055-45b2-838e-b384b6fc1125"
+	#define CHARACTERISTIC_UUID "a36e7c55-6bd4-4c3c-a003-8fe819de260a"
 
-#define bleServerName "ESP32-TEST-BLE"
+	#define bleServerName "ESP32-TEST-BLE"
 
-bool deviceConnected = false;
+	bool deviceConnected = false;
 
-unsigned long lastTime = 0;
+	unsigned long lastTime = 0;
 
-int counter = 0;
+	int counter = 0;
 
-BLECharacteristic characteristic(CHARACTERISTIC_UUID, BLECharacteristic::PROPERTY_NOTIFY);
-BLEDescriptor descriptor(BLEUUID((uint16_t)0x2902));
+	BLECharacteristic characteristic(CHARACTERISTIC_UUID, BLECharacteristic::PROPERTY_NOTIFY);
+	BLEDescriptor descriptor(BLEUUID((uint16_t)0x2902));
 
-// Setup callbacks onConnect and onDisconnect
-class MyServerCallbacks : public BLEServerCallbacks
-{
-void onConnect(BLEServer *pServer)
-{
-deviceConnected = true;
-};
-void onDisconnect(BLEServer *pServer)
-{
-deviceConnected = false;
-}
-};
+	// Setup callbacks onConnect and onDisconnect
+	class MyServerCallbacks : public BLEServerCallbacks
+	{
+		void onConnect(BLEServer *pServer)
+		{
+			deviceConnected = true;
+		};
+		void onDisconnect(BLEServer *pServer)
+		{
+			deviceConnected = false;
+		}
+	};
 
-void setup()
-{
-Serial.begin(115200);
-Serial.println("Starting BLE");
+	void setup()
+	{
+		Serial.begin(115200);
+		Serial.println("Starting BLE");
 
-BLEDevice::init(bleServerName);
+		BLEDevice::init(bleServerName);
 
-BLEServer \*pServer = BLEDevice::createServer();
-pServer->setCallbacks(new MyServerCallbacks());
+		BLEServer \*pServer = BLEDevice::createServer();
+		pServer->setCallbacks(new MyServerCallbacks());
 
-BLEService \*pService = pServer->createService(SERVICE_UUID);
+		BLEService \*pService = pServer->createService(SERVICE_UUID);
 
-pService->addCharacteristic(&characteristic);
-descriptor.setValue("Counter");
-characteristic.addDescriptor(&descriptor);
-// Start the service
-pService->start();
+		pService->addCharacteristic(&characteristic);
+		descriptor.setValue("Counter");
+		characteristic.addDescriptor(&descriptor);
+		// Start the service
+		pService->start();
 
-BLEAdvertising \*pAdvertising = BLEDevice::getAdvertising();
-pAdvertising->addServiceUUID(SERVICE_UUID);
-pServer->getAdvertising()->start();
-Serial.println("Waiting a client connection to notify...");
-}
+		BLEAdvertising \*pAdvertising = BLEDevice::getAdvertising();
+		pAdvertising->addServiceUUID(SERVICE_UUID);
+		pServer->getAdvertising()->start();
+		Serial.println("Waiting a client connection to notify...");
+	}
 
-void loop()
-{
-if (deviceConnected)
-{
-if ((millis() - lastTime) > 5000)
-{
-char data[4];
-dtostrf(counter, 4, 2, data);
-characteristic.setValue(data);
-characteristic.notify();
+	void loop()
+	{
+		if (deviceConnected)
+		{
+			if ((millis() - lastTime) > 5000)
+			{
+				char data[4];
+				dtostrf(counter, 4, 2, data);
+				characteristic.setValue(data);
+				characteristic.notify();
 
-lastTime = millis();
-counter += 1;
-}
-}
-}`}
-/>
-
+				lastTime = millis();
+				counter += 1;
+			}
+		}
+	}
+	```
 </Details>
+
 <Details title="BLE client code">
-<Code
-respectMargin
-value={`#include "BLEDevice.h"
+	```cpp
+	#include "BLEDevice.h"
 
-#define bleServerName "ESP32-TEST-BLE"
+	#define bleServerName "ESP32-TEST-BLE"
 
-static BLEUUID serviceUUID("3fff1c98-3055-45b2-838e-b384b6fc1125");
-static BLEUUID characteristicUUID("a36e7c55-6bd4-4c3c-a003-8fe819de260a");
+	static BLEUUID serviceUUID("3fff1c98-3055-45b2-838e-b384b6fc1125");
+	static BLEUUID characteristicUUID("a36e7c55-6bd4-4c3c-a003-8fe819de260a");
 
-static boolean doConnect = false;
-static boolean connected = false;
+	static boolean doConnect = false;
+	static boolean connected = false;
 
-static BLEAddress *pServerAddress;
-static BLERemoteCharacteristic *characteristic;
+	static BLEAddress *pServerAddress;
+	static BLERemoteCharacteristic *characteristic;
 
-const uint8_t notificationOn[] = {0x1, 0x0};
-const uint8_t notificationOff[] = {0x0, 0x0};
+	const uint8_t notificationOn[] = {0x1, 0x0};
+	const uint8_t notificationOff[] = {0x0, 0x0};
 
-char \*counter;
+	char \*counter;
 
-boolean newCounter = false;
+	boolean newCounter = false;
 
-// Connect to the BLE Server that has the name, Service, and Characteristics
-bool connectToServer(BLEAddress pAddress)
-{
-BLEClient \*pClient = BLEDevice::createClient();
+	// Connect to the BLE Server that has the name, Service, and Characteristics
+	bool connectToServer(BLEAddress pAddress)
+	{
+		BLEClient \*pClient = BLEDevice::createClient();
 
-pClient->connect(pAddress);
-Serial.println("Connected to server");
+		pClient->connect(pAddress);
+		Serial.println("Connected to server");
 
-BLERemoteService \*pRemoteService = pClient->getService(serviceUUID);
-if (pRemoteService == nullptr)
-{
-Serial.print("Failed to find our service UUID: ");
-Serial.println(serviceUUID.toString().c_str());
-return (false);
-}
+		BLERemoteService \*pRemoteService = pClient->getService(serviceUUID);
+		if (pRemoteService == nullptr)
+		{
+			Serial.print("Failed to find our service UUID: ");
+			Serial.println(serviceUUID.toString().c_str());
+			return (false);
+		}
 
-characteristic = pRemoteService->getCharacteristic(characteristicUUID);
+		characteristic = pRemoteService->getCharacteristic(characteristicUUID);
 
-if (characteristic == nullptr)
-{
-Serial.print("Failed to find our characteristic UUID");
-return false;
-}
-Serial.println(" - Found our characteristics");
+		if (characteristic == nullptr)
+		{
+			Serial.print("Failed to find our characteristic UUID");
+			return false;
+		}
+		Serial.println(" - Found our characteristics");
 
-// Assign callback functions for the Characteristics
-characteristic->registerForNotify(counterNotifyCallback);
-return true;
-}
+		// Assign callback functions for the Characteristics
+		characteristic->registerForNotify(counterNotifyCallback);
+		return true;
+	}
 
-class MyAdvertisedDeviceCallbacks : public BLEAdvertisedDeviceCallbacks
-{
-void onResult(BLEAdvertisedDevice advertisedDevice)
-{
-if (advertisedDevice.getName() == bleServerName)
-{
-advertisedDevice.getScan()->stop();
-pServerAddress = new BLEAddress(advertisedDevice.getAddress());
-doConnect = true;
-Serial.println("Device found. Connecting!");
-}
-}
-};
+	class MyAdvertisedDeviceCallbacks : public BLEAdvertisedDeviceCallbacks
+	{
+		void onResult(BLEAdvertisedDevice advertisedDevice)
+		{
+			if (advertisedDevice.getName() == bleServerName)
+			{
+				advertisedDevice.getScan()->stop();
+				pServerAddress = new BLEAddress(advertisedDevice.getAddress());
+				doConnect = true;
+				Serial.println("Device found. Connecting!");
+			}
+		}
+	};
 
-static void counterNotifyCallback(BLERemoteCharacteristic *pBLERemoteCharacteristic,
-uint8_t *pData, size_t length, bool isNotify)
-{
-counter = (char \*)pData;
-newCounter = true;
-}
+	static void counterNotifyCallback(BLERemoteCharacteristic *pBLERemoteCharacteristic,
+	uint8_t *pData, size_t length, bool isNotify)
+	{
+		counter = (char \*)pData;
+		newCounter = true;
+	}
 
-void setup()
-{
-Serial.begin(115200);
-Serial.println("Starting ble client");
+	void setup()
+	{
+		Serial.begin(115200);
+		Serial.println("Starting ble client");
 
-BLEDevice::init("");
+		BLEDevice::init("");
 
-BLEScan \*pBLEScan = BLEDevice::getScan();
-pBLEScan->setAdvertisedDeviceCallbacks(new MyAdvertisedDeviceCallbacks());
-pBLEScan->setActiveScan(true);
-pBLEScan->start(30);
-}
+		BLEScan \*pBLEScan = BLEDevice::getScan();
+		pBLEScan->setAdvertisedDeviceCallbacks(new MyAdvertisedDeviceCallbacks());
+		pBLEScan->setActiveScan(true);
+		pBLEScan->start(30);
+	}
 
-void loop()
-{
-if (doConnect == true)
-{
-if (connectToServer(_pServerAddress))
-{
-Serial.println("Connected to server");
-// Activate the Notify property of each Characteristic
-characteristic->getDescriptor(BLEUUID((uint16_t)0x2902))->writeValue((uint8_t _)notificationOn, 2, true);
-connected = true;
-}
-else
-{
-Serial.println("Failed to connect to server");
-}
-doConnect = false;
-}
-if (newCounter)
-{
-newCounter = false;
-Serial.println(counter);
-}
-delay(1000);
-}`}
-/>
-
+	void loop()
+	{
+		if (doConnect == true)
+		{
+			if (connectToServer(_pServerAddress))
+			{
+				Serial.println("Connected to server");
+				// Activate the Notify property of each Characteristic
+				characteristic->getDescriptor(BLEUUID((uint16_t)0x2902))->writeValue((uint8_t _)notificationOn, 2, true);
+				connected = true;
+			}
+			else
+			{
+				Serial.println("Failed to connect to server");
+			}
+			doConnect = false;
+		}
+		if (newCounter)
+		{
+			newCounter = false;
+			Serial.println(counter);
+		}
+		delay(1000);
+	}
+	```
 </Details>
 
 ## ESP-NOW
@@ -454,10 +453,9 @@ is connected to a serial monitor, it's _much_ faster. It turns out that there is
 [bug in Arduino](https://github.com/espressif/arduino-esp32/issues/6983)
 regarding buffering serial output. The fix is simple:
 
-<Code
-	value={`Serial.setTxTimeoutMs(0);`}
-	respectMargin
-/>
+```cpp
+Serial.setTxTimeoutMs(0);
+```
 
 With this, I see around **800 messages per second** at a message size of 16 bytes.
 
@@ -478,9 +476,8 @@ transmit data via ESP-NOW and then attempts to resend data until the recipient (
 the device with the mac address described in the `receiver[]` array) acknowledges it. Then
 the device enters deep sleep for a microsecond, wakes up and reruns the procedure.
 
-<Code
-caption="Code 3: Test script to measure time from deep sleep to successful data transmission with ESP-NOW"
-value={`#include <esp_now.h>
+```cpp
+#include <esp_now.h>
 #include <WiFi.h>
 #include <esp_wifi.h>
 
@@ -493,93 +490,94 @@ int success = 0;
 
 struct msg_data
 {
-int counter;
-int num_tries;
+	int counter;
+	int num_tries;
 };
 
 void OnDataSent(const uint8_t \*mac_addr, esp_now_send_status_t status)
 {
-Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Success" : "Fail");
+	Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Success" : "Fail");
 
-if (status == ESP_NOW_SEND_SUCCESS)
-{
-success = 1;
-}
+	if (status == ESP_NOW_SEND_SUCCESS)
+	{
+		success = 1;
+	}
 }
 
 void setup()
 {
-Serial.begin(115200);
-// For ESP32-C3
-// Serial.setTxTimeoutMs(0);
-WiFi.mode(WIFI_STA);
+	Serial.begin(115200);
+	// For ESP32-C3
+	// Serial.setTxTimeoutMs(0);
+	WiFi.mode(WIFI_STA);
 
-if (esp_now_init() != ESP_OK)
-{
-Serial.println("Error initializing ESP-NOW");
-return;
-}
+	if (esp_now_init() != ESP_OK)
+	{
+		Serial.println("Error initializing ESP-NOW");
+		return;
+	}
 
-if (esp_now_register_send_cb(OnDataSent) != ESP_OK)
-{
-Serial.println("Error registering callback");
-return;
-}
+	if (esp_now_register_send_cb(OnDataSent) != ESP_OK)
+	{
+		Serial.println("Error registering callback");
+		return;
+	}
 
-memcpy(peerInfo.peer_addr, receiver, 6);
-peerInfo.channel = 0;
-peerInfo.encrypt = false;
+	memcpy(peerInfo.peer_addr, receiver, 6);
+	peerInfo.channel = 0;
+	peerInfo.encrypt = false;
 
-if (esp_now_add_peer(&peerInfo) != ESP_OK)
-{
-Serial.println("Error adding peer");
-return;
-}
+	if (esp_now_add_peer(&peerInfo) != ESP_OK)
+	{
+		Serial.println("Error adding peer");
+		return;
+	}
 }
 
 void loop()
 {
-esp_wifi_start();
-WiFi.mode(WIFI_STA);
+	esp_wifi_start();
+	WiFi.mode(WIFI_STA);
 
-int num_tries = 0;
+	int num_tries = 0;
 
-// Resend until data was received by recipient
-while (!success)
-{
-esp_err_t result = ESP_FAIL;
+	// Resend until data was received by recipient
+	while (!success)
+	{
+		esp_err_t result = ESP_FAIL;
 
-// Try sending until successfully sent
-while (result != ESP_OK)
-{
-num_tries += 1;
+		// Try sending until successfully sent
+		while (result != ESP_OK)
+		{
+			num_tries += 1;
 
-struct msg_data data = {counter, num_tries};
+			struct msg_data data = {counter, num_tries};
 
-result = esp_now_send(receiver, (uint8_t \*)&data, sizeof(msg_data));
+			result = esp_now_send(receiver, (uint8_t \*)&data, sizeof(msg_data));
 
-if (result != ESP_OK)
-{
-Serial.println("Error sending the data");
-break;
+			if (result != ESP_OK)
+			{
+				Serial.println("Error sending the data");
+				break;
+			}
+		}
+
+		// Allow time for callback to signal success
+		delay(100);
+	}
+
+	success = 0;
+	counter += 1;
+
+	esp_wifi_stop();
+	esp_sleep_enable_timer_wakeup(1);
+
+	esp_deep_sleep_start();
+	// or
+	// esp_light_sleep_start();
 }
-}
-
-// Allow time for callback to signal success
-delay(100);
-}
-
-success = 0;
-counter += 1;
-
-esp_wifi_stop();
-esp_sleep_enable_timer_wakeup(1);
-
-esp_deep_sleep_start();
-// or
-// esp_light_sleep_start();
-}`}
-/>
+```
+<p class='caption'>Code 3: Test script to measure time from deep sleep to successful data transmission with ESP-NOW</p>
 
 The results are very promising:
 

@@ -7,8 +7,6 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false,
 ---
 
-import { Code } from 'src/components';
-
 I enjoy using [Observable Plot](https://observablehq.com/plot/) for my odd visualization
 needs. It has a nice API and looks great out of the box. But for better or worse, Plot does not
 automatically use all the space available to render a plot. You need to specify the width and height
@@ -23,9 +21,8 @@ framework nor the plotting library are so widely used as to have a solution read
 combination. I've had to tinker a bit to find a convenient way to achieve this, learning about
 ResizeObserver in the process. Here is the result for posterity:
 
-<Code
-value={`import { createSignal, onCleanup, onMount, Show } from 'solid-js';
-
+```jsx
+import { createSignal, onCleanup, onMount, Show } from 'solid-js';
 import * as Plot from '@observablehq/plot';
 
 export type ChartProps = {
@@ -37,28 +34,25 @@ export const Chart = (props: ChartProps) => {
   const [width, setWidth] = createSignal(0);
   const [height, setHeight] = createSignal(0);
 
-const onResize = (entries: ResizeObserverEntry[]) => {
-setWidth(entries[0].contentRect.width);
-setHeight(entries[0].contentRect.height);
+  const onResize = (entries: ResizeObserverEntry[]) => {
+    setWidth(entries[0].contentRect.width);
+    setHeight(entries[0].contentRect.height);
+  };
+
+  const observer = new ResizeObserver(onResize);
+
+  onMount(() => {
+    observer.observe(document.getElementById(props.id)!);
+  });
+
+  onCleanup(() => {
+    observer.disconnect();
+  });
+
+  return (
+    <div id={props.id} class="w-full h-80">
+      {Plot.plot({ width: width(), height: height(), ...props.plot })}
+    </div>
+  );
 };
-
-const observer = new ResizeObserver(onResize);
-
-onMount(() => {
-observer.observe(document.getElementById(props.id)!);
-});
-
-onCleanup(() => {
-observer.disconnect();
-});
-
-return (
-
-<div
-	id={props.id}
-	class="w-full h-80">
-	{Plot.plot({ width: width(), height: height(), ...props.plot })}
-</div>
-);
-
-};`} />
+```

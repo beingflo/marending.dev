@@ -7,7 +7,7 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Info, Code, Details, Hint } from 'src/components';
+import { Info, Details, Hint } from 'src/components';
 import { Circle } from './_Circle';
 import { SimpleLine } from './_SimpleLine';
 import { Chaos } from './_Chaos';
@@ -88,12 +88,11 @@ time to use my brain like that.
 Instead, I want to draw my line horizontally, and then rotate it using the `rotate`{' '}
 transform that `SVG` provides.
 
-<Code
-	respectMargin
-	value={`<svg width="600" height="400" xmlns="http://www.w3.org/2000/svg">
-<line x1={x} y1={y} x2={x + 50} y2={y} transform="rotate(rand())" stroke="black" />
-</svg>`}
-/>
+```html
+<svg width="600" height="400" xmlns="http://www.w3.org/2000/svg">
+	<line x1={x} y1={y} x2={x + 50} y2={y} transform="rotate(rand())" stroke="black" />
+</svg>
+```
 
 This way I don't have to do any math, just generate random numbers for the rotation. As it
 turns out, this doesn't work correctly as we have seen above. The lines are rotated about
@@ -101,13 +100,11 @@ the
 `(0, 0)` origin instead of the center point of the line. To fix it, we either set the
 `transform-origin` property on the `SVG` correctly, or we get fancy:
 
-<Code
-	respectMargin
-	value={`<svg width="600" height="400" xmlns="http://www.w3.org/2000/svg">
-<line x1="-25" y1="0" x2="25" y2="0"
-transform="rotate(rand()), translate(rand(), rand())" stroke="black" />
-</svg>`}
-/>
+```html
+<svg width="600" height="400" xmlns="http://www.w3.org/2000/svg">
+	<line x1="-25" y1="0" x2="25" y2="0" transform="rotate(rand()), translate(rand(), rand())" stroke="black" />
+</svg>
+```
 
 We draw lines with center points on the origin and use the `transform` both for
 rotation

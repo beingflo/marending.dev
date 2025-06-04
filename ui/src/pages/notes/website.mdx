@@ -7,8 +7,6 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Code } from 'src/components';
-
 Some time ago I decided to build a personal website to write about technical things I'm up to. If
 you're reading this, suprisingly, I followed through. Now, I'm under no delusion that the things I
 have to share will not be world shattering. Instead, I primarily want to write about projects to
@@ -38,23 +36,14 @@ built from the ground up and can thus be customized completely. To have some con
 hope to build up a collection of reusable components that I can put to use in any note. Take
 for instance the component I wrap every note with:
 
-<Code
-	value={`\
+```jsx
 <article class="p-4 py-8 md:py-12 max-w-4xl mx-auto">
-		<slot />
-</article>`}
-/>
+	<slot />
+</article>`
+```
 
 These three lines define the markup and styling of a container with responsive padding and
-max-width behaviour. The following snippet shows the code that generates the above snippet
-(hold on to your seat, we're going meta):
-
-<Code
-	value={`<Code value={\`<article class="p-4 py-8 md:py-12 max-w-4xl mx-auto"><slot /></article>\`} />`}
-/>
-
-Inside the `Code` component is some complexity related to code highlighting that would be
-unnecessary to unpack here.
+max-width behaviour. 
 
 ### Deployment
 

@@ -7,7 +7,7 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Code, Info } from 'src/components';
+import { Info } from 'src/components';
 import Results from './results.astro';
 import ResultsMacOs from './results-macos.astro';
 
@@ -70,7 +70,10 @@ how much performance is lost by being dockerized. Option (e) is the production-g
 We measure requests per second to the `index.html` resource. The numbers are obtained by
 running
 
-<Code value="wrk -c 1000 -d 20s -t 8 --latency http://localhost:4000/" />
+```
+wrk -c 1000 -d 20s -t 8 --latency http://localhost:4000/
+```
+
 <Results />
 
 Notable are the improvements from (a) to (b). Considering all the extra work the full-fledged

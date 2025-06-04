@@ -7,7 +7,7 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Code, Info } from 'src/components';
+import { Info } from 'src/components';
 
 To store metrics, I have a Grafana and Prometheus deployment on my server. I'm primarily
 feeding IoT sensor data from various sensors around the house into that system. Lately, I've
@@ -42,15 +42,15 @@ certain geo fence has been visited.
 Structured logs from various backend services I'm operating. A sample log could look like
 this:
 
-<Code
-	value={`{
-		"timestamp": "2069-09-08T09:06:45.944Z",
-		"span_id": "1287394",
-		"level": "ERROR",
-		"user": "Bobby Tables",
-		"message": "Dropping database failed"
-}`}
-/>
+```json
+{
+	"timestamp": "2069-09-08T09:06:45.944Z",
+	"span_id": "1287394",
+	"level": "ERROR",
+	"user": "Bobby Tables",
+	"message": "Dropping database failed"
+}
+```
 
 Now consider a new event being emitted that includes a new field of origin IP address. Naturally,
 these logs must still be handled gracefully by observatory. Here, a query might be the ongoing

@@ -19,3 +19,43 @@
 :where(a):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
 	@apply underline decoration-1 border-dashed;
 }
+
+:where(pre):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+	color: var(--tw-prose-pre-code);
+	background-color: var(--tw-prose-pre-bg);
+	overflow-x: auto;
+	font-weight: 400;
+	font-size: 0.875em;
+	line-height: 1.7142857;
+	margin-top: 1.7142857em;
+	margin-bottom: 1.7142857em;
+	border-radius: 0.2rem;
+	padding-top: 0.8571429em;
+	padding-inline-end: 1.1428571em;
+	padding-bottom: 0.8571429em;
+	padding-inline-start: 1.1428571em;
+}
+
+:where(pre code):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+	background-color: transparent;
+	border-width: 0;
+	border-radius: 0;
+	padding: 0;
+	font-weight: inherit;
+	color: inherit;
+	font-size: inherit;
+	font-family: inherit;
+	line-height: inherit;
+}
+
+p:has(+ pre) {
+	padding-bottom: 0;
+}
+
+pre:has(+ .caption) {
+	margin-bottom: 1rem;
+}
+
+pre + .caption {
+	@apply text-center text-gray-800 dark:text-gray-100 text-sm italic font-serif mb-2;
+}

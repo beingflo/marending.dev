@@ -7,7 +7,7 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Img, Details, Li, Info, Code, Hint } from 'src/components';
+import { Img, Details, Li, Info, Hint } from 'src/components';
 import textli from './textli-v1.png';
 import textliv2 from './textli-v2.png';
 import fieldnotes from './fieldnotes.png';
@@ -227,9 +227,14 @@ needed to decrypt the note. This is done by embedding the _plain_ key of this pa
 note as the [hash](https://developer.mozilla.org/en-US/docs/Web/API/URL/hash) of the
 URL. So a shared link will look something like
 
-<Code value="https://fieldnotes.land/note/uUpZgnUOeamS6SefalXjVVYb5zXChGh1#yLOOY5rCqxL0eJaZYPFrU2NzwHWqf+kkzCXNYUVLnrI=" />
+```
+https://fieldnotes.land/note/uUpZgnUOeamS6SefalXjVVYb5zXChGh1#yLOOY5rCqxL0eJaZYPFrU2NzwHWqf+kkzCXNYUVLnrI=
+```
 or simplified:
-<Code value="https://fieldnotes.land/note/NOTE_ID#NOTE_KEY" />
+
+```
+https://fieldnotes.land/note/NOTE_ID#NOTE_KEY
+```
 
 The client application now requests the note with `NOTE_ID` from the backend and then goes
 through the decryption process using the plain `NOTE_KEY` found in the hash.

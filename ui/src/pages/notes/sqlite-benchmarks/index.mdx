@@ -7,7 +7,6 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Code } from 'src/components';
 import { ResultsMac } from './_results-mac';
 import { Resultsx86 } from './_results-linux-x86';
 import { ResultsArm } from './_results-linux-arm';
@@ -33,20 +32,24 @@ _Right up my alley_.
 I conducted some microbenchmarks to gauge the performance of SQLite. There is one table that
 is declared as follows:
 
-<Code
-	value={`CREATE TABLE metrics(bucket TEXT NOT NULL, date TEXT NOT NULL, data TEXT NOT NULL);`}
-/>
+```sql
+CREATE TABLE metrics(bucket TEXT NOT NULL, date TEXT NOT NULL, data TEXT NOT NULL);
+```
 
 You might notice that the motivating application to try SQLite is a home-grown metrics
 collection system. For one scenario I also add indices on `bucket` and `date`. Next,
 I ran a bunch of (hopefully) self explanatory scenarios and measured the execution time of the
 queries in isolation. Read queries are prepared statements of the form:
 
-<Code value={`SELECT * FROM metrics WHERE bucket = ?1 AND rowid = ?2;`} />
+```sql
+SELECT * FROM metrics WHERE bucket = ?1 AND rowid = ?2;
+```
 
 Notice that `rowid` is an implicit column added by SQLite. Write queries:
 
-<Code value={`INSERT INTO metrics (bucket, date, data) VALUES (?1, ?2, ?3);`} />
+```sql
+INSERT INTO metrics (bucket, date, data) VALUES (?1, ?2, ?3);
+```
 
 The benchmarks were run on my local macbook, as well as a linux ARM server and a linux x86
 server on Hetzner.

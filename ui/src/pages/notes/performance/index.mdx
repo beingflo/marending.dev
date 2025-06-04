@@ -7,7 +7,7 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Hint, Info, Details, Code } from 'src/components';
+import { Hint, Info, Details } from 'src/components';
 
 import { SSRResults } from './_ssr-results';
 import { SSGResults } from './_ssg-results';
@@ -84,7 +84,9 @@ server side for now.
 To get a realistic end-to-end view of how the server performs, I'm running benchmarks at the
 `HTTP` level using `wrk` approximately like so:
 
-<Code value={`wrk -c 100 -d 30s -t 6 --latency http://localhost:3000/notes/lines`} />
+```
+wrk -c 100 -d 30s -t 6 --latency http://localhost:3000/notes/lines
+```
 
 For faster turnaround when benchmarking I'm running the preview server of SvelteKit locally.
 So any numbers presented here are not to be compared with performance numbers from the

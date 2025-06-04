@@ -1,6 +1,5 @@
 export { A } from './A';
 export { default as Chart } from './Chart.astro';
-export { Code } from './Code';
 export { Details } from './Details';
 export { GithubSVG } from './GithubSVG';
 export { Hint } from './Hint';
