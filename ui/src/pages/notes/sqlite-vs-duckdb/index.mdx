@@ -7,15 +7,9 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false,
 ---
 
-import { Note, Title, Code, Info, Details } from 'src/components';
+import { Note, Code, Info, Details } from 'src/components';
 import DuckDBResults from './DuckDBResults.astro';
 import SQLiteResults from './SQLiteResults.astro';
-
-<Title
-	subtitle={frontmatter.subtitle}
-	date={frontmatter.date}>
-	{frontmatter.title}
-</Title>
 
 I've been yearning to build my own observability / time series system. You can get some more
 background on this [here](/notes/unstructured-data/). After establishing

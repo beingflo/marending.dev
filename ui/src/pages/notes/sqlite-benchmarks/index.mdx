@@ -7,16 +7,10 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Title, Code } from 'src/components';
+import { Code } from 'src/components';
 import { ResultsMac } from './_results-mac';
 import { Resultsx86 } from './_results-linux-x86';
 import { ResultsArm } from './_results-linux-arm';
-
-<Title
-	subtitle={frontmatter.subtitle}
-	date={frontmatter.date}>
-	{frontmatter.title}
-</Title>
 
 I have recently been on a path towards radical simplification of the systems I build. Forgoing
 Spring Boot for a simple Axum Rust backend is a simple choice for me. Choosing a database is

@@ -7,7 +7,7 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false,
 ---
 
-import { Note, Title, Img, Details, LiD, Li } from 'src/components';
+import { Note, Img, Details, LiD, Li } from 'src/components';
 
 import ux1 from './ux1.jpg';
 import ux2 from './ux2.jpg';
@@ -21,12 +21,6 @@ import app1 from './app1.png';
 import app2 from './app2.png';
 import app3 from './app3.png';
 import app4 from './app4.png';
-
-<Title
-	subtitle={frontmatter.subtitle}
-	date={frontmatter.date}>
-	{frontmatter.title}
-</Title>
 
 After building [Fieldnotes](/notes/fieldnotes), I was hooked on side projects. It
 was a ton of fun to build something that would end up actually being useful every day.

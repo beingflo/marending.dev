@@ -7,13 +7,7 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Title, Code, Info } from 'src/components';
-
-<Title
-	subtitle={frontmatter.subtitle}
-	date={frontmatter.date}>
-	{frontmatter.title}
-</Title>
+import { Code, Info } from 'src/components';
 
 To store metrics, I have a Grafana and Prometheus deployment on my server. I'm primarily
 feeding IoT sensor data from various sensors around the house into that system. Lately, I've

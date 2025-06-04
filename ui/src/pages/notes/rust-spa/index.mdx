@@ -7,15 +7,9 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Code, Title, Info } from 'src/components';
+import { Code, Info } from 'src/components';
 import Results from './results.astro';
 import ResultsMacOs from './results-macos.astro';
-
-<Title
-	subtitle={frontmatter.subtitle}
-	date={frontmatter.date}>
-	{frontmatter.title}
-</Title>
 
 Thus far, my frontend projects are mostly single-page applications (SPA). The only exception
 is my website, the one you're looking at right now (this one is a multi-page app built with

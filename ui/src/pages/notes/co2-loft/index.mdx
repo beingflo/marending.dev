@@ -8,15 +8,9 @@ draft: false
 ---
 
 import Chart from 'src/components/Chart.astro';
-import { Title, Info } from 'src/components';
+import { Info } from 'src/components';
 import * as Plot from '@observablehq/plot';
 import { data } from './data';
-
-<Title
-	subtitle={frontmatter.subtitle}
-	date={frontmatter.date}>
-	{frontmatter.title}
-</Title>
 
 In [a previous note](/notes/co2-bedroom) I explored how closing the bedroom door affects
 CO2 levels during sleep. Since then, we've moved into a new place that is effectively one big open

@@ -7,7 +7,7 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Title, Details } from 'src/components';
+import { Details } from 'src/components';
 import MatchesHeatmap from './MatchesHeatmap.astro';
 import MatchesBar from './MatchesBar.astro';
 import MatchesDayOfWeek from './MatchesDayOfWeek.astro';
@@ -20,12 +20,6 @@ import OffensiveGoalRate from './OffensiveGoalRate.astro';
 import WinStreakMe from './WinStreakMe.astro';
 import PlayerInvolvement from './PlayerInvolvement.astro';
 import PlayerInvolvementWins from './PlayerInvolvementWins.astro';
-
-<Title
-	subtitle={frontmatter.subtitle}
-	date={frontmatter.date}>
-	{frontmatter.title}
-</Title>
 
 About 4 years ago I graduated from university and started my first job at a company. About two
 weeks into my employment I was asked to join a game of foosball (also known as table soccer or

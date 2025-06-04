@@ -8,15 +8,9 @@ draft: false,
 ---
 
 import Chart from 'src/components/Chart.astro';
-import { Title, Info } from 'src/components';
+import { Info } from 'src/components';
 import * as Plot from '@observablehq/plot';
 import { dataOpenDoor, dataClosedDoor } from './data';
-
-<Title
-	subtitle={frontmatter.subtitle}
-	date={frontmatter.date}>
-	{frontmatter.title}
-</Title>
 
 My recent foray into embedded devices has yielded a nice little CO2 sensor based on the
 [Seeed Grove SCD30](http://www.seeedstudio.com/Grove-CO2-Temperature-Humidity-Sensor-SCD30-p-2911.html). I normally place it in the living room and ingest

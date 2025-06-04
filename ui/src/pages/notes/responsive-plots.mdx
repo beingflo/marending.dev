@@ -7,13 +7,7 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false,
 ---
 
-import { Title, Code } from 'src/components';
-
-<Title
-	subtitle={frontmatter.subtitle}
-	date={frontmatter.date}>
-	{frontmatter.title}
-</Title>
+import { Code } from 'src/components';
 
 I enjoy using [Observable Plot](https://observablehq.com/plot/) for my odd visualization
 needs. It has a nice API and looks great out of the box. But for better or worse, Plot does not

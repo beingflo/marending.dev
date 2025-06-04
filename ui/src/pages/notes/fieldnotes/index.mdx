@@ -7,7 +7,7 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Title, Img, Details, Li, Info, Code, Hint } from 'src/components';
+import { Img, Details, Li, Info, Code, Hint } from 'src/components';
 import textli from './textli-v1.png';
 import textliv2 from './textli-v2.png';
 import fieldnotes from './fieldnotes.png';
@@ -16,12 +16,6 @@ import settings from './fieldnotes-settings.png';
 import login from './fieldnotes-login.png';
 import encryption from './fieldnotes-encryption.png';
 import share from './fieldnotes-share.png';
-
-<Title
-	subtitle={frontmatter.subtitle}
-	date={frontmatter.date}>
-	{frontmatter.title}
-</Title>
 
 Some years ago, I got very serious about upping my privacy game. From Gmail and Google Drive
 to cloud-based note-taking applications, I wanted to stop giving all my data to companies that

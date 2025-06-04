@@ -7,16 +7,10 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Info, Title } from 'src/components';
+import { Info } from 'src/components';
 
 import { ResultsFirebeetle } from './_results-firebeetle';
 import { ResultsC3 } from './_results-c3';
-
-<Title
-	subtitle={frontmatter.subtitle}
-	date={frontmatter.date}>
-	{frontmatter.title}
-</Title>
 
 I like some nice greenery in the living room. I also like data. Naturally, I have to monitor
 the CO2, temperature and humidity in the room as well as the soil moisture and incident light

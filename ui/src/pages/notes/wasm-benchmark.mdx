@@ -7,13 +7,7 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Title, Code, Table } from 'src/components';
-
-<Title
-	subtitle={frontmatter.subtitle}
-	date={frontmatter.date}>
-	{frontmatter.title}
-</Title>
+import { Code, Table } from 'src/components';
 
 [WebAssembly](https://developer.mozilla.org/en-US/docs/WebAssembly) has recently caught
 my eye to be used in a plugin system. Imagine this: You want to allow your users to augment the

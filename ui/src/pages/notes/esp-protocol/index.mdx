@@ -7,15 +7,9 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Info, Code, Title, Details } from 'src/components';
+import { Info, Code, Details } from 'src/components';
 import { ResultsEspNow } from './_results-esp-now';
 import { ResultsWifi } from './_results-wifi';
-
-<Title
-	subtitle={frontmatter.subtitle}
-	date={frontmatter.date}>
-	{frontmatter.title}
-</Title>
 
 [We've established](/notes/esp-power) that deep sleep on ESP32 boards gives us a runtime
 of ~4 up to ~15 years on a modest battery charge. This is plenty for my applications. So now we

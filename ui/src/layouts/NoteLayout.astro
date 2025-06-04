@@ -1,9 +1,18 @@
 ---
 import Layout from './Layout.astro';
-import { Note } from '../components';
+import { Note, Title } from 'src/components';
 import 'src/typography.css';
+
+let { frontmatter } = Astro.props;
 ---
 
 <Layout>
-	<Note><slot /></Note>
+	<Note>
+		<Title
+			subtitle={frontmatter.subtitle}
+			date={frontmatter.date}>
+			{frontmatter.title}
+		</Title>
+		<slot />
+	</Note>
 </Layout>

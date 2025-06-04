@@ -7,7 +7,7 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Info, Code, Details, Hint, Title } from 'src/components';
+import { Info, Code, Details, Hint } from 'src/components';
 import { Circle } from './_Circle';
 import { SimpleLine } from './_SimpleLine';
 import { Chaos } from './_Chaos';
@@ -16,12 +16,6 @@ import { ChaosAngles } from './_ChaosAngles';
 import { ChaosAngles90 } from './_ChaosAngles90';
 import { CircularDisturbance } from './_CircularDisturbance';
 import { FeatheredEpicenter } from './_FeatheredEpicenter';
-
-<Title
-	subtitle={frontmatter.subtitle}
-	date={frontmatter.date}>
-	{frontmatter.title}
-</Title>
 
 After moving into a bigger apartment, I've found the walls of our office to be a bit naked.
 While I'm a hobby photographer and would like to get more into printing my work, for this

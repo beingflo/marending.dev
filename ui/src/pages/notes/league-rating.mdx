@@ -7,13 +7,7 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Title, Info } from 'src/components';
-
-<Title
-	subtitle={frontmatter.subtitle}
-	date={frontmatter.date}>
-	{frontmatter.title}
-</Title>
+import { Info } from 'src/components';
 
 I'm in the possession of data from around 26'000 matches of foosball played over a span of 9
 years. This data was captured with a web application that also maintains an Elo score for each

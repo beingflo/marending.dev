@@ -7,18 +7,12 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Hint, Info, Title, Details, Code } from 'src/components';
+import { Hint, Info, Details, Code } from 'src/components';
 
 import { SSRResults } from './_ssr-results';
 import { SSGResults } from './_ssg-results';
 import { CaddyResults } from './_caddy-results';
 import { CaddyStaticResults } from './_caddy-static-results';
-
-<Title
-	subtitle={frontmatter.subtitle}
-	date={frontmatter.date}>
-	{frontmatter.title}
-</Title>
 
 During my studies, I focused on high-performance computing. My interest in this field
 culminated in my (only mildly interesting) [undergrad thesis](https://ieeexplore.ieee.org/abstract/document/7967093). What's
