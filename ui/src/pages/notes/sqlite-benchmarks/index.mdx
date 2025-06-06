@@ -7,10 +7,6 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { ResultsMac } from './_results-mac';
-import { Resultsx86 } from './_results-linux-x86';
-import { ResultsArm } from './_results-linux-arm';
-
 I have recently been on a path towards radical simplification of the systems I build. Forgoing
 Spring Boot for a simple Axum Rust backend is a simple choice for me. Choosing a database is
 an entirely different story. I have been using PostgreSQL successfully, but operating it has
@@ -56,9 +52,59 @@ server on Hetzner.
 
 ### Results
 
-<ResultsMac />
-<ResultsArm />
-<Resultsx86 />
+<div>
+	| Scenario                             | Throughput   | 90 percentile duration |
+	|:-------------------------------------|-------------:|-----------------------:|
+	| Vanilla (read)                       | 183'150/s    | 6us                    |
+	| Vanilla (write)                      | 4'363/s      | 248us                  |
+	| WAL Mode (read)                      | 454'338/s    | 3us                    |
+	| WAL Mode (write)                     | 14'401/s     | 37us                   |
+	| WAL + Synchronisation Normal (read)  | 483'558/s    | 3us                    |
+	| WAL + Synchronisation Normal (write) | 113'684/s    | 8us                    |
+	| WAL + In-memory (read)               | 50'000'000/s | 0us                    |
+	| WAL + In-memory (write)              | 981'836/s    | 1us                    |
+	| WAL + Index (read)                   | 440'917/s    | 3us                    |
+	| WAL + Index (write)                  | 47'359/s     | 25us                   |
+	| WAL + Index (mixed, 80% read)        | 197'012/s    | 15us                   |
+	| WAL + Index (mixed 80% write)        | 59'111/s     | 16us                   |
+</div>
+<p class="caption">Table 1: M1 Macbook Air results</p>
+
+<div>
+	| Scenario                             | Throughput | 90 percentile duration |
+	|:-------------------------------------|-----------:|-----------------------:|
+	| Vanilla (read)                       | 94'786/s   | 12us                   |
+	| Vanilla (write)                      | 560/s      | 2'463us                |
+	| WAL Mode (read)                      | 238'322/s  | 6us                    |
+	| WAL Mode (write)                     | 3'316/s    | 585us                  |
+	| WAL + Synchronisation Normal (read)  | 275'406/s  | 5us                    |
+	| WAL + Synchronisation Normal (write) | 46'512/s   | 18us                   |
+	| WAL + In-memory (read)               | 943'396/s  | 1us                    |
+	| WAL + In-memory (write)              | 299'976/s  | 4us                    |
+	| WAL + Index (read)                   | 186'358/s  | 7us                    |
+	| WAL + Index (write)                  | 19'479/s   | 46us                   |
+	| WAL + Index (mixed, 80% read)        | 75'153/s   | 24us                   |
+	| WAL + Index (mixed 80% write)        | 22'801/s   | 42us                   |
+</div>
+<p class="caption">Table 2: Linux Ampere ARM results (Hetzner CAX31)</p>
+
+<div>
+	| Scenario                             | Throughput | 90 percentile duration |
+	|:-------------------------------------|-----------:|-----------------------:|
+	| Vanilla (read)                       | 73'800/s   | 14us                   |
+	| Vanilla (write)                      | 925/s      | 1'484us                |
+	| WAL Mode (read)                      | 332'225/s  | 4us                    |
+	| WAL Mode (write)                     | 5'542/s    | 211us                  |
+	| WAL + Synchronisation Normal (read)  | 315'756/s  | 4us                    |
+	| WAL + Synchronisation Normal (write) | 80'145/s   | 12us                   |
+	| WAL + In-memory (read)               | 952'380/s  | 1us                    |
+	| WAL + In-memory (write)              | 322'695/s  | 3us                    |
+	| WAL + Index (read)                   | 315'357/s  | 4us                    |
+	| WAL + Index (write)                  | 26'469/s   | 34us                   |
+	| WAL + Index (mixed, 80% read)        | 121'703/s  | 15us                   |
+	| WAL + Index (mixed 80% write)        | 36'260/s   | 26us                   |
+</div>
+<p class="caption">Table 3: Linux AMD x86 results (Hetzner CPX31)</p>
 
 ### Observations
 

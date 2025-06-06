@@ -9,7 +9,6 @@ export { NoteSummary } from './NoteSummary';
 export { Page } from './Page';
 export { Title } from './Title';
 export { WidePage } from './WidePage';
-export { Table } from './Table';
 export { default as Img } from './Img.astro';
 export { Li } from './Li';
 export { LiD } from './LiD';

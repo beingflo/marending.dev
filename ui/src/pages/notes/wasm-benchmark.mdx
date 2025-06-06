@@ -51,31 +51,13 @@ Next, I use [extism](https://github.com/extism/extism) (which internally uses
 [wasmtime](https://github.com/bytecodealliance/wasmtime)) to load this plugin and run it.
 I then run this same code also natively in Rust. Below you find the results.
 
-<div class="md:w-full mx-auto">
-	<Table>
-		<tr class="border-b border-black dark:border-white">
-			<th class="text-left"></th>
-			<th class="text-right">Throughput</th>
-			<th class="text-right">Average duration</th>
-			<th class="text-right">90 percentile duration</th>
-		</tr>
-		<tr>
-			<td class="text-left">Native Rust</td>
-			<td class="text-right">4.85/s</td>
-			<td class="text-right">206ms</td>
-			<td class="text-right">206ms</td>
-		</tr>
-		<tr>
-			<td class="text-left">Webassembly</td>
-			<td class="text-right">4.59/s</td>
-			<td class="text-right">217ms</td>
-			<td class="text-right">218ms</td>
-		</tr>
-	</Table>
+<div>
+	|             | Throughput | Average duration | 90 percentile duration |
+	| :---------- | ---------: | ---------------: | ---------------------: |
+	| Native Rust | 4.85/s     | 206ms            | 206ms                  |
+	| Webassembly	| 4.59/s     | 217ms            | 218ms                  |
 </div>
-<div class="pt-4 pb-6 text-center text-gray-800 dark:text-gray-100 text-sm italic font-serif">
-	Table 1: Performance comparison of native Rust and Rust compiled to Webassembly.
-</div>
+<p class='caption'>Table 1: Performance comparison of native Rust and Rust compiled to Webassembly.</p>
 
 At first I was sure I was making a mistake, no way the Webassembly is so close in performance to
 the native code, right? I'm starting to believe it's actually correct. What's incredible, this

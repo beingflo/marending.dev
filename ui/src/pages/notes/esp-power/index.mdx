@@ -9,9 +9,6 @@ draft: false
 
 import { Info } from 'src/components';
 
-import { ResultsFirebeetle } from './_results-firebeetle';
-import { ResultsC3 } from './_results-c3';
-
 I like some nice greenery in the living room. I also like data. Naturally, I have to monitor
 the CO2, temperature and humidity in the room as well as the soil moisture and incident light
 on the plants.
@@ -67,7 +64,16 @@ test.
 
 ## Results
 
-<ResultsFirebeetle />
+<div>
+	| Scenario             | Firebeetle ESP32 | Firebeetle ESP32-E (stock) | Firebeetle ESP32-E (low power) |
+	|:---------------------|-----------------:|---------------------------:|-------------------------------:|
+	| Wifi setup           | 60 - 80 mA       | 70 - 140 mA                | 70 - 140 mA                    |
+	| Blink in loop        | 36 mA            | 41 mA                      | 40.5 mA                        |
+	| Light sleep with LED | 1.5 mA           | 3.2 mA                     | 2.65 mA                        |
+	| Light sleep no LED   | 1.2 mA           | 2.6 mA                     | 2.2 mA                         |
+	| Deep sleep           | 10 uA            | 470 uA                     | 12 uA                          |
+</div>
+<p class='caption'>Table 1: Power consumption of ESP32 dev boards in various situations</p>
 
 <Info>
 	The current while the Wifi module is connecting to the access point is too erratic to draw
@@ -83,7 +89,17 @@ Also interesting is the vast impact the connected LED seems to have on the deep 
 470 uA vs 12 uA could have a huge impact for a device that is mostly sleeping. With the same
 1500 mAh battery a device with 470 uA draw could only sleep for around 100 days.
 
-<ResultsC3 />
+<div>
+	| Scenario             | Seeed XIAO | M5Stamp    |
+	|:---------------------|-----------:|-----------:|
+	| Wifi setup           | 30 - 60 mA | 30 - 60 mA |
+	| Blink in loop        | 18 mA      | 18 mA      |
+	| Light sleep with LED | 1.5 mA     | 2.2 mA     |
+	| Light sleep no LED   | 0.2 mA     | 0.95 mA    |
+	| Deep sleep           | 38 uA      | 750 uA     |
+</div>
+<p class='caption'>Table 2: Power consumption of ESP32-C3 dev boards in various situations</p>
+
 
 Given that the ESP32-C3 boards only have one processing core compared to the two on the other
 ESP32 boards, it's not suprising to see less power consumption in normal operation. They are

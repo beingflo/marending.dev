@@ -8,8 +8,6 @@ draft: false
 ---
 
 import { Info, Details } from 'src/components';
-import { ResultsEspNow } from './_results-esp-now';
-import { ResultsWifi } from './_results-wifi';
 
 [We've established](/notes/esp-power) that deep sleep on ESP32 boards gives us a runtime
 of ~4 up to ~15 years on a modest battery charge. This is plenty for my applications. So now we
@@ -194,7 +192,13 @@ this weird `#TYPE some_metric gauge` syntax comes from. By letting this run for 
 minutes and then checking what count has been reached in Prometheus, we get the following timings
 for a single wake-up cycle:
 
-<ResultsWifi />
+<div>
+	| Mode                   | FireBeetle ESP32 | Seeed XIAO |
+	|:-----------------------|-----------------:|-----------:|
+	| Deep sleep             | 4.5 s            | 1.3 s      |
+	| Deep sleep + static IP | 4.4 s            | 1.4 s      |
+</div>
+<p class='caption'>Table 1: Time from wake up to successful transmission of small message with WiFi</p>
 
 Interestingly the XIAO is significantly faster in acquiring a connection to the access point
 and sending the data. I'm not sure if this is due to the ESP32-C3 chip or the external antenna
@@ -581,7 +585,13 @@ void loop()
 
 The results are very promising:
 
-<ResultsEspNow />
+<div>
+	| Sleep mode  | FireBeetle ESP32 | Seeed XIAO |
+	|:------------|-----------------:|-----------:|
+	| Deep sleep  | 416 ms           | 172 ms     |
+	| Light sleep | 104 ms           | 102 ms     |
+</div>
+<p class='caption'>Table 2: Time from wake up to successful transmission of small message with ESP-NOW</p>
 
 Now we have some end-to-end timings to gauge how much time we should expect for a full cycle
 of waking up, sending data and resuming sleep in this protocol. Remember that assumption
