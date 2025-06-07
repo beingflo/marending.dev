@@ -7,6 +7,22 @@ import Layout from '../layouts/Layout.astro';
 	<Page>
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-y-2 md:gap-y-24">
 			<div>
+				<A href="https://reflective.quest">reflective</A>
+			</div>
+			<div class="col-span-2 mb-8 md:mb-0 flex flex-col">
+				<span>
+					Reflective is a personal photo gallery application to upload, view and manage photos. Born
+					from a desire to have an elegant, portfolio-like view of my pictures, Reflective is
+					designed to be minimalistic and fast. Image metadata is stored in a Postgres database, the
+					full images as well as downsized versions are stored in an S3-compatible object storage
+					bucket.
+				</span>
+				<div class="mt-2 text-sm text-stone-600">
+					<span>Technologies involved:</span>
+					<span>Rust, Postgres, S3, SolidJS, Caddy, Docker</span>
+				</div>
+			</div>
+			<div>
 				<A href="https://observatory.marending.dev">observatory</A>
 			</div>
 			<div class="col-span-2 mb-8 md:mb-0 flex flex-col">
