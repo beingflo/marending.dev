@@ -10,4 +10,3 @@ export { NoteSummary } from './NoteSummary';
 export { Page } from './Page';
 export { Title } from './Title';
 export { WidePage } from './WidePage';
-export { default as Img } from './Img.astro';

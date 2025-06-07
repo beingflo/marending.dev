@@ -7,20 +7,7 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Img, Details } from 'src/components';
-
-import ux1 from './ux1.jpg';
-import ux2 from './ux2.jpg';
-import ux3 from './ux3.jpg';
-import ux4 from './ux4.jpg';
-import ux5 from './ux5.jpg';
-import ux6 from './ux6.jpg';
-import ux7 from './ux7.jpg';
-import ux8 from './ux8.jpg';
-import app1 from './app1.png';
-import app2 from './app2.png';
-import app3 from './app3.png';
-import app4 from './app4.png';
+import { Details } from 'src/components';
 
 After building [Fieldnotes](/notes/fieldnotes), I was hooked on side projects. It
 was a ton of fun to build something that would end up actually being useful every day.
@@ -37,7 +24,7 @@ component; hence there is also no sign-up. It primarily stores data in the brows
 optionally provide credentials for an S3-compatible object storage bucket to synchronize the state
 directly from the browser to the bucket.
 
-<Img src={app1} />
+![Screenshot of rest.quest](./_app1.png)
 
 On the left, vertically centered, is a list of projects. All the to-do items (or
 _quests_, if you will) in the selected project are laid out in a 2D grid, taking up the
@@ -52,16 +39,16 @@ of clicking on the text of the item itself. An item's description can be edited 
 When items are checked off, they leave a gap to visualize the progress you've made in working
 through your list.
 
-<Img src={app4} />
+![Screenshot of rest.quest](./_app4.png)
 
 The quest view can be switched between the default with gaps, one where the checked-off items are
 shown as strikethrough, or one that doesn't show the old items at all.
 
-<Img src={app2} />
+![Screenshot of rest.quest](./_app2.png)
 
 The landing page doubles as the help page, explaining all the shortcuts and the S3 sync feature.
 
-<Img src={app3} />
+![Screenshot of rest.quest](./_app3.png)
 
 When S3 credentials are added to the configuration screen, the application will synchronize its
 state with the remote bucket. So by adding the same credentials to another instance of the app,
@@ -100,7 +87,7 @@ world" version of a project deployed first is something I always do since that t
 Fieldnotes didn't even get deployed before it was obsoleted by the next version.
 
 <div class="md:w-1/2 w-full mx-auto">
-	<Img src={ux3} />
+	![Screenshot of UX concept](./_ux3.jpg)
 </div>
 
 Next, I started aimlessly scribbling on a piece of paper about the feature set, how every UI
@@ -110,14 +97,14 @@ started writing code from the start.
 
 <Details title="Full UX concept">
 	<div class="md:w-1/2 w-full mx-auto">
-		<Img src={ux1} />
-		<Img src={ux2} />
-		<Img src={ux3} />
-		<Img src={ux4} />
-		<Img src={ux5} />
-		<Img src={ux6} />
-		<Img src={ux7} />
-		<Img src={ux8} />
+		![Screenshot of UX concept](./_ux1.jpg)
+		![Screenshot of UX concept](./_ux2.jpg)
+		![Screenshot of UX concept](./_ux3.jpg)
+		![Screenshot of UX concept](./_ux4.jpg)
+		![Screenshot of UX concept](./_ux5.jpg)
+		![Screenshot of UX concept](./_ux6.jpg)
+		![Screenshot of UX concept](./_ux7.jpg)
+		![Screenshot of UX concept](./_ux8.jpg)
 	</div>
 </Details>
 

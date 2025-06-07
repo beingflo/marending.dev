@@ -171,3 +171,7 @@ p:has(+ ol) {
 :where(ul > li):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
 	padding-inline-start: 0.4em;
 }
+
+:where(img):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+	@apply my-8 border dark:border-white bg-stone-50 shadow-[6px_6px_0_#00000020] dark:shadow-[6px_6px_0_#FFFFFF40];
+}

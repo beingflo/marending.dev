@@ -7,15 +7,7 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Img, Details, Hint, Warn } from 'src/components';
-import textli from './textli-v1.png';
-import textliv2 from './textli-v2.png';
-import fieldnotes from './fieldnotes.png';
-import list from './fieldnotes-list.png';
-import settings from './fieldnotes-settings.png';
-import login from './fieldnotes-login.png';
-import encryption from './fieldnotes-encryption.png';
-import share from './fieldnotes-share.png';
+import { Details, Hint, Warn } from 'src/components';
 
 Some years ago, I got very serious about upping my privacy game. From Gmail and Google Drive
 to cloud-based note-taking applications, I wanted to stop giving all my data to companies that
@@ -55,7 +47,7 @@ on-the-job React usage. So I built the UI using React, the only way I knew how: 
 For UI components I used [Semantic UI](https://semantic-ui.com/). Looking back at
 this code my eyes start to bleed. Anyhow, this is how it looked:
 
-<Img src={textli} />
+![Screenshot of first version of the app](./_textli-v1.png)
 
 It was simple but functional, I was hosting it on a Raspberry Pi in a shoebox. At this stage,
 there was no encryption. Since I was self-hosting and thus was the only person with access to
@@ -70,7 +62,7 @@ I started hosting my applications on a VPS rented in a datacenter. So long, trus
 Trying to start this application locally to get a screenshot turned out to be quite hard. So
 much for the longevity of frontend code bases.
 
-<Img src={textliv2} />
+![Screenshot of second version of the app](./_textli-v2.png)
 
 But v2 was not even deployed when I got the itch to rewrite again. I gave in and built the
 application using Rust and PostgreSQL in the backend and React with Jotai state management in
@@ -78,7 +70,7 @@ the frontend. This time around I used [Tailwind CSS](https://tailwindcss.com/)
 with [Headless UI](https://headlessui.com/) components. This turned out to be the stack
 that stuck. This is what it looks like today:
 
-<Img src={fieldnotes} />
+![Screenshot of current version of the app](./_fieldnotes.png)
 
 I find it amazing to look back on these 3 versions of the same application and reflect on my
 progress both technically as well as visually. You can see my minimalistic style preference
@@ -96,27 +88,27 @@ Low-friction editing, minimalistic and elegant UI, end-to-end encryption, and pr
 Searching for notes (cmd+k) opens an overlay with a flat list of all notes. Due to the e2e
 encryption, only note titles can be searched here.
 
-<Img src={list} />
+![Note overview page](./_fieldnotes-list.png)
 
 Notes can be shared privately via a share dialog. The user can choose how long the share link
 should stay active for.
 
-<Img src={share} />
+![Share details page](./_fieldnotes-share.png)
 
 In the settings, a list of all shares can be viewed. The backend keeps track of how many times
 a share has been viewed.
 
-<Img src={settings} />
+![Settings page](./_fieldnotes-settings.png)
 
 Authentication is handled by the backend in a hand-rolled auth system. Only username /
 password is supported, reset emails are not implemented.
 
-<Img src={login} />
+![Login page](./_fieldnotes-login.png)
 
 Upon login for the first time on a device, the user is prompted for an additional password
 that is used to derive a key for encryption. More about this in a later section.
 
-<Img src={encryption} />
+![Encryption page](./_fieldnotes-encryption.png)
 
 ### Non-features
 
