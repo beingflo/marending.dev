@@ -79,3 +79,95 @@ div:has(table) {
 th {
 	@apply border-b border-black dark:border-white;
 }
+
+p:has(+ ul) {
+	padding-bottom: 0rem;
+}
+
+p:has(+ ol) {
+	padding-bottom: 0rem;
+}
+
+:where(ol):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+	list-style-type: decimal;
+	margin-top: 1.25em;
+	margin-bottom: 1.25em;
+	padding-inline-start: 1.625em;
+}
+
+:where(ol[type='A']):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+	list-style-type: upper-alpha;
+}
+
+:where(ol[type='a']):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+	list-style-type: lower-alpha;
+}
+
+:where(ol[type='A' s]):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+	list-style-type: upper-alpha;
+}
+
+:where(ol[type='a' s]):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+	list-style-type: lower-alpha;
+}
+
+:where(ol[type='I']):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+	list-style-type: upper-roman;
+}
+
+:where(ol[type='i']):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+	list-style-type: lower-roman;
+}
+
+:where(ol[type='I' s]):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+	list-style-type: upper-roman;
+}
+
+:where(ol[type='i' s]):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+	list-style-type: lower-roman;
+}
+
+:where(ol[type='1']):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+	list-style-type: decimal;
+}
+
+:where(ul):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+	list-style-type: '-';
+	margin-top: 1.25em;
+	margin-bottom: 1.25em;
+	padding-inline-start: 1.625em;
+}
+
+:where(ol > li):not(:where([class~='not-prose'], [class~='not-prose'] *))::marker {
+	font-weight: 400;
+	color: var(--tw-prose-counters);
+}
+
+:where(ul > li):not(:where([class~='not-prose'], [class~='not-prose'] *))::marker {
+	color: var(--tw-prose-bullets);
+}
+
+:where(ol):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+	margin-top: 1.25em;
+	margin-bottom: 1.25em;
+	padding-inline-start: 2em;
+}
+
+:where(ul):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+	margin-top: 1.25em;
+	margin-bottom: 1.25em;
+	padding-inline-start: 1.5;
+}
+
+:where(li):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+	margin-top: 0.6em;
+	margin-bottom: 0.6em;
+}
+
+:where(ol > li):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+	padding-inline-start: 0.4em;
+}
+
+:where(ul > li):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+	padding-inline-start: 0.4em;
+}

@@ -7,7 +7,7 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Img, Details, Li, Hint, Warn } from 'src/components';
+import { Img, Details, Hint, Warn } from 'src/components';
 import textli from './textli-v1.png';
 import textliv2 from './textli-v2.png';
 import fieldnotes from './fieldnotes.png';
@@ -190,19 +190,11 @@ At no point does the key stored in one device's browser leave the device.
 
 Now, let's consider what happens when a user wants to store a new note:
 
-<ul class="pb-4">
-	<Li>User writes a note and tries saving it</Li>
-	<Li>
-		Client generates an encryption key for this note using
-		[AES-GCM](https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/encrypt#aes-gcm)
-	</Li>
-	<Li>Client encrypts content and metadata using encryption key with AES-GCM</Li>
-	<Li>
-		Client wraps encryption key using main key with
-		[AES-KW](https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/wrapKey#aes-kw)
-	</Li>
-	<Li>Client sends cyphertext and wrapped key to backend for storage</Li>
-</ul>
+1. User writes a note and tries saving it
+2. Client generates an encryption key for this note using [AES-GCM](https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/encrypt#aes-gcm)
+3. Client encrypts content and metadata using encryption key with AES-GCM
+4. Client wraps encryption key using main key with [AES-KW](https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/wrapKey#aes-kw)
+5. Client sends cyphertext and wrapped key to backend for storage
 
 Notable here is the inclusion of the "per-note" key, we will explore later how this is useful
 for sharing notes without exposing your main key.

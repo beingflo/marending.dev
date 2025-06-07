@@ -7,7 +7,7 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Note, Img, Details, LiD, Li } from 'src/components';
+import { Img, Details } from 'src/components';
 
 import ux1 from './ux1.jpg';
 import ux2 from './ux2.jpg';
@@ -85,13 +85,11 @@ to my needs jumped out at me.
 
 First, I set up a schedule for this project:
 
-<ul class="pb-4">
-	<LiD>2 hours for the initial technical setup and deployment</LiD>
-	<LiD>2 hours for the UI/UX concept (including feature set)</LiD>
-	<LiD>6 hours for the implementation of basic features</LiD>
-	<LiD>4 hours for the implementation of advanced features</LiD>
-	<LiD>2 hours of reserve</LiD>
-</ul>
+- 2 hours for the initial technical setup and deployment
+- 2 hours for the UI/UX concept (including feature set)
+- 6 hours for the implementation of basic features
+- 4 hours for the implementation of advanced features
+- 2 hours of reserve
 
 Notably, I set the schedule _before_ I even knew what features I would want. The scope
 would have to fit the available time.
@@ -133,20 +131,16 @@ The application is frontend-only, originally as a consequence of the time constr
 sketching out how this could work without a backend, I fell in love with the simplicity and
 elegance of this approach. The way I built it now comes with a number of advantages:
 
-<ul class="pb-4">
-	<LiD>Implementation effort is drastically lower</LiD>
-	<LiD>The software is vastly more accessible as there is no sign-up</LiD>
-	<LiD>Offline functionality comes practically for free</LiD>
-	<LiD>The user gets to bring their own storage backend</LiD>
-</ul>
+- Implementation effort is drastically lower
+- The software is vastly more accessible as there is no sign-up
+- Offline functionality comes practically for free
+- The user gets to bring their own storage backend
 
 There are disadvantages too, of course. This approach does not suit all applications:
 
-<ul class="pb-4">
-	<LiD>Non-technical users don't know what an S3 bucket is</LiD>
-	<LiD>Advanced features like sharing a list with a third party would be hard to pull off</LiD>
-	<LiD>Less efficient synchronization (more data being sent and received)</LiD>
-</ul>
+- Non-technical users don't know what an S3 bucket is
+- Advanced features like sharing a list with a third party would be hard to pull off
+- Less efficient synchronization (more data being sent and received)
 
 One topic that is worth discussing a bit further is synchronization. In the original
 implementation described here, the application would only ever upload or download the full state
@@ -161,17 +155,11 @@ This works for simple use cases: If this feature is only used to backup the stat
 If you use the app on two devices, but only one at a time, it also works. If, however, two
 mutations happen simultaneously, one will be overwritten. Imagine the following scenario:
 
-<ul class="pb-4">
-	<Li>State on devices A, B and S3 is in sync at version X</Li>
-	<Li>User modifies state on device A (local state @ version X+1)</Li>
-	<Li>User modifies state on device B (local state @ version X+1)</Li>
-	<Li>
-		User synchronizes state on device A against S3 (local state ahead, so S3 now @ version X+1)
-	</Li>
-	<Li>
-		User synchronizes state on device B against S3 (local and remote state both @ version X+1)
-	</Li>
-</ul>
+1. State on devices A, B and S3 is in sync at version X
+2. User modifies state on device A (local state @ version X+1)
+3. User modifies state on device B (local state @ version X+1)
+4. User synchronizes state on device A against S3 (local state ahead, so S3 now @ version X+1)
+5. User synchronizes state on device B against S3 (local and remote state both @ version X+1)
 
 At this point, the application either has to overwrite the local state with the remote state
 (losing modification on device B) or overwrite the state on S3 (losing modification on device A).
