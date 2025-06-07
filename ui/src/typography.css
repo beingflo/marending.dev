@@ -52,6 +52,10 @@ p:has(+ pre) {
 	padding-bottom: 0;
 }
 
+.container p:last-child {
+	padding-bottom: 0;
+}
+
 pre:has(+ .caption) {
 	margin-bottom: 1rem;
 }

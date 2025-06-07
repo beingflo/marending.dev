@@ -7,7 +7,7 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Hint, Info, Details } from 'src/components';
+import { Warn, Info, Details } from 'src/components';
 
 During my studies, I focused on high-performance computing. My interest in this field
 culminated in my (only mildly interesting) [undergrad thesis](https://ieeexplore.ieee.org/abstract/document/7967093). What's
@@ -138,12 +138,12 @@ Caddy serve them. We would expect that to be faster at the very least because we
 proxy the requests anymore, but also, Caddy being written in Go is likely to be faster at
 serving requests than node.
 
-<Hint>
+<Warn>
 	When switching Caddy from reverse proxying requests to directly serving the static assets, make
 	sure to set the `trailingSlash`
 	[appropriately](https://github.com/sveltejs/kit/tree/master/packages/adapter-static). Otherwise
 	reloading a subpage doesn't work. Don't ask me how I know.
-</Hint>
+</Warn>
 
 <div>
 	| Page         | Requests / second | Avg. latency | 99% latency |

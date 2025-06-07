@@ -7,7 +7,7 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Info } from 'src/components';
+import { Warn } from 'src/components';
 import Results from './results.astro';
 import ResultsMacOs from './results-macos.astro';
 
@@ -55,10 +55,10 @@ about on this front.
 
 ## Benchmarks
 
-<Info>
+<Warn>
 	The following benchmarks have been run on a shared VPS with noisy neighbors. Use these numbers
 	only as a guideline.
-</Info>
+</Warn>
 
 Naturally, we have to compare how the different approaches do performance-wise. We consider
 the following scenarios: **(a)** Dockerized Caddy serves SPA from directory; **(b)**

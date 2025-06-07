@@ -8,7 +8,7 @@ draft: false
 ---
 
 import Chart from 'src/components/Chart.astro';
-import { Info } from 'src/components';
+import { Warn } from 'src/components';
 import * as Plot from '@observablehq/plot';
 import { dataOpenDoor, dataClosedDoor } from './data';
 
@@ -18,7 +18,7 @@ all the data into my Grafana / Prometheus based monitoring system. Unfortunately
 some pretty graphs that tell you that you should probably open some windows gets a bit old at
 times. So I decided to conduct some experiments with the sensor instead.
 
-<Info>What follows is highly unscientific (n=1). Proceed with caution.</Info>
+<Warn>What follows is highly unscientific (n=1). Proceed with caution.</Warn>
 
 Most people living with roommates probably have the habit of closing the bedroom door at
 night. It's also not uncommon to have someone over at night, making it two people in a closed

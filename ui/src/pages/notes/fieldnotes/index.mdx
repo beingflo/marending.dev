@@ -7,7 +7,7 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Img, Details, Li, Info, Hint } from 'src/components';
+import { Img, Details, Li, Hint, Warn } from 'src/components';
 import textli from './textli-v1.png';
 import textliv2 from './textli-v2.png';
 import fieldnotes from './fieldnotes.png';
@@ -273,12 +273,12 @@ my opinion as a non-specialist in security questions, that means you only have t
 web app on the first use. After that, even I can not maliciously extract that key. (I can
 still carry out decryption operations in your browser that you didn't want to happen, though)
 
-<Info>
+<Warn>
 	Web Crypto API is a fairly low-level API and experts on the internet warn against using it if you
 	don't know what you're doing. I don't know what I'm doing. I hope it's still secure.
 	[Here](https://github.com/beingflo/write.fieldnotes/blob/main/src/components/crypto.ts) is the
 	relevant code in my repo, do let me know if something is wrong.
-</Info>
+</Warn>
 
 ## Deployment
 
