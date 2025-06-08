@@ -175,3 +175,25 @@ p:has(+ ol) {
 :where(img):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
 	@apply my-8 border dark:border-white bg-stone-50 shadow-[6px_6px_0_#00000020] dark:shadow-[6px_6px_0_#FFFFFF40];
 }
+
+:where(blockquote):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+	font-weight: 500;
+	font-style: italic;
+	color: var(--tw-prose-quotes);
+	border-inline-start-width: 0.25rem;
+	border-inline-start-color: var(--prose-blockquote-border-color);
+	quotes: '\201C' '\201D' '\2018' '\2019';
+	margin-top: 1.6em;
+	margin-bottom: 1.6em;
+	padding-inline-start: 1em;
+}
+
+:where(blockquote):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+	margin-top: 1.6666667em;
+	margin-bottom: 1.6666667em;
+	padding-inline-start: 1em;
+}
+
+blockquote p:last-child {
+	padding-bottom: 0;
+}
