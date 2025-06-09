@@ -169,7 +169,7 @@ p:has(+ ol) {
 }
 
 :where(ul > li):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-	padding-inline-start: 0.4em;
+	padding-inline-start: 0.7em;
 }
 
 :where(img):not(:where([class~='not-prose'], [class~='not-prose'] *)) {

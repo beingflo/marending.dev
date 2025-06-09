@@ -1,0 +1,109 @@
+---
+title: 'Should I shoot in JPEG or RAW?'
+subtitle: 'Or both?'
+date: '9 June 2025'
+link: '/notes/jpeg-raw/'
+layout: 'src/layouts/NoteLayout.astro'
+draft: true
+---
+
+I've been taking pictures on vacation and around the house for a couple of years now
+as a way to document life to look back on later. But after all this time, I'm still
+not happy with my photo workflow. The central question is whether I should shoot primarily
+JPEG, only RAW or something in between.
+
+This is one of those notes where I'm mostly trying to sort my thoughts into some cohesive form.
+
+## Some background on (Fujifilm) image formats
+
+I shoot with a Fujifilm X100F. Fuji cameras come with so-called _film simulations_, a fancy way to say
+you can tweak the JPEG output of your camera. Every other camera manufacturer offers the same, but some
+say Fujis JPEGs are nicer. I can only compare to Olympus JPEGs, where every single profile other than
+the standard one _does_ look terrible. Either way, for me that means that no matter how long I stare
+at an image in an image editor, I can never get it to look as nice as a Fuji JPEG in the
+Classic Chrome look.
+
+These film simulations are so infamous at this point that there are [entire websites](https://fujixweekly.com/2017/08/27/my-fujifilm-x100f-classic-chrome-film-simulation-recipe/) 
+dedicated to curating Fuji _recipes_, which include the simulation itself as well as other parameters 
+that can be tweaked.
+
+Now, when I shoot JPEGs, I'm getting these nice colors out of the box. But those very colors (or that 
+lack thereof in case of a B&W recipe) are backed into the file. It's hard to recover from that.
+If I crushed those shadows as a stylistic choice in camera, I'm not getting them back.
+That's what RAWs are for: These files are more or less raw sensor readings from the camera. Maximally
+flexible, maximally boring and flat without any editing applied. Here are some axioms about these
+files:
+
+- You can always recreate JPEGs from RAW
+- You can never recreate RAWs from JPEGs, or even, say, color JPEGs from B&W JPEGs
+
+It's a one-way street. As for the first point, you can even get those authentic Fuji JPEGs thanks to
+[X Raw Studio](https://www.fujifilm-x.com/de-ch/products/software/x-raw-studio/). This piece of software
+allows you to send RAW files through your physical cameras JPEG engine to get the
+very same result as if you had shot JPEG in the first place.
+
+Alternatively of course, you can wrangle RAWs into any series of pixels physically possible (including
+those magical Fuji pixels) via a RAW editor. From this property, the age-old wisdom originates: Beginners shoot JPEG because they don't any better,
+everyone else shoots RAW.
+
+## Where am I coming from?
+
+I currently shoot RAW+JPEG because I like the JPEG colors, but I also like the flexibility and 
+freedom to stop liking them in the future. But that's where the trouble starts. Now I have cull 
+those image. How do you look through images on your disk that occur in pairs and delete the bad 
+ones? You can use specialized software that understands that `DSCXXX.jpeg` and `DSCXXX.raf` are 
+the same image and should be treated as such: Deletion of the image should remove both files. 
+On macOS, such software is surprisingly elusive and / or expensive. So, as you do, you write a script for it.
+
+```bash
+mkdir ./trash
+for file in ./raw/*; do
+  [[ $file = *.JPG ]] && continue  # skip .JPG files
+  jpg_file=$(basename ${file%.*}.JPG)
+  [[ -s ./jpeg/$jpg_file ]] || mv "$file" ./trash
+done
+```
+
+Here's how this works: When I plug the SD card from my camera into my computer, I get a folder with
+images, each a `.jpeg` and a `.raf` version. I then copy the JPEG files into a `jpeg` folder and the
+RAW files into a `raw` folder. Then I cull the JPEGs with Preview. Once done, I run the above script,
+which moves all the RAW files into the trash folder, that don't have a corresponding JPEG image.
+
+This makes the culling process bearable. But now what? I enjoy the JPEGs coming out of my
+camera (I spent considerable amount of time researching recipes, they better) so 
+I don't need to do any heavy color correcting or such. But I still need to make the occasional
+exposure adjustment, leveling or crop. So, after months of deliberation, I purchased a license for
+[Capture One](https://www.captureone.com/en) for an eye-watering 300 bucks a while back.
+I import the JPEGs into CO and do my light adjustments, then I export them at some arbitrary resolution
+and quality setting. That's it, those are my images now that I occasionally look at.
+
+Oh the RAW files, what happened to them? Well they get chucked in a backup somewhere, in case I need
+them in the future. I rarely do, but you never know. The term 'data hoarder' comes to mind. Unrelated
+thought.
+
+This workflow is somewhat convoluted, that's why I'm reevaluating it. I don't like that I have to
+juggle two file types. I also don't like that 
+
+## What _do_ I like?
+
+Philosophically
+
+1. I want to choose settings in camera
+2. I want a simple shooting experience (OVF)
+3. I want to edit as little as possible
+
+1. Simple. I want to spend my time taking pictures, not editing, culling and otherwise managing photos etc.
+2. Flexible. I want to be able to change my mind later.
+
+## What are my options?
+
+- Shoot JPEG only
+- Shoot RAW only
+- Shoot RAW+JPEG
+
+Thus, I can not shoot JPEG only. It fulfills the first criteria, but fails the second.
+I can not shoot JPEG + RAW, because it fails the first criteria.
+Shooting RAW only seems to be the only way.
+
+Now there are two options
+
