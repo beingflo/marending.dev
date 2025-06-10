@@ -1,13 +1,13 @@
 ---
 title: 'Should I shoot JPEG or RAW?'
 subtitle: 'Let me overthink this'
-date: '9 June 2025'
+date: '10 Jun 2025'
 link: '/notes/jpeg-raw/'
 layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Hint, Details } from 'src/components';
+import { Hint, Info, Details } from 'src/components';
 
 I've been taking pictures on vacation, around the house and out and about with friends for a 
 couple of years now as a way to document life. But after all this time, I'm still
@@ -94,13 +94,17 @@ This workflow is somewhat convoluted, that's why I'm reevaluating it. I don't li
 juggle two file types. I don't like the indecisiveness of wanting to make decisions in-camera, but then
 keeping a backup just in case. I also don't like that with my (non-destructive) edits on the JPEGs in 
 Capture One, the "source of truth" is in a proprietary database file of this editor and _not_ some standard
-image files.
+image files. 
 
 <Hint>
   Now this right here is the reason I'm writing notes like this. Only when trying to verbalize the reasons
   I dislike my workflow did this fugitive thought crystallize. Writing is thinking and all that jazz.
 </Hint>
 
+What I don't like either is that RAW files are not a "progressive" enhancement over my JPEGs,
+they are a completely separate starting point: Say I see that my JPEG is badly overexposed, I reach
+for my RAW file, which looks completely different. I first need to get it to match the colors of the
+JPEG before I even attempt to utilize some of the latitude that this file has.
 Now that I think about it, I _really_ don't like that the whole Capture One catalogue is _the_ source
 of truth for my creative work when it's so messy. E.g. when I lightly edit an image as usual for digital
 usage it looks very different from the edit for print. These two versions show up in my CO catalogue.
@@ -159,7 +163,7 @@ and a linear curve.
 
 Needless to say the RAW file lacks a lot of contrast that could obviously be added if desired.
 
-But what if I wanted to recover some shadow details at the bottom of the screen?
+But what if I wanted to recover some shadow details at the bottom of the image?
 First a crop of the JPEG with shadows lifted, then the RAW file:
 
 ![image](./_jpeg-shadow.jpg)
@@ -193,7 +197,9 @@ Classic Chrome.
 
 Looking at those curves through my untrained eyes, it seems they match quite well. There are some differences
 like the lack of vignette control in the curve vs Fujis JPEG engine. This is kind of expected and can easily be
-fixed for all images that are imported.
+fixed for all images that are imported. The problem is that these curves only reproduce the simulation,
+not all the custom settings in the camera, like white balance shift, pushing highlights etc.
+Alas, you can't have it all.
 
 ## So what are my options?
 
@@ -202,7 +208,7 @@ fixed for all images that are imported.
 - Shoot RAW+JPEG
 
 Shooting only JPEG is not an option. It's too risky not to be able to reprocess images if rough mistakes
-happen or my stylistic choices change.
+happen or my stylistic taste changes.
 
 Shooting only RAW sees two sub-options in my opinion: Either I plan to shoot RAW and then run them through
 X Raw Studio to get JPEGs out, or I run them through Capture One to edit and get JPEGs out. The first
@@ -213,6 +219,33 @@ So RAW -> Capture One -> JPEG is the only viable path for this option.
 Lastly, shooting RAW and JPEG is where I'm currently at. The only thing I could vary here is using the RAWs
 as starting point for editing rather than the JPEGs. But at that point I might as well just shoot RAW only.
 
-<Hint>
-  To be continued...
-</Hint>
+So this is where it's at: Continue shooting RAW+JPEG, edit from JPEGs and keep RAWs as backup. Or
+shoot RAW only and use it for editing.
+
+<Info>
+  Funnily enough, normally when I ponder questions like this I'm secretly just trying to reason my
+  way into the solution I already deep down prefer. But here I'm genuinely stumped, I don't know which
+  way I want to go.
+</Info>
+
+Pros RAW only:
+- Single source file
+- Full flexibility with editing
+- Can be more careless with exposure (OVF)
+- Could be more creative in post if desired
+- Less disk space required
+
+Cons RAW only:
+- Always need a RAW editor to get JPEGs
+- Reliance on CO to get Fuji-like output
+
+Pros RAW+JPEG:
+- JPEG readily available and typically good enough
+- Don't strictly need any software, can use JPEG straight away
+
+Cons RAW+JPEG:
+- Duality of files, RAW really rarely needed
+- Editing JPEGs non-destructively just feels icky
+
+I think I just need to test a RAW-only workflow and see how I like it. This rambling has gone on long
+enough. Sorry to leave you on this note. Now to go out and shoot instead of overthinking image formats.
