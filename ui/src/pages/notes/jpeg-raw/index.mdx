@@ -7,14 +7,15 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: true
 ---
 
-import { Hint } from 'src/components';
+import { Hint, Details } from 'src/components';
 
 I've been taking pictures on vacation, around the house and out and about with friends for a 
 couple of years now as a way to document life. But after all this time, I'm still
 not happy with my photo workflow. In a departure from my usual technical musings, in this
-note I'm exploring one of age old questions the old philosophers already asked.
+note I'm exploring one of the age old questions the old philosophers already asked.
 
 > Should I shoot JPEG or RAW on this thing?
+>
 > - Plato
 
 This is one of those notes where I'm mostly trying to pelt my thoughts into some cohesive form.
@@ -91,7 +92,7 @@ them in the future. I rarely do, but you never know. In an unrelated thought the
 
 This workflow is somewhat convoluted, that's why I'm reevaluating it. I don't like that I have to
 juggle two file types. I don't like the indecisiveness of wanting to make decisions in-camera, but then
-keep a backup just in case. I also don't like that with my (non-destructive) edits on the JPEGs in 
+keeping a backup just in case. I also don't like that with my (non-destructive) edits on the JPEGs in 
 Capture One, the "source of truth" is in a proprietary database file of this editor and _not_ some standard
 image files.
 
@@ -100,18 +101,99 @@ image files.
   I dislike my workflow did this fugitive thought crystallize. Writing is thinking and all that jazz.
 </Hint>
 
-I do have a perpetual license, but it still doesn't sit right with me.
+Now that I think about it, I _really_ don't like that the whole Capture One catalogue is _the_ source
+of truth for my creative work when it's so messy. E.g. when I lightly edit an image as usual for digital
+usage it looks very different from the edit for print. These two versions show up in my CO catalogue.
+This feels messy, call me old-fashioned but I want to use OS directories to organize my images, not
+proprietary, non-transparent, custom behavior of _some_ piece of software.
+
+I do have a perpetual license, so I shouldn't expect to lose access at some point but it still doesn't 
+sit right with me. Oh boy, going into this I didn't want to question my use of Capture One, I paid good
+money for it after all. But here we are, let's see where this goes.
 
 ## What _do_ I like?
 
-Philosophically
+First, want I care about when out and about taking pictures:
 
-1. I want to choose settings in camera
-2. I want a simple shooting experience (OVF)
-3. I want to edit as little as possible
+- I want to choose settings in camera
+- I want a simple shooting experience (optical viewfinder)
+- I don't want to have to think about post-processing
 
-1. Simple. I want to spend my time taking pictures, not editing, culling and otherwise managing photos etc.
-2. Flexible. I want to be able to change my mind later.
+I've shot analog film for a while and learned to love the simplicity of it. This is part of the reason
+I enjoy the X100F so much, it offers a hybrid optical / electronic viewfinder as well as a whole bunch 
+of physical dials for setting exposure. I would love to use the OVF more, I often avoid it because
+I worry that I get the wrong exposure in-camera if I'm not previewing it through the EVF.
+
+I would also like to choose what type of image I'm taking when I take it. I want to decide to shoot
+B&W in-camera, I don't want to sit in front of a computer after the fact for hours, pondering which
+image might look nice in black and white.
+
+Next, what should my workflow look like after I'm done taking pictures:
+
+- Simple. I don't want to spend much time editing, culling and otherwise managing photos
+- Flexible. I want to be able to change my mind later
+
+Now here is an interesting dichotomy, the flexibility here is completely at odds with choosing settings
+in-camera above. When taking pictures I don't want to be babysat by post-processing Me. At the same time
+I don't want to facepalm in front of my computer, looking at hundreds of overexposed images that some
+buffoon with a camera took.
+
+I think the flexibility in post-processing has to win out. I've taken wedding pictures before where
+a series of bad decisions led to some where ghastly pictures. It was very fortunate I had the RAW files
+to put through X Raw Studio and get reasonable JPEGs out.
+
+## What about image quality anyway?
+
+In a small intermezzo I also want to briefly take a look at how malleable JPEG and RAW files are, maybe
+that will also yield some interesting point to consider. Though I'm generally plenty happy with my JPEGs.
+
+First, here is a straight-out-of-camera JPEG from a recent trip to Wales. This was run through Capture
+One just to compress it for web viewing. Wouldn't want to bother you with a 15MB file.
+![image](./_jpeg-original.jpg)
+
+The same image now from the unprocessed RAW file. Note that a RAW file has to be interpreted somehow
+to show it on screen. Here, Capture One is used to convert into a JPEG but with no special editing applied
+and a linear curve.
+
+![image](./_raw-flat.jpg)
+
+Needless to say the RAW file lacks a lot of contrast that could obviously be added if desired.
+
+But what if I wanted to recover some shadow details at the bottom of the screen?
+First a crop of the JPEG with shadows lifted, then the RAW file:
+
+![image](./_jpeg-shadow.jpg)
+![image](./_raw-shadow.jpg)
+
+This is the flexibility of RAW files. It's really no competition. In the JPEG the information has simply
+been compressed away while the RAW file maintains it.
+
+Next, let's look at a black and white image. Here, I have used Fujis ACROS simulation for a nice look.
+Below is again the RAW file with a linear curve.
+
+![image](./_jpeg-bw.jpg)
+![image](./_raw-bw.jpg)
+
+Zooming in to a section of the image reveals the grain that I configured in my B&W recipe. It just looks
+really nice. Yes, I add artificial film grain to my images, I'm that kind of a hipster.
+Again, this look could be reproduced from the RAW file, it would just require significant
+effort that I'm not willing to spend.
+
+![image](./_jpeg-grain.jpg)
+![image](./_raw-grain.jpg)
+
+## Capture One tone curves
+
+But here is an interesting thing I just learned while writing this note: Capture One has tone curves 
+that mimic Fujis film simulations. Supposedly they even worked with Fujifilm to get them to match closely.
+This means I can take RAW files, set the tone curve to `Auto` and CO will choose the appropriate curve
+as selected in camera. For this, it will read the metadata embedded in the file and select the appropriate
+simulation. I could still override it by specifically choosing e.g. Eterna on an image that was shot on 
+Classic Chrome.
+
+Looking at those curves through my untrained eyes, it seems they match quite well. There are some differences
+like the lack of vignette control in the curve vs Fujis JPEG engine. This is kind of expected and can easily be
+fixed for all images that are imported.
 
 ## What are my options?
 
