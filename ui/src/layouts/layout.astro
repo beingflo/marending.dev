@@ -40,19 +40,19 @@ import 'src/global.css';
 			</a>
 			<nav class="flex flex-row gap-3 sm:gap-6 pr-6 h-fit decoration-1">
 				<a
-					class={`text-sm md:text-md ${
+					class={`not-prose text-sm md:text-md ${
 						(pathname.startsWith('/notes') || pathname === '/') && 'underline'
 					}`}
 					href="/"
 					>notes</a
 				>
 				<a
-					class={`text-sm md:text-md ${pathname.startsWith('/projects') && 'underline'}`}
+					class={`not-prose text-sm md:text-md ${pathname.startsWith('/projects') && 'underline'}`}
 					href="/projects/">
 					projects</a
 				>
 				<a
-					class={`text-sm md:text-md ${pathname.startsWith('/about') && 'underline'}`}
+					class={`not-prose text-sm md:text-md ${pathname.startsWith('/about') && 'underline'}`}
 					href="/about/">
 					about</a
 				>
