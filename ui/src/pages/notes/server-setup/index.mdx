@@ -126,3 +126,37 @@ to the `Cargo.toml` file and used to tag the resulting image appropriately.
 Then the docker image is built, pushed into Github container registry and subsequently pulled from the
 server and spun up. This script took some tinkering, but now I use a version of this in every one of
 my projects.
+
+I could have also avoided my use of a container registry by directly pushing the image to the server,
+but as docker registries are a rather standardized commodity at this point I don't worry about vendor
+lock-in too much on this front.
+
+For static frontend-only applications my deployment script looks significantly simpler:
+
+```bash
+#!/usr/bin/env bash
+die() { echo "$*" 1>&2 ; exit 1; }
+
+echo -e "Deploying rest.quest to production!"
+
+[ -z "$(git status --porcelain)" ] || die "There are uncommitted changes"
+
+npm run build || die "Build failed"
+
+docker --context arm cp dist caddy:/srv/rest.quest || die "Failed to copy files to container"
+```
+
+Here I'm copying the `dist` folder after a `npm run build` straight into `Caddy`s docker container.
+
+## Conclusion
+
+This is a rather old-school way of doing things. I would have scoffed at this not too long ago, but 
+I've come to appreciate the simplicity. I understand every part of this setup and can fix any issues.
+I can't say the same about the network layer in a kubernetes cluster for instance.
+
+Further, this setup is also efficient. I'm building docker images locally on my laptop in seconds,
+rather than spinning up a cloud VM somewhere that takes minutes to build from scratch.
+
+Lastly I want to emphasize that this is very much designed for my personal use in hobby projects. I
+would not recommend you use it in a team. There, the imposed rigor of an automatic CI run is
+desirable. But since I'm just having fun here, I might as well deviate from "best practices" at work.
