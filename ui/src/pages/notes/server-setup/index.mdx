@@ -1,24 +1,24 @@
 ---
 title: 'Hosting my side projects the easy way'
 subtitle: 'Choosing boring technology'
-date: '16 Jun 2025'
+date: '17 Jun 2025'
 link: '/notes/server-setup/'
 layout: 'src/layouts/NoteLayout.astro'
 draft: true
 ---
 
 I'm writing a bunch of software for myself as a hobby. Most of this software requires
-a server to function, be to store data or to serve a web application.
+a server to function, be it to store data or to serve a web application.
 I've gone through a couple of iterations on my hosting setup over the years and finally,
-I've arrived at one I'm quite content with. I will take you down a path of simplification
-and, incidentally, back in time.
+I've arrived at one I'm quite content with. In this note I will take you down my path of 
+simplification.
 
 ## Few dependencies
 
 Software like mine has no special requirements, many have built similar software before and many
 will after. There are dozens of ways to deploy and host backend servers, databases and static web
 applications. Many of those ways try to abstract complexity away from you, pushing it down into
-an infrastructure layer. That sounds appealing, but if you give in to the temptation you're dependant
+an infrastructure layer. That sounds appealing, but if you give in to the temptation, you're dependant
 on that machinery. I like to avoid that and make sure I control the whole stack. This doesn't have to 
 be as hard as cloud vendors make it sound. They have an interest in making you believe you can't
 administer a database by yourself after all.
@@ -33,7 +33,6 @@ Further, I've largely stopped using auxiliary services to enable deployments, ba
 you may want to do. Again, there are platforms that promise you a seamless experience, for just a
 little bit of your hard-earned money (or data). But I've found that for my purposes I can do without.
 
-
 ## Architecture
 
 My setup is entirely dockerized. I run [Caddy](https://caddyserver.com/) as my central web server that
@@ -42,8 +41,88 @@ projects are simply bundled and chucked into a folder for Caddy to serve. All my
 and spun up alongside Caddy, which proxies requests appropriately. All my domains have automatic
 SSL certificates issued by [Let's Encrypt](https://letsencrypt.org/), all managed by Caddy.
 
-![image](./_architecture.svg)
-
 It's quite simple, really.
 
 ## Deployment
+
+The only real question is how my software ends up there. Previously, I was manually copying compose files,
+`.env` files etc. onto the server and `ssh`-ing in to issue docker commands. But I've found a better way,
+enabled by docker contexts. 
+
+Let me bring you up to speed in case you're unfamiliar. The `docker` cli tool we use to interact with
+containers is not doing most of the work itself, it's instead sending commands to the docker daemon
+running in the background. Now, with docker contexts we can instruct docker to send commands not to
+the local daemon, but instead a remote one, reachable via `ssh` for instance.
+
+So for my purposes, I've set up a docker context that points to my VPS via `ssh`. This is entirely seamless,
+docker will automatically use the configured ssh key.
+Now, I can bring up for this very website with the following command:
+
+```bash
+docker --context arm compose --file docker-compose.prod.yml up -d 
+```
+
+`arm` is the name of the context (the VPS is an arm server), the `docker-compose.prod.yml` is a local file
+in this repo. Btw. for _reasons_ this website is not a naked bundle of static assets, but instead
+a Rust application that serves said bundle.
+
+And the interesting thing here is that if I want to reference secrets from a `.env` file to provide
+as environment variables to the running container, I can do just that. The local `.env` file is read
+and passed along in the raw `docker` commands sent over the network to the daemon on `arm`. This way,
+no files have to be manually managed on the server. Neither compose files, nor `.env` files.
+
+This means that I can set up a new remote context, and immediately bring up my applications with a 
+single command, given that the `ssh` target has a docker daemon running. _Lovely_.
+
+Now you might think I would have a CI/CD pipeline that gets triggered when I push changes to some branch
+and execute this command to update the deployment. You would have been correct some time ago, but
+not anymore. As outlined above, I want to avoid third-party services as much as possible. 
+So instead, I've started writing shell scripts to streamline the process of locally building docker
+images and installing them on the server. Shocking, I know. This is straight out of a 1997 nerd magazine.
+But it works perfectly for my use cases. I can utilize the docker layer cache to make builds blazing
+fast, I can separate commits logically from units of deployment and it feels good to have such
+flexibility.
+
+Here's the full deployment script that I invoke every time I redeploy this website:
+
+```bash
+#!/usr/bin/env bash
+die() { echo "$*" 1>&2 ; exit 1; }
+
+echo -e "Deploying marending.dev to production!"
+
+[ -z "$(git status --porcelain)" ] || die "There are uncommitted changes"
+
+cd service; version=$(cargo metadata --format-version=1 --no-deps | jq '.packages[0].version' | tr -d '"'); cd ..
+
+echo "Latest version: ${version}"
+
+next_version=$(echo ${version} | awk -F. -v OFS=. '{$NF += 1 ; print}')
+
+read -p "Enter version to be deployed [${next_version}]: " new_version 
+
+new_version=${new_version:-${next_version}}
+
+cd service; cargo set-version "${new_version}" || die "Failed to set version in Cargo.toml"; cd ..
+
+docker buildx build -t "ghcr.io/beingflo/marending-dev:${new_version}" . || die "Failed to build docker image"
+docker push "ghcr.io/beingflo/marending-dev:${new_version}" || die "Failed to push docker image"
+
+sed -i '' -e "s/image: \"ghcr.io\/beingflo\/marending-dev:${version}\"/image: \"ghcr.io\/beingflo\/marending-dev:${new_version}\"/" ./docker-compose.prod.yml || die "Failed to write new version to docker compose file"
+
+docker --context arm compose --file docker-compose.prod.yml pull || die "Failed to pull new image"
+docker --context arm compose --file docker-compose.prod.yml up -d || die "Failed to bring compose up"
+
+git commit -am "Release ${new_version}"
+git tag "${new_version}"
+git push origin --tags
+```
+
+Some notes: The `die` function is just a handy way to exit early. The version handling is querying
+the current version from `cargo`, then presenting a choice to the user. Either the default of a patch
+increment on the current version, or a user-provided version is chosen. This new version is then written
+to the `Cargo.toml` file and used to tag the resulting image appropriately.
+
+Then the docker image is built, pushed into Github container registry and subsequently pulled from the
+server and spun up. This script took some tinkering, but now I use a version of this in every one of
+my projects.
