@@ -4,7 +4,7 @@ subtitle: 'Choosing boring technology'
 date: '17 Jun 2025'
 link: '/notes/server-setup/'
 layout: 'src/layouts/NoteLayout.astro'
-draft: true
+draft: false 
 ---
 
 I'm writing a bunch of software for myself as a hobby. Most of this software requires
@@ -56,14 +56,14 @@ the local daemon, but instead a remote one, reachable via `ssh` for instance.
 
 So for my purposes, I've set up a docker context that points to my VPS via `ssh`. This is entirely seamless,
 docker will automatically use the configured ssh key.
-Now, I can bring up for this very website with the following command:
+Now, I can bring up this very website with the following command:
 
 ```bash
 docker --context arm compose --file docker-compose.prod.yml up -d 
 ```
 
 `arm` is the name of the context (the VPS is an arm server), the `docker-compose.prod.yml` is a local file
-in this repo. Btw. for _reasons_ this website is not a naked bundle of static assets, but instead
+in this repo. Btw. for _reasons_, this website is not a naked bundle of static assets, but instead
 a Rust application that serves said bundle.
 
 And the interesting thing here is that if I want to reference secrets from a `.env` file to provide
@@ -147,6 +147,10 @@ docker --context arm cp dist caddy:/srv/rest.quest || die "Failed to copy files 
 ```
 
 Here I'm copying the `dist` folder after a `npm run build` straight into `Caddy`s docker container.
+
+I also have a separate `deployment` repo that serves as the home for all the infrastructure related 
+files and configs like the Caddy config, compose file and the deployment script itself to roll out
+a new config to the running Caddy container.
 
 ## Conclusion
 
