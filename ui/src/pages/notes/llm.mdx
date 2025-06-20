@@ -25,13 +25,15 @@ Explore all models on the following tasks
 - Architecture discussions
 - Search (replacement for google)
 
+Try local modal on my jour data set.
+
 Bonus: Look into fine-tuning and deploying LLMs
 
 Main goal is to acquire an informed view on LLMs, their uses and their limitations.
 
 ## Work log
 
-### Watch https://www.youtube.com/watch?v=7xTGNNLPyMI
+### Watch [Deep Dive into LLMs like ChatGPT](https://www.youtube.com/watch?v=7xTGNNLPyMI)
 
 - Base models don't know about question / answer format, they simply predict the next token
 from the context.
@@ -40,5 +42,28 @@ question / answer format ending in `answer: `. The model will continue in a simi
 - Instruct models are post-trained on human-generated conversations to properly bake in the
 concept of answering questions. While the base training might take months, post-training typically
 takes only hours.
+- Hallucinations are being addressed by first probing a model for what it knows: Paste a paragraph
+of wikipedia into one model and have it generate question / answer pairs related to the paragraph.
+This is easy because the answers are right there in the context window. Take the generated questions
+to another model and have it answer without having the context. Compare answers to determine if second
+model knows the answer. If model doesn't know, add an answer to post-training data set to give answer
+"Don't know".
+- Tool usage works as follows: Model generates special tokens for e.g. web search, inference code
+pauses when it encounters those tokens, goes of to do the search, pastes response back into context
+and continues inference.
+- Interesting insight on reasoning: There is only a fixed amount of computation flowing into any 
+given token. So training data needs to be phrased in such a way that the model doesn't have to
+solve the entire problem in one token, but instead can spread out intermediary computation on more
+tokens. Kind of like slowly reasoning your way towards the solution rather than produce an answer 
+immediately and then post-hoc justifying the answer. This leads to the conclusion that LLMs need
+token to think. Thinking is intrinsically linked to language processing.
+- Many counting and spelling tasks are not working well due to tokens. Tokens only exist for efficiency,
+there are efforts to move to character-level or byte-level models. That may solve this problem.
+- Post-processing: Reinforcement learning: Model is sampled many times on same question. Answers are
+checked for correctness against known answer. Correct answers are trained on to make those token streams
+more likely. E.g. model has reasoned its way through problem well, not pinning too much computation
+on a single token and thus got to the right answer. This is good and should be encouraged through fine-tuning
+on those answers.
 
-### Read https://huggingface.co/spaces/HuggingFaceFW/blogpost-fineweb-v1
+
+### Watch [How I use LLMs](https://www.youtube.com/watch?v=EWvNQjAaOHw)
