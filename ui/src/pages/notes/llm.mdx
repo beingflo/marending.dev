@@ -61,9 +61,26 @@ token to think. Thinking is intrinsically linked to language processing.
 there are efforts to move to character-level or byte-level models. That may solve this problem.
 - Post-processing: Reinforcement learning: Model is sampled many times on same question. Answers are
 checked for correctness against known answer. Correct answers are trained on to make those token streams
-more likely. E.g. model has reasoned its way through problem well, not pinning too much computation
+more likely (reinforced). E.g. model has reasoned its way through problem well, not pinning too much computation
 on a single token and thus got to the right answer. This is good and should be encouraged through fine-tuning
 on those answers.
+- Deepseek R1 was the first model where the use of reinforcement learning was publicly talked about.
+This model learned to generate thinking sequences, where multiple different approaches are generated
+and compared by the model. Only then does it generate a nice output intended for the human with the
+previous thinking in context.
+- together.ai for trying all state-of-the-art models
+- Reinforcement learning in *verifiable domains*: There is a way to reliably tell what the correct
+answer is. Trivially or via LLM judge.
+- RLHF: Reinforcement learning from human feedback
+- Reinforcement learning in *unverifiable domains* (e.g. jokes): Train rewards model few little human
+feedbacks, then use that to judge many outputs.
+- Discriminator-generator gap: For a human it's way easier to judge output than create output.
+- Risk of RLHF: RL may discover a way to game the model as a lossy simulation of a human is judging
+output. That may lead to nonsensical output getting high scores. (Adversarial example)
+- As a result RLHF is often run briefly to avoid this problem.
+- Upcoming capabilities: Multimodal models: Tokenize audio, video and train as usual.
+- Upcoming capabilities: Agents: Long, coherent, error-correcting contexts
+
 
 
 ### Watch [How I use LLMs](https://www.youtube.com/watch?v=EWvNQjAaOHw)
