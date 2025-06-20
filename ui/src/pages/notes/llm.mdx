@@ -33,7 +33,7 @@ Main goal is to acquire an informed view on LLMs, their uses and their limitatio
 
 ## Work log
 
-### Watch [Deep Dive into LLMs like ChatGPT](https://www.youtube.com/watch?v=7xTGNNLPyMI)
+### Notes on [Deep Dive into LLMs like ChatGPT](https://www.youtube.com/watch?v=7xTGNNLPyMI)
 
 - Base models don't know about question / answer format, they simply predict the next token
 from the context.
@@ -68,7 +68,7 @@ on those answers.
 This model learned to generate thinking sequences, where multiple different approaches are generated
 and compared by the model. Only then does it generate a nice output intended for the human with the
 previous thinking in context.
-- together.ai for trying all state-of-the-art models
+- together.ai for trying open weights models
 - Reinforcement learning in *verifiable domains*: There is a way to reliably tell what the correct
 answer is. Trivially or via LLM judge.
 - RLHF: Reinforcement learning from human feedback
@@ -79,8 +79,21 @@ feedbacks, then use that to judge many outputs.
 output. That may lead to nonsensical output getting high scores. (Adversarial example)
 - As a result RLHF is often run briefly to avoid this problem.
 - Upcoming capabilities: Multimodal models: Tokenize audio, video and train as usual.
-- Upcoming capabilities: Agents: Long, coherent, error-correcting contexts
+- Upcoming capabilities: Agents: Long, coherent, error-correcting contexts.
+- Upcoming capabilities: Test-time training: Current models only do in-context learning on the context.
 
+### Notes on [How I use LLMs](https://www.youtube.com/watch?v=EWvNQjAaOHw)
 
+- Keep context on-topic. Large context may distract model and slightly decrease accuracy.
+- Thinking (reasoning) models are considered ones that have been improved with reinforcement learning.
+- GPT-4o is non-thinking model.
+- OpenAI models starting with `o` (o3-mini, o1, etc.) are thinking models.
+- Search tool use very useful to quickly gather websites and summarize content.
+- Deep research combines search and thinking to do research.
 
-### Watch [How I use LLMs](https://www.youtube.com/watch?v=EWvNQjAaOHw)
+### Easy way to run local models
+
+- ollama
+- lm studio
+- msty
+- open webui
