@@ -1,0 +1,44 @@
+---
+title: 'Exploring LLMs'
+subtitle: 'A skeptic reconsiders'
+date: '20 Jul 2025'
+link: '/notes/llm/'
+layout: 'src/layouts/NoteLayout.astro'
+draft: true
+---
+
+## Scope
+
+Learn technical details of how LLMs work
+
+Explore modern LLM tools and agents
+- Newest OpenAI models
+- Newest Anthropic models
+- Newest Google models
+
+Explore modern local models
+-> Check leaderboards
+
+Explore all models on the following tasks
+- Coding
+- Proof reading
+- Architecture discussions
+- Search (replacement for google)
+
+Bonus: Look into fine-tuning and deploying LLMs
+
+Main goal is to acquire an informed view on LLMs, their uses and their limitations.
+
+## Work log
+
+### Watch https://www.youtube.com/watch?v=7xTGNNLPyMI
+
+- Base models don't know about question / answer format, they simply predict the next token
+from the context.
+- One can fake a conversational agent by constructing a few-shot example prompt that shows the
+question / answer format ending in `answer: `. The model will continue in a similar fashion.
+- Instruct models are post-trained on human-generated conversations to properly bake in the
+concept of answering questions. While the base training might take months, post-training typically
+takes only hours.
+
+### Read https://huggingface.co/spaces/HuggingFaceFW/blogpost-fineweb-v1
