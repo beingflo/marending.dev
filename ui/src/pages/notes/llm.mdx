@@ -117,7 +117,24 @@ that have lower components in the vector.
 
 ### Notes on [Attention in transformers, step-by-step](https://www.youtube.com/watch?v=eMlx5fFNoYc&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=7)
 
-- 
+- Initially, every input token gets mapped to the same embedding vector, there is no sense of context.
+- One interaction of attention may be to update the embeddings of nouns with the proceeding adjectives. This should refine the embedding
+vector to one that captures the essence of the noun in context better. (this assumes tokens are words).
+- Query and key vectors determine how relevant each token is to each other. i.e. the embedding of one word _attends_ to the
+embedding of another.
+- The dot products of each query vector with each key vector yields the _attention pattern_.
+- To improve training, not only is the last token expected to predict the next one, but all tokens are expected to predict the following.
+- _Masking_ is the process of setting the lower left half of the attention pattern to 0, to ensure later tokens can not "give away"
+the prediction of earlier ones.
+- Size of attention pattern is bottle neck for context window as it scales with the square.
+- Finally, embeddings of tokens are updated by multiplying attention pattern by value vectors (produced using a value matrix). This way,
+every token gets _some_ part of every other token (proceeding it), but more from the ones that are attending it more strongly.
+- This whole process is called one _head of attention_.
+- One attention head using approximately 6.4M weights.
+- Multi-headed attention is running multiple attention layers in parallel. 96 per block for GPT-3.
+- All deltas of each attention layer is added together to the original embedding.
+- GPT-3 has 96 attention blocks, leading to 58B weights dedicated to attention.
+- The rest of the 175B parameters are in the in-between multilayer perceptron layers.
 
 ### Easy way to run local models
 
