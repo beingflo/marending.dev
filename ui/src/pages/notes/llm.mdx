@@ -91,6 +91,34 @@ output. That may lead to nonsensical output getting high scores. (Adversarial ex
 - Search tool use very useful to quickly gather websites and summarize content.
 - Deep research combines search and thinking to do research.
 
+### Notes on [Transformers, the tech behind LLMs](https://www.youtube.com/watch?v=wjZofJX0v4M&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=6)
+
+- "Attention is all you need" originally introduced transformers.
+- GPT-3 has 175B parameters
+- Word embedding in GPT-3 is 12k-dimensional
+- Typical word-embedding may choose to encode gender information in one dimension. Thus,
+the classic `man - woman = uncle - aunt`. Similarly, `hitler + italy - germany = mussolini`.
+- Further, one direction in the embedding space indicates _plurality_. i.e. `plur = cats - cat` and
+the dot product between plurals and the `plur` direction is higher than with singular words.
+- Embedding matrix in GPT-3 has around 617M weights.
+- Embedding maps every token to a vector in isolation. It's the attention mechanism that enables
+the network to exchange meaning _between_ the vectors, to arrive at a more enriched meaning for
+each token. e.g. `river bank` vs `deposit at the bank`, `bank` has different meaning based on context.
+- At the end, the _unembedding matrix_ maps the last token in the context to a probability distribution
+across the entire vocabulary (50k in GPT-3) for prediction.
+- All the other tokens in the last layer are actually encoding their immediately following tokens and
+are not used for the prediction of a new token. This turns out to favor training.
+- Unembedding matrix also has 617M weighs in GPT-3.
+- Softmax is used to turn embedding vector into a probability distribution. The temperature is an extra
+parameter here to guide how "sharp" the distribution is. i.e `T = 0`, highest component gets 100% of the
+probability, `T = 5`, spreads out the probability much more evenly, thus making predictions more likely
+that have lower components in the vector.
+- Components in the output vector after unembedding are called Logits.
+
+### Notes on [Attention in transformers, step-by-step](https://www.youtube.com/watch?v=eMlx5fFNoYc&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=7)
+
+- 
+
 ### Easy way to run local models
 
 - ollama
