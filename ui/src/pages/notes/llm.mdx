@@ -138,6 +138,28 @@ every token gets _some_ part of every other token (proceeding it), but more from
 
 ### Notes on [How might LLMs store facts](https://www.youtube.com/watch?v=9-Jl0dxWQs8&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=8)
 
+- 2/3 of weights in a typical transformer lives in the Multilayer Perceptron layers (MLP).
+- In MLP layers vectors don't "talk" to each other, the operations happen in isolation.
+- First operation in MLP layer is a matrix multiplication that maps input vector into higher dimension.
+- In case of GPT-3, this matrix has 49k rows.
+- In some way, each of those rows can be thought of as a question that is being asked of the input vector.
+- Matrix multiplication is like dot product between rows of matrix and vector.
+- Next, resulting vector is run through non-linear function (e.g ReLU) to nicely clip components that
+didn't satisfy question.
+- Finally a down projection matrix maps the intermediate vector down to the input dimension.
+- The resulting vector is added to input vector.
+- Single MLP layer has about 1.2B parameters.
+- Fascinating insight: For an n-dimensional space, there are exactly n vectors that are pairwise orthogonal
+to each other. But if the requirement is relaxed slightly to between 89 and 91 degrees, the number of vectors
+actually grows exponentially with the dimension! (Johnson-Lindenstrauss Lemma)
+- This has huge implications for LLMs and explains why model performance seems to scale so well with
+size. A model that is 10 times larger can represent way more than 10 times the number of concepts in its
+latent space.
+- This explains why inside a MLP layer the neurons are not lighting up as unit vectors to represent a single
+concept, instead it's some random looking vector that happens to be one of the nearly orthogonal directions 
+in that high-dimensional space.
+- Research area trying to extract true meaning of those neurons: Sparse Autoencoders.
+
 ### Easy way to run local models
 
 - ollama
