@@ -25,7 +25,7 @@ Tried Gemini and Claude. I'll focus on Claude for now just to dive deep rather t
 
 Works great
 
-**[ ] Explore Claude on spotting mistakes in crypto code**
+**[x] Explore Claude on spotting mistakes in crypto code**
 
 **[ ] Explore Claude on architecture discussions**
 
@@ -94,6 +94,19 @@ that Claude produced. Wouldn't trust it otherwise.
 
 ### Spot mistakes in crypto code
 
+I'm pasting in the [encryption code](https://github.com/beingflo/write.fieldnotes/blob/main/src/components/crypto.ts)
+used in [Fieldnotes](/notes/fieldnotes) and ask to assess the security of this code and whether it follows
+best practices. Claude says the code is sound and accomplishes its goal. Asking follow-up questions, it's
+clear that Claude has a rather sophisticated understanding. E.g. "What could be the advantage of using
+per-note keys rather than encrypting notes directly with the main key?".
+
+To check that Claude isn't overly agreeable I ask the same question in a new context with modified crypto
+code that includes some issues. In one instance I set the main key to be `extractable`, which it correctly
+flags as something that could be improved. Further, when passing undefined in the initialization vectors,
+it raises alarm bells, calling this a critical bug with catastrophic consequences.
+
+This isn't to say that an AI chatbot should be entrusted with security audits, it is still reassuring that
+it doesn't mess up on obvious issues.
 
 ---
 
