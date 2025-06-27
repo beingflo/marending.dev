@@ -90,6 +90,21 @@ output. That may lead to nonsensical output getting high scores. (Adversarial ex
 - OpenAI models starting with `o` (o3-mini, o1, etc.) are thinking models.
 - Search tool use very useful to quickly gather websites and summarize content.
 - Deep research combines search and thinking to do research.
+- Some models support document upload. Here, the document is simply added to the context for the LLM to
+query.
+- ChatGPT is trained to recognize math problems it probably can't do in it's "head". In this case it
+will invoke a python interpreter instead (tool use).
+- Claude Artifacts can build little applications and run it directly in browser in their interface.
+- SuperWhisper to transcribe voice to text system-wide. Also useful for prompting without typing.
+- Advanced voice mode in ChatGPT: Handle voice natively in the LLM instead of transcribing to text 
+and operating on that. 
+- NotebookLM for generating podcasts on arbitrary topics.
+- DALL-E does not generate images inside the LLM, it sends a caption to a separate image-generation model.
+- ChatGPT typically wipes context in a new chat. But there is the option to ask it to remember something.
+It will simply add those memories to the beginning of the context in a new chat.
+- ChatGPT custom instructions to avoid repeating preferences in every new chat.
+- Custom GPT: provide a system prompt to get answers in specific format.
+
 
 ### Notes on [Transformers, the tech behind LLMs](https://www.youtube.com/watch?v=wjZofJX0v4M&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=6)
 
