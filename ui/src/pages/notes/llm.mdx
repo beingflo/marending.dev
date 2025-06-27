@@ -25,15 +25,77 @@ Tried Gemini and Claude. I'll focus on Claude for now just to dive deep rather t
 
 Works great
 
+**[ ] Explore Claude on spotting mistakes in crypto code**
+
 **[ ] Explore Claude on architecture discussions**
 
 **[ ] Explore Claude on search (google replacement)**
 
-**[ ] Explore Claude on coding**
+**[ ] Explore Claude on embedded project**
+
+**[ ] Explore Claude on web dev project**
 
 **[x] Try local model on my jour data set**
 
 Not working. Context too small or they just can't keep track of anything.
+
+## Explore local models, claude and gemini
+
+### Who is currently in the swiss national council
+
+- **Gemini 2.5 Flash**: Very good
+- **Claude Sonnet 4**: Good but slow, can't figure out presidency
+- **Gemma3:1B**: Bad, gets even the number of members wrong
+- **Llama 3.2**: Get's the number of members correct but has knowledge cutoff in 2023 and doesn't to web search. Also slow to load model.
+- **Qwen3**: Super slow but pretty good.
+- **Gemma3**: Get's number of seats really wrong and annoyingly agreeable to having it pointed out
+
+### Summarize my server setup blog post and explain the scripts
+
+- **Gemini 2.5 Flash**: Phenomenal
+- **Claude Sonnet 4**: Phenomenal, a bit more concise than Gemini
+- **Gemma3:1B**: Useless. Asking for typos it thinks I'm talking about typos in its response. Asking it
+explain something in the script is fruitless.
+- **Llama 3.2**: Not good. Doesn't find any typos and can't explain script at all.
+- **Qwen3**: Not good. It comes up with a new deployment script, doesn't analyze mine.
+- **Gemma3**: Not good. Comes up with new deployment script like Qwen 3. Slightly more similar to the script
+in the post though.
+
+### Local models conclusion
+
+As much as I would like to use local models for privacy reasons, it doesn't look like it's gonna happen.
+This is not to say that open-weight models in general are bad, just the ones that are small enough
+that I can run them on my laptop. So I guess I'll have to go with one of the bigger hosted ones.
+
+## Hosted models
+
+I'm going with Claude for this exploration for two reasons. First, it's said to be the strongest model
+for coding, which is my primary use case. Second, Anthropic seems to be the most sympathetic of the 
+AI companies out there to me. 
+
+I can't get behind Google due to privacy reasons, they can simply bring
+together to many threads of my digital persona. OpenAI is exceptionally unpleasant in their public
+conduct. Mostly Sam Altman if I'm being honest. Grok also won't cut it for similar reasons.
+
+Unfortunately there are no *good* options when it comes to privacy, but it seems Anthropic is the least
+bad.
+
+## Claude
+
+### Proof reading
+
+Works very well. I can paste in a note in `mdx` format and just need to remind it to keep
+line breaks as is, and it will do a fine job directly correcting typos and awkward sentences, ready
+to paste back into my website.
+
+Even handles markdown tables etc. flawlessly. Much simpler than pasting note into an online spell-checker
+and manually fix all the findings. With having the note checked into git, it's easy to see the diff
+that Claude produced. Wouldn't trust it otherwise.
+
+### Spot mistakes in crypto code
+
+
+---
 
 ## Notes on [Deep Dive into LLMs like ChatGPT](https://www.youtube.com/watch?v=7xTGNNLPyMI)
 
@@ -175,56 +237,3 @@ latent space.
 concept, instead it's some random looking vector that happens to be one of the nearly orthogonal directions 
 in that high-dimensional space.
 - Research area trying to extract true meaning of those neurons: Sparse Autoencoders.
-
-## Explore local models, claude and gemini
-
-### Who is currently in the swiss national council
-
-- **Gemini 2.5 Flash**: Very good
-- **Claude Sonnet 4**: Good but slow, can't figure out presidency
-- **Gemma3:1B**: Bad, gets even the number of members wrong
-- **Llama 3.2**: Get's the number of members correct but has knowledge cutoff in 2023 and doesn't to web search. Also slow to load model.
-- **Qwen3**: Super slow but pretty good.
-- **Gemma3**: Get's number of seats really wrong and annoyingly agreeable to having it pointed out
-
-### Summarize my server setup blog post and explain the scripts
-
-- **Gemini 2.5 Flash**: Phenomenal
-- **Claude Sonnet 4**: Phenomenal, a bit more concise than Gemini
-- **Gemma3:1B**: Useless. Asking for typos it thinks I'm talking about typos in its response. Asking it
-explain something in the script is fruitless.
-- **Llama 3.2**: Not good. Doesn't find any typos and can't explain script at all.
-- **Qwen3**: Not good. It comes up with a new deployment script, doesn't analyze mine.
-- **Gemma3**: Not good. Comes up with new deployment script like Qwen 3. Slightly more similar to the script
-in the post though.
-
-### Local models conclusion
-
-As much as I would like to use local models for privacy reasons, it doesn't look like it's gonna happen.
-This is not to say that open-weight models in general are bad, just the ones that are small enough
-that I can run them on my laptop. So I guess I'll have to go with one of the bigger hosted ones.
-
-## Hosted models
-
-I'm going with Claude for this exploration for two reasons. First, it's said to be the strongest model
-for coding, which is my primary use case. Second, Anthropic seems to be the most sympathetic of the 
-AI companies out there to me. 
-
-I can't get behind Google due to privacy reasons, they can simply bring
-together to many threads of my digital persona. OpenAI is exceptionally unpleasant in their public
-conduct. Mostly Sam Altman if I'm being honest. Grok also won't cut it for similar reasons.
-
-Unfortunately there are no *good* options when it comes to privacy, but it seems Anthropic is the least
-bad.
-
-## Claude
-
-### Proof reading
-
-Works very well. I can paste in a note in `mdx` format and just need to remind it to keep
-line breaks as is, and it will do a fine job directly correcting typos and awkward sentences, ready
-to paste back into my website.
-
-Even handles markdown tables etc. flawlessly. Much simpler than pasting note into an online spell-checker
-and manually fix all the findings. With having the note checked into git, it's easy to see the diff
-that Claude produced. Wouldn't trust it otherwise.
