@@ -7,6 +7,8 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: true
 ---
 
+import { Details } from 'src/components';
+
 ## Goals and summary
 
 **[x] Learn technical details of how LLMs work**
@@ -107,6 +109,199 @@ it raises alarm bells, calling this a critical bug with catastrophic consequence
 
 This isn't to say that an AI chatbot should be entrusted with security audits, it is still reassuring that
 it doesn't mess up on obvious issues.
+
+### Architecture discussion
+
+```md
+# Observatory: Observability and Time Series System
+
+Observatory is a new system to store observability data as well as time series data.
+
+## Store time series data from embedded devices
+
+There are multiple embedded devices that periodically records sensor data. They should be able
+to send that time series data to Observatory.
+
+## Store observability data from backend services
+
+There are multiple backend services implemented in Rust. They use the `tracing` crate to instrument them.
+They should be able to export their tracing data to Observatory.
+
+## Visualization
+
+Observatory should include a web application that visualizes the data stored within.
+
+## Questions
+
+- What storage layer is advisable?
+- Can a database be used directly to ingest observability data or is a backend application in-front of
+the storage layer needed?
+```
+
+<Details title="Resulting architecture document">
+## Overview
+
+Observatory will handle data ingestion from embedded devices and backend services, store the data efficiently for perpetual retention, and provide visualization through Grafana integration.
+
+## Scale and Performance Requirements
+
+- **Device Scale**: Support for less than 20 embedded devices
+- **Data Volume**: Handle at most hundreds of messages per second
+- **Retention**: Perpetual data retention (no automatic deletion)
+- **Query Performance**: Up to 5 seconds delay acceptable for visualization
+- **Downsampling**: No requirement for data downsampling or tiered storage
+
+## Data Sources
+
+### Store Time Series Data from Embedded Devices
+
+There are multiple embedded devices that periodically record sensor data. They should be able to send that time series data to Observatory.
+
+**Device Specifications:**
+- **Connectivity**: WiFi connection to Observatory
+- **Data Types**: Temperature, CO2, location, and other sensor data
+- **Flexibility**: API should allow sending arbitrary JSON data structures
+- **Frequency**: Data transmission every 30 seconds to every 10 minutes
+- **Reliability**: Devices should cache data locally if Observatory is unreachable
+- **Connection**: No intermittent connectivity issues expected
+
+### Store Observability Data from Backend Services
+
+There are multiple backend services implemented in Rust. They use the `tracing` crate to instrument them. They should be able to export their tracing data to Observatory.
+
+**Observability Specifications:**
+- **Data Types**: Both spans and events from Rust tracing
+- **Format**: Structured logging and metrics
+- **Integration**: OpenTelemetry standard for data export
+- **Services**: Multiple Rust backend services using `tracing` crate
+
+## Storage Architecture
+
+### Technology Stack
+- **Database**: ClickHouse (preferred for time-series analytics)
+- **Backend**: Rust application layer
+- **Alternative**: Open to other technologies if justified
+
+### Database Schema
+
+**Two specialized tables in ClickHouse:**
+
+```sql
+-- Device sensor data
+CREATE TABLE device_data (
+    timestamp DateTime64(3),
+    device_id String,
+    sensor_type String,  -- 'temperature', 'co2', 'location', etc.
+    data JSON,
+    INDEX idx_device_id device_id TYPE bloom_filter(0.01) GRANULARITY 1,
+    INDEX idx_sensor_type sensor_type TYPE bloom_filter(0.01) GRANULARITY 1
+) ENGINE = MergeTree()
+PARTITION BY toYYYYMM(timestamp)
+ORDER BY (device_id, timestamp);
+
+-- Observability data (spans + events)
+CREATE TABLE observability_data (
+    timestamp DateTime64(3),
+    service_name String,
+    trace_id String,
+    span_id String,
+    event_type Enum('span', 'event'),
+    data JSON,
+    INDEX idx_service service_name TYPE bloom_filter(0.01) GRANULARITY 1,
+    INDEX idx_trace trace_id TYPE bloom_filter(0.01) GRANULARITY 1
+) ENGINE = MergeTree()
+PARTITION BY toYYYYMM(timestamp)
+ORDER BY (service_name, timestamp);
+```
+
+### Backend Application Requirements
+
+A Rust backend application is required in front of ClickHouse rather than direct database ingestion to provide:
+
+- **Protocol Translation**: Convert device JSON and OpenTelemetry data to ClickHouse schemas
+- **Authentication**: API key management and user authentication
+- **Data Validation**: Schema validation and data transformation
+- **Performance Optimization**: Batching and buffering for efficient ingestion
+- **Flexible JSON Handling**: Support for arbitrary sensor data structures
+
+## API Specifications
+
+### Device Data Ingestion
+- **Protocol**: HTTP REST interface
+- **Endpoint**: `/api/v1/devices/{device_id}/data`
+- **Method**: POST
+- **Authentication**: API key based authentication
+- **Data Format**: JSON payload with sensor readings
+
+### Observability Data Ingestion
+- **Protocol**: OpenTelemetry Protocol (OTLP)
+- **Endpoint**: `/api/v1/otlp/v1/traces`
+- **Standard**: Full OpenTelemetry compatibility
+- **Integration**: Compatible with Rust `tracing` crate via OpenTelemetry exporters
+
+## Visualization
+
+Observatory should integrate with Grafana for data visualization rather than building a custom web application.
+
+**Visualization Requirements:**
+- **Platform**: Grafana integration with ClickHouse data source
+- **Users**: Primary users are operators
+- **Dashboards**: Support for real-time dashboards, historical analysis, and alerting
+- **Query Types**: Complex aggregations across time windows and devices
+- **Performance**: Near real-time updates (up to 5 second delay acceptable)
+
+## Authentication and Security
+
+**API Authentication:**
+- API key authentication for device data ingestion
+- API key authentication for observability data ingestion
+
+**User Authentication:**
+- User authentication system for Grafana visualization access
+- No device-level permissions required (all operators can see all device data)
+
+**Authorization Scope:**
+- Authentication required for both data ingestion and visualization
+- Single-tenant system (no multi-tenancy requirements)
+
+## Deployment and Scalability
+
+**Constraints:**
+- No specific deployment constraints (cloud/on-premises flexibility)
+- No horizontal scalability requirements given the scale
+- No specific performance SLA requirements beyond the 5-second visualization delay
+
+**Integration:**
+- No requirement to integrate with existing monitoring tools
+- No requirement to export data to other systems
+- Grafana satisfies all visualization requirements
+
+## Technical Implementation Details
+
+### Data Processing
+- **Batching**: Configurable batch insertion (2-3 second intervals) to meet 5-second delay target
+- **Error Handling**: Robust error handling for device connectivity issues
+- **Data Transformation**: Convert OpenTelemetry spans/events to unified storage format
+
+### Performance Optimization
+- **Connection Pooling**: ClickHouse connection pooling for efficient database access
+- **Indexing**: Optimized indexes for common query patterns
+- **Partitioning**: Monthly partitioning for efficient data management
+
+### Monitoring and Reliability
+- **Caching**: Local device caching when Observatory is unreachable
+- **Buffering**: Backend buffering to handle traffic spikes
+- **Health Checks**: System health monitoring capabilities
+
+## Success Criteria
+
+- Successfully ingest data from up to 20 embedded devices
+- Handle hundreds of messages per second without data loss
+- Provide real-time visualization through Grafana with sub-5-second delay
+- Support perpetual data retention without performance degradation
+- Authenticate and authorize all data access appropriately
+- Maintain system availability even when individual devices are offline
+</Details>
 
 ---
 
