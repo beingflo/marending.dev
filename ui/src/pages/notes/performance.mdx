@@ -11,10 +11,10 @@ import { Warn, Info, Details } from 'src/components';
 
 During my studies, I focused on high-performance computing. My interest in this field
 culminated in my (only mildly interesting) [undergrad thesis](https://ieeexplore.ieee.org/abstract/document/7967093). What's
-left of my passing passion is ~~_the need for speed_~~ a distain for
+left of my passing passion is ~~_the need for speed_~~ a disdain for
 slow software.
 
-Due to this conditioning, I always find myself curious about performance characteristics of my
+Due to this conditioning, I always find myself curious about the performance characteristics of my
 own applications. I wouldn't want to just deploy something for the world to see without
 knowing how it would behave under load. While the web applications and backend systems I tend
 to spend my time with nowadays are a far cry from the number-crunching code screaming along on
@@ -30,24 +30,24 @@ such a simple site should be served at such a mediocre rate.
 What follows is a highly unscientific and subjective exploration into improving the
 performance of this website.
 
-## Background on SvelteKits rendering modes (CSR, SSR, SSG)
+## Background on SvelteKit's rendering modes (CSR, SSR, SSG)
 
 This site is my first project using SvelteKit, so my knowledge is limited. However, from
 glancing at the docs and some quick experimentation we can learn that there are three
 rendering modes supported out of the box: Client-side rendering (CSR), server-side rendering
 (SSR) and static site generation (SSG). SvelteKit is very flexible and allows combinations of
-CSR and SSR as well as page specific configuration.
+CSR and SSR as well as page-specific configuration.
 
 CSR refers to the browser rendering the page. This is the mode employed by any single-page
 application framework on its own. In this mode, the backend would send back a document that
 just contains the script to render the page, but no markup.
 
-SSR is the counter part: The server pre-renders the page for every request. The browser just
+SSR is the counterpart: The server pre-renders the page for every request. The browser just
 needs to show the document, which already contains all the markup. What's somewhat unintuitive
 is that SvelteKit employs these two techniques at the same time. Pages are pre-rendered on the
 server, but the code to render the page on the client is still shipped along. In a process
-called _hydration_ the browser renders the page again. This is supposed to give us
-benefits from both options. Fast initial page load as well as full js-driven interactivity.
+called _hydration_ the browser renders the page again. This is supposed to give us the
+benefits from both options: fast initial page load as well as full js-driven interactivity.
 
 Additionally, if CSR is enabled SvelteKit serves code that takes over navigation in the
 client. That means instead of doing full page loads when clicking a link to a subpage, only
@@ -61,7 +61,7 @@ static anyway and doesn't change depending on the request.
 
 While this is primarily a static site, there is one piece of functionality that makes use of
 the dynamic server-side rendering. The metrics section counts page views by writing to a
-SQLite database on every request. If we pre-render the pages at build-time and serving them
+SQLite database on every request. If we pre-render the pages at build-time and serve them
 from a webserver, there is no code running server-side to keep track of views.
 
 <Info>Update: The metrics section is gone for now :(</Info>
@@ -71,7 +71,7 @@ pre-render all pages while still collecting statistics: Instead of building the 
 into the node server serving the site, I can configure the reverse proxy (in my case Caddy) to
 emit logs. Then, in a classic display of over-engineering, I consume said logs in a separate
 service, which offers aggregated statistics to the site via API call. So for the purposes of
-improving performance of the website, I can ignore the need for dynamic behaviour on the
+improving performance of the website, I can ignore the need for dynamic behavior on the
 server side for now.
 
 ## Benchmarking marending.dev
@@ -100,7 +100,7 @@ build-time.
 </div>
 <p class="caption">Table 1: Performance characteristics of a SvelteKit node server with server-side rendering enabled</p>
 
-For the `/notes/lines` page there is a noticeable degredation because there are thousands
+For the `/notes/lines` page there is a noticeable degradation because there are thousands
 of elements rendered into `SVGs`, which has the server do some work. The whole page is
 also significantly larger, which is also going to have some impact.
 
@@ -122,7 +122,7 @@ Obviously SSG is going to be faster than SSR, nothing unexpected here. However, 
 end of it. In the production deployment, the site sits behind
 
 [Caddy](https://caddyserver.com/), which acts as a reverse proxy to the SvelteKit node
-server. Before we go further, we should establish if we incur a performance penality for this.
+server. Before we go further, we should establish if we incur a performance penalty for this.
 
 <div>
 | Page         | Requests / second | Avg. latency | 99% latency |
@@ -132,7 +132,7 @@ server. Before we go further, we should establish if we incur a performance pena
 </div>
 <p class="caption">Table 3: Performance characteristics of a SvelteKit node server serving static assets. Requests are reverse proxied via Caddy</p>
 
-Indeed we do, and it's suprising to me how much throughput we lose. But this scenario begs the
+Indeed we do, and it's surprising to me how much throughput we lose. But this scenario begs the
 question if we even need the node server: If we just have static assets, we might as well let
 Caddy serve them. We would expect that to be faster at the very least because we don't need to
 proxy the requests anymore, but also, Caddy being written in Go is likely to be faster at
@@ -151,7 +151,7 @@ serving requests than node.
 	| /            | 46'553 rps        | 1.6 ms       | 24.6 ms     |
 	| /notes/lines | 42'973 rps        | 2.4 ms       | 43.8 ms     |
 </div>
-<p class="caption">Table 4: Performance characteristics of Caddy serving static pages built by SvelteKits static adapter</p>
+<p class="caption">Table 4: Performance characteristics of Caddy serving static pages built by SvelteKit's static adapter</p>
 
 <Details title="Validating measurements is a pretty good idea!">
 	At first I was actually measuring around 62'000 requests per second for the `/notes/lines` page.
