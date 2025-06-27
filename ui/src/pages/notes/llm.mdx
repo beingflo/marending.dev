@@ -7,33 +7,35 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: true
 ---
 
-## Scope
+## Goals and summary
 
-Learn technical details of how LLMs work
+**[x] Learn technical details of how LLMs work**
 
-Explore modern LLM tools and agents
-- Newest OpenAI models
-- Newest Anthropic models
-- Newest Google models
+Excellent videos by 3Blue1Brown
 
-Explore modern local models
--> Check leaderboards
+**[x] Explore modern local models**
 
-Explore all models on the following tasks
-- Coding
-- Proof reading
-- Architecture discussions
-- Search (replacement for google)
+Not great if I want more than simple summarization or proof-reading
 
-Try local modal on my jour data set.
+**[x] Explore modern LLM tools and agents**
 
-Bonus: Look into fine-tuning and deploying LLMs
+Tried Gemini and Claude. I'll focus on Claude for now just to dive deep rather than wide.
 
-Main goal is to acquire an informed view on LLMs, their uses and their limitations.
+**[x] Explore Claude on proof reading**
 
-## Work log
+Works great
 
-### Notes on [Deep Dive into LLMs like ChatGPT](https://www.youtube.com/watch?v=7xTGNNLPyMI)
+**[ ] Explore Claude on architecture discussions**
+
+**[ ] Explore Claude on search (google replacement)**
+
+**[ ] Explore Claude on coding**
+
+**[x] Try local model on my jour data set**
+
+Not working. Context too small or they just can't keep track of anything.
+
+## Notes on [Deep Dive into LLMs like ChatGPT](https://www.youtube.com/watch?v=7xTGNNLPyMI)
 
 - Base models don't know about question / answer format, they simply predict the next token
 from the context.
@@ -82,7 +84,7 @@ output. That may lead to nonsensical output getting high scores. (Adversarial ex
 - Upcoming capabilities: Agents: Long, coherent, error-correcting contexts.
 - Upcoming capabilities: Test-time training: Current models only do in-context learning on the context.
 
-### Notes on [How I use LLMs](https://www.youtube.com/watch?v=EWvNQjAaOHw)
+## Notes on [How I use LLMs](https://www.youtube.com/watch?v=EWvNQjAaOHw)
 
 - Keep context on-topic. Large context may distract model and slightly decrease accuracy.
 - Thinking (reasoning) models are considered ones that have been improved with reinforcement learning.
@@ -105,8 +107,7 @@ It will simply add those memories to the beginning of the context in a new chat.
 - ChatGPT custom instructions to avoid repeating preferences in every new chat.
 - Custom GPT: provide a system prompt to get answers in specific format.
 
-
-### Notes on [Transformers, the tech behind LLMs](https://www.youtube.com/watch?v=wjZofJX0v4M&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=6)
+## Notes on [Transformers, the tech behind LLMs](https://www.youtube.com/watch?v=wjZofJX0v4M&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=6)
 
 - "Attention is all you need" originally introduced transformers.
 - GPT-3 has 175B parameters
@@ -130,7 +131,7 @@ probability, `T = 5`, spreads out the probability much more evenly, thus making 
 that have lower components in the vector.
 - Components in the output vector after unembedding are called Logits.
 
-### Notes on [Attention in transformers, step-by-step](https://www.youtube.com/watch?v=eMlx5fFNoYc&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=7)
+## Notes on [Attention in transformers, step-by-step](https://www.youtube.com/watch?v=eMlx5fFNoYc&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=7)
 
 - Initially, every input token gets mapped to the same embedding vector, there is no sense of context.
 - One interaction of attention may be to update the embeddings of nouns with the proceeding adjectives. This should refine the embedding
@@ -151,7 +152,7 @@ every token gets _some_ part of every other token (proceeding it), but more from
 - GPT-3 has 96 attention blocks, leading to 58B weights dedicated to attention.
 - The rest of the 175B parameters are in the in-between multilayer perceptron layers.
 
-### Notes on [How might LLMs store facts](https://www.youtube.com/watch?v=9-Jl0dxWQs8&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=8)
+## Notes on [How might LLMs store facts](https://www.youtube.com/watch?v=9-Jl0dxWQs8&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=8)
 
 - 2/3 of weights in a typical transformer lives in the Multilayer Perceptron layers (MLP).
 - In MLP layers vectors don't "talk" to each other, the operations happen in isolation.
@@ -175,9 +176,34 @@ concept, instead it's some random looking vector that happens to be one of the n
 in that high-dimensional space.
 - Research area trying to extract true meaning of those neurons: Sparse Autoencoders.
 
-### Easy way to run local models
+## Explore local models, claude and gemini
 
-- ollama
-- lm studio
-- msty
-- open webui
+### Who is currently in the swiss national council
+
+- **Gemini 2.5 Flash**: Very good
+- **Claude Sonnet 4**: Good but slow, can't figure out presidency
+- **Gemma3:1B**: Bad, gets even the number of members wrong
+- **Llama 3.2**: Get's the number of members correct but has knowledge cutoff in 2023 and doesn't to web search. Also slow to load model.
+- **Qwen3**: Super slow but pretty good.
+- **Gemma3**: Get's number of seats really wrong and annoyingly agreeable to having it pointed out
+
+### Summarize my server setup blog post and explain the scripts
+
+- **Gemini 2.5 Flash**: Phenomenal
+- **Claude Sonnet 4**: Phenomenal, a bit more concise than Gemini
+- **Gemma3:1B**: Useless. Asking for typos it thinks I'm talking about typos in its response. Asking it
+explain something in the script is fruitless.
+- **Llama 3.2**: Not good. Doesn't find any typos and can't explain script at all.
+- **Qwen3**: Not good. It comes up with a new deployment script, doesn't analyze mine.
+- **Gemma3**: Not good. Comes up with new deployment script like Qwen 3. Slightly more similar to the script
+in the post though.
+
+### Local models conclusion
+
+As much as I would like to use local models for privacy reasons, it doesn't look like it's gonna happen.
+This is not to say that open-weight models in general are bad, just the ones that are small enough
+that I can run them on my laptop. So I guess I'll have to go with one of the bigger hosted ones.
+
+## Claude
+
+### Proof reading
