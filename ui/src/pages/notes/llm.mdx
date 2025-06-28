@@ -29,7 +29,7 @@ Works great
 
 **[x] Explore Claude on spotting mistakes in crypto code**
 
-**[ ] Explore Claude on architecture discussions**
+**[x] Explore Claude on architecture discussions**
 
 **[ ] Explore Claude on search (google replacement)**
 
@@ -112,6 +112,10 @@ it doesn't mess up on obvious issues.
 
 ### Architecture discussion
 
+I'm writing a short overview of requirements for my upcoming rewrite of my observability / metrics
+tool. There are a bunch of open questions in my head and I haven't managed to get a clear picture
+of what I want to do. Part of the reasons is the absolute mess that is OpenTelemetry documentation.
+
 ```md
 # Observatory: Observability and Time Series System
 
@@ -137,6 +141,9 @@ Observatory should include a web application that visualizes the data stored wit
 - Can a database be used directly to ingest observability data or is a backend application in-front of
 the storage layer needed?
 ```
+
+After pasting in this document and prompting Claude to ask clarifying questions, it produces the
+updated requirements doc below.
 
 <Details title="Resulting architecture document">
 ## Overview
@@ -302,6 +309,10 @@ Observatory should integrate with Grafana for data visualization rather than bui
 - Authenticate and authorize all data access appropriately
 - Maintain system availability even when individual devices are offline
 </Details>
+
+I also ask follow-up questions regarding OpenTelemetry that I haven't been able to find answers to
+after hours of scouring the web and Claude can give competent answers. Overall, exceptionally helpful
+for this task.
 
 ---
 
