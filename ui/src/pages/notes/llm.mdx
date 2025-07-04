@@ -19,6 +19,10 @@ Excellent videos by 3Blue1Brown
 
 Not great if I want more than simple summarization or proof-reading
 
+**[x] Try local model on my jour data set**
+
+Not working. Context too small or they just can't keep track of anything.
+
 **[x] Explore modern LLM tools and agents**
 
 Tried Gemini and Claude. I'll focus on Claude for now just to dive deep rather than wide.
@@ -43,11 +47,9 @@ Pretty useful.
 
 Pretty useful.
 
-**[ ] Explore Claude on web dev project**
+**[x] Explore Claude on web dev project**
 
-**[x] Try local model on my jour data set**
-
-Not working. Context too small or they just can't keep track of anything.
+Mixed bag.
 
 ## Explore local models, claude and gemini
 
@@ -151,7 +153,8 @@ the storage layer needed?
 ```
 
 After pasting in this document and prompting Claude to ask clarifying questions, it produces the
-updated requirements doc below.
+updated requirements doc below. It contains a bunch of boilerplate that would satisfy an architect, but
+also some interesting stuff.
 
 <Details title="Resulting architecture document">
 ## Overview
@@ -339,6 +342,11 @@ well.
 the template generator it most definitely has this code from. That leads to outdated dependencies.
 - Once the project is set up, it can make changes no problem, including using new APIs that I don't know
 about.
+
+### Web development
+
+- Changing an image layout from cropped images in a square grid to masonry (without CSS masonry grid): 
+Not managing well. It literally tried to absolute position the images \*facepalm\*.
 
 ---
 
