@@ -345,8 +345,31 @@ about.
 
 ### Web development
 
+**Masonry grid**
+
 - Changing an image layout from cropped images in a square grid to masonry (without CSS masonry grid): 
 Not managing well. It literally tried to absolute position the images \*facepalm\*.
+- Claude lacks contextual persistence: It just modified a file which throws a JS error now. Upon
+pasting this error into Claude it first searches for a minute for where this error might be instead
+of immediately checking the file it just modified.
+- Not fun to use at all. Claude just messed something new up every time. An exercise in frustration. Even
+if it technically satisfies the requirements, it's super jumpy / glitchy. It has no taste whatsoever to
+build a robust solution. To be fair, it *is* building this blind. It has no channel to observe the result,
+that would be hard for me as well. But that's just the nature of these tools for now I guess.
+- I'm giving up on this. It will be faster and importantly less nerve-wracking doing this myself.
+
+**Async image processing**
+
+- Changing an image upload endpoint from immediate compression and upload of multiple versions to one 
+where only original is uploaded and compression and upload of compressed images is happening 
+asynchronously: Works flawlessly on first try! Did not expect that.
+- Later, I noticed a bug that I couldn't get Claude to resolve itself. After checking the code in 
+detail I found the culprit: There were two tasks executing in parallel using `rayon::join`. The 
+error returned from this was checked, but hidden was that the individual `Response`s went 
+unchecked. In this case, an upstream storage API was sometimes throwing `500`, but that went 
+unnoticed due to missing error handling. It's bugs like this that don't happen to me, I'm too meticulous
+in handling any error the type system throws my way (part of the reason I enjoy Rust so much). That
+makes it extra annoying when I need to spend 5 minutes tracking down this bug.
 
 ---
 
