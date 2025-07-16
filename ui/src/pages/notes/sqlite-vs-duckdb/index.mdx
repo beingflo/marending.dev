@@ -7,7 +7,7 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Info, Details } from 'src/components';
+import { Info, Details, Hint } from 'src/components';
 import DuckDBResults from './DuckDBResults.astro';
 import SQLiteResults from './SQLiteResults.astro';
 
@@ -211,3 +211,8 @@ the main DB.
 
 In the end, I can't bring myself to leave that much performance on the table, so I'll go ahead
 with DuckDB even though SQLite has its allures.
+
+<Hint>
+	Hint from the future: [I've also tested ClickHouse](/notes/clickhouse) in a similar fashion with
+	interesting results.
+</Hint>

@@ -73,9 +73,8 @@ TTL toDateTime(Timestamp) + toIntervalDay(3)
 SETTINGS ttl_only_drop_parts = 1
 ```
 
-My application under test exposes an endpoint for ingesting data.
-This endpoint looks as follows. As mentioned, it does not make use of the ClickHouse client, instead
-just emits tracing data that ends up in the DB.
+My application under test exposes an endpoint for ingesting data.  As mentioned, it does not make 
+use of the ClickHouse client, instead just emits tracing data that ends up in the DB.
 
 ```rust
 async fn upload_data(Json(payload): Json<Data>) -> StatusCode {
@@ -121,7 +120,7 @@ WHERE SpanAttributes['bucket'] = 'location'
 }
 ```
 
-These endpoints are then load tested via [k6](https://k6.io/) to get the below numbers.
+These endpoints are then load tested via [k6](https://k6.io/) to get the numbers below.
 
 ### Queries
 
@@ -173,7 +172,8 @@ ORDER BY count(*) DESC
 
 This groups the entries indicating an error by `endpoint` and checks which one has the
 highest error count. It does so over the data of the last 90 days. (Here I could not use `today` minus
-90 days as the data was older at this point and I was too lazy to re-ingest all the data with up-to-date timestamps)
+90 days as the data was older at this point and I was too lazy to re-ingest all the data with up-to-date timestamps,
+so I just chose a date somewhere within the date range)
 
 ## Results
 
@@ -186,3 +186,6 @@ a client-server model. But either way, the gains are undeniable.
 And this is with a rather unfavorable data model. I'm really misusing the tracing table
 here but ClickHouse is just extremely fast at extracting nested JSON attributes. This is
 undoubtedly thanks to the `Map` data type.
+
+The steady performance across all use cases even indicates to me that I'm maybe hitting some
+other bottleneck. But as it's plenty good enough I'll stop here.
