@@ -130,8 +130,9 @@ ClickHouse equivalents to the DuckDB ones in the previous note.
 GPS coordinates:
 
 ```sql
-JSONExtractString(SpanAttributes['payload'], 'longitude') AS longitude,
-    JSONExtractString(SpanAttributes['payload'], 'latitude') AS latitude
+SELECT
+	JSONExtractString(SpanAttributes['payload'], 'longitude') AS longitude,
+	JONExtractString(SpanAttributes['payload'], 'latitude') AS latitude
 FROM otel_traces 
 WHERE SpanAttributes['bucket'] = 'location'
     AND toFloat64(JSONExtractString(SpanAttributes['payload'], 'longitude')) > 6
