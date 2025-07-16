@@ -1,0 +1,47 @@
+---
+import { Chart } from '../../../components';
+import { Figure } from '../../../components/Figure';
+import * as Plot from '@observablehq/plot';
+
+let results = [
+	{ db: 'clickhouse', test: 'co2', value: 850 },
+	{ db: 'clickhouse', test: 'logs', value: 840 },
+	{ db: 'clickhouse', test: 'gps', value: 800 },
+	{ db: 'duckdb', test: 'co2', value: 35 },
+	{ db: 'duckdb', test: 'logs', value: 133 },
+	{ db: 'duckdb', test: 'gps', value: 100 },
+	{ db: 'sqlite', test: 'co2', value: 2.5 },
+	{ db: 'sqlite', test: 'logs', value: 80 },
+	{ db: 'sqlite', test: 'gps', value: 23 },
+];
+---
+
+<Figure caption="Figure 1. Adding clickhouse results under the same conditions">
+	<Chart
+		options={{
+			x: { grid: true, label: '→ requests / second' },
+			y: { inset: 2, label: null },
+			fy: { label: null },
+			marginLeft: 50,
+			marginRight: 78,
+			marks: [
+				Plot.frame(),
+				Plot.barX(results, {
+					x: 'value',
+					y: 'test',
+					fy: 'db',
+					sort: { fy: null },
+				}),
+				Plot.text(results, {
+					text: (d) => d.value,
+					y: 'test',
+					x: 'value',
+					textAnchor: 'end',
+					dx: -3,
+					fill: 'white',
+					fy: 'db',
+				}),
+			],
+		}}
+	/>
+</Figure>
