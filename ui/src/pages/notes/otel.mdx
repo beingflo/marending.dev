@@ -12,12 +12,12 @@ it's solving a hard problem, but it feels needlessly complicated. I get the impr
 the observability vendors are begrudgingly adopting an open standard but want to 
 make it a daunting task to host your own observability stack. Anyway, I've recently
 struggled for a bit to instrument a Rust application with `tracing` and send the
-data to ClickHouse. So here is a short write up to save you a hot minute—or provide
+data to ClickHouse. So here is a short write-up to save you a hot minute—or provide
 some inspiration to self-host your observability platform. 
 
 ## Observed application
 The Rust crates involved here are unstable and moving fast, part of the reason this
-was trickier than expected. But at the time of writing here is what works.
+was trickier than expected. But at the time of writing, here is what works.
 
 ```toml
 // Cargo.toml
@@ -130,7 +130,7 @@ volumes:
 ```
 
 ```yaml
-// otel-collector.config.yaml
+// otel-collector-config.yaml
 receivers:
   otlp:
     protocols:
@@ -171,10 +171,10 @@ service:
 
 ```
 
-Once you bring up these containers you should be able to run your Rust application
+Once you bring up these containers, you should be able to run your Rust application
 and start sending tracing data to the collector. By manually connecting to the
 ClickHouse instance with something like [TablePlus](https://tableplus.com/), you
-should see an `otel-traces` table with your spans in there.
+should see an `otel_traces` table with your spans in there.
 
 
 ## Visualization
