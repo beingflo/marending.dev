@@ -1,5 +1,5 @@
 ---
-title: 'Rust tracing data to OTEL collector'
+title: 'Rust tracing to ClickHouse'
 subtitle: "This shouldn't be this hard"
 date: '19 Jul 2025'
 link: '/notes/otel/'
@@ -7,6 +7,197 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: true
 ---
 
-## Instrumented application setup
+I don't like the OpenTelemetry ecosystem. It's complicated. Not just because
+it's solving a hard problem, but it feels needlessly complicated. I get the impression
+the observability vendors are begrudgingly adopting an open standard but want to 
+make it a daunting task to host your own observability stack. Anyway, I've recently
+struggled for a bit to instrument a Rust application with `tracing` and send the
+data to ClickHouse. So here is a short write up to save you a hot minute—or provide
+some inspiration to self-host your observability platform. 
+
+## Observed application
+The Rust crates involved here are unstable and moving fast, part of the reason this
+was trickier than expected. But at the time of writing here is what works.
+
+```toml
+// Cargo.toml
+tracing = "0.1.40"
+tracing-subscriber = "0.3.18"
+opentelemetry_sdk = { version = "0.30.0", features = ["rt-tokio"] }
+opentelemetry = "0.30.0"
+opentelemetry-otlp = "0.30.0"
+tracing-opentelemetry = "0.31.0"
+opentelemetry-stdout = "0.30.0"
+opentelemetry-semantic-conventions = "0.30.0"
+```
+
+```rust
+// main.rs
+use opentelemetry::{global, trace::TracerProvider};
+use opentelemetry_otlp::WithExportConfig;
+use opentelemetry_sdk::trace::SdkTracerProvider;
+use tracing::{error, info, span, Span};
+use tracing_opentelemetry::OpenTelemetryLayer;
+use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, Layer};
+
+std::env::set_var("OTEL_SERVICE_NAME", "your-application");
+
+let tracer = opentelemetry_otlp::SpanExporter::builder()
+    .with_http()
+    .with_endpoint("http://localhost:4318/v1/traces")
+    .build()?;
+
+let provider = SdkTracerProvider::builder()
+    .with_batch_exporter(tracer)
+    .build();
+
+global::set_tracer_provider(provider.clone());
+
+tracing_subscriber::registry()
+    .with(
+        tracing_subscriber::fmt::layer()
+            .with_filter(tracing_subscriber::filter::LevelFilter::WARN),
+    )
+    .with(
+        OpenTelemetryLayer::new(provider.tracer("your-application"))
+            .with_filter(tracing_subscriber::filter::LevelFilter::INFO),
+    )
+    .init();
+
+```
+
 ## Compose stack to ingest data
-## Example Grafana query
+Next, we want to run the [OpenTelemetry Collector](https://github.com/open-telemetry/opentelemetry-collector-contrib)
+from the contrib repository, a ClickHouse instance as well as Grafana.
+
+```yaml
+// compose.yaml
+services:
+  clickhouse:
+    image: "clickhouse/clickhouse-server:25.6"
+    container_name: clickhouse
+    ports:
+      - 18123:8123
+      - 19000:9000
+    restart: unless-stopped
+    environment:
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=default
+      - CLICKHOUSE_DB=your-db
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8123/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.128.0
+    container_name: otel-collector
+    ports:
+      - 4317:4317
+      - 4318:4318
+      - 55679:55679
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    restart: unless-stopped
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-data:/var/lib/grafana
+    restart: unless-stopped
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+
+volumes:
+  grafana-data:
+
+```
+
+```yaml
+// otel-collector.config.yaml
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch:
+
+exporters:
+  clickhouse:
+    endpoint: tcp://clickhouse:9000
+    database: your-db
+    username: default
+    password: default
+    ttl: 72h
+    create_schema: true
+    timeout: 5s
+    retry_on_failure:
+      enabled: true
+      initial_interval: 5s
+      max_interval: 30s
+      max_elapsed_time: 300s
+
+extensions:
+  health_check:
+    endpoint: 0.0.0.0:55679
+
+service:
+  extensions: [health_check]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [clickhouse]
+
+```
+
+Once you bring up these containers you should be able to run your Rust application
+and start sending tracing data to the collector. By manually connecting to the
+ClickHouse instance with something like [TablePlus](https://tableplus.com/), you
+should see an `otel-traces` table with your spans in there.
+
+
+## Visualization
+
+Navigate to http://localhost:3000 for the Grafana frontend. Here you must
+[install the appropriate data source plugin](https://clickhouse.com/docs/integrations/grafana).
+Finally, you can start writing queries like this to visualize your tracing data:
+
+```sql
+SELECT
+  toStartOfInterval("Timestamp", toIntervalSecond(${__interval_ms}/50)) as time,
+  count(*) as trace_count
+FROM
+  "events"."otel_traces"
+WHERE
+  (
+    Timestamp >= $__fromTime
+    AND Timestamp <= $__toTime
+  )
+  AND (ParentSpanId = '')
+  AND (Duration > 0)
+GROUP BY
+  toStartOfInterval("Timestamp", toIntervalSecond(${__interval_ms}/50))
+ORDER BY
+  time ASC
+```
