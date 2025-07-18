@@ -24,14 +24,27 @@ up to the latest advancements in transformer architecture and then by putting th
 
 **Explore modern local models**: Underwhelming. Models small enough to run on my laptop leave much to be desired.
 
-**Try local model on my jour data set**: Not working. Context too small or they just can't keep track of anything.
-
 **Explore modern LLM tools and agents**: Claude Code phenomenally useful for coding. Claude also useful for a bunch
 of other tasks.
 
 ## Developing an intuition on how LLMs work
 
-TODO
+I came into this with some knowledge of machine learning and neural networks from university courses. I even read 
+[the OG transformer paper](https://arxiv.org/abs/1706.03762) back then but apparently didn't take much away from it.
+So previously I would consider LLMs as the classical stochastic token predictors that don't _think_, but only produce 
+text that conforms to previous patterns, thus appearing plausibly intelligent. Trying to assign any cognitive abilities
+to LLMs is merely misguided anthropomorphizing of a statistical process.
+
+But after catching up on transformer architecture I've changed my mind. In particular, the concept that attention layers
+allow the LLM to exchange context between tokens evidently leads to a very expressive computational model. Contrasting
+this to a simple feed-forward, fully connected neural network it seems obvious that this architecture is something
+fundamentally different. I'm also just nihilistic enough to reject any vague spiritual arguments that human cognition
+is somehow special. That leads me to consider it plausible that an LLM could actually "think". Naturally, much has been
+written about this topic, both technical as well as philosophical. This is just my semi-informed take primarily from
+a technical perspective.
+
+It's worth mentioning that transformer models have obvious limitations that may not apply to human cognition: 
+Reasoning is inherently token-based, models are static and not updating weights during inference, and I'm sure many more.
 
 ## Explore local models, Claude and Gemini
 
@@ -237,11 +250,14 @@ for this.
 - Humans learn, LLMs don't
 - Be fair to the model
 - If LLM struggles, so will I
+- I don't write prose with LLMs
+- No vibe coding
 
+<div class="mb-40" />
 
----
+## Appendix
 
-## Notes on [Deep Dive into LLMs like ChatGPT](https://www.youtube.com/watch?v=7xTGNNLPyMI)
+### Notes on [Deep Dive into LLMs like ChatGPT](https://www.youtube.com/watch?v=7xTGNNLPyMI)
 
 - Base models don't know about question / answer format, they simply predict the next token
 from the context.
@@ -290,7 +306,7 @@ output. That may lead to nonsensical output getting high scores. (Adversarial ex
 - Upcoming capabilities: Agents: Long, coherent, error-correcting contexts.
 - Upcoming capabilities: Test-time training: Current models only do in-context learning on the context.
 
-## Notes on [How I use LLMs](https://www.youtube.com/watch?v=EWvNQjAaOHw)
+### Notes on [How I use LLMs](https://www.youtube.com/watch?v=EWvNQjAaOHw)
 
 - Keep context on-topic. Large context may distract model and slightly decrease accuracy.
 - Thinking (reasoning) models are considered ones that have been improved with reinforcement learning.
@@ -313,7 +329,7 @@ It will simply add those memories to the beginning of the context in a new chat.
 - ChatGPT custom instructions to avoid repeating preferences in every new chat.
 - Custom GPT: provide a system prompt to get answers in specific format.
 
-## Notes on [Transformers, the tech behind LLMs](https://www.youtube.com/watch?v=wjZofJX0v4M&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=6)
+### Notes on [Transformers, the tech behind LLMs](https://www.youtube.com/watch?v=wjZofJX0v4M&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=6)
 
 - "Attention is all you need" originally introduced transformers.
 - GPT-3 has 175B parameters
@@ -337,7 +353,7 @@ probability, `T = 5`, spreads out the probability much more evenly, thus making 
 that have lower components in the vector.
 - Components in the output vector after unembedding are called Logits.
 
-## Notes on [Attention in transformers, step-by-step](https://www.youtube.com/watch?v=eMlx5fFNoYc&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=7)
+### Notes on [Attention in transformers, step-by-step](https://www.youtube.com/watch?v=eMlx5fFNoYc&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=7)
 
 - Initially, every input token gets mapped to the same embedding vector, there is no sense of context.
 - One interaction of attention may be to update the embeddings of nouns with the preceding adjectives. This should refine the embedding
@@ -358,7 +374,7 @@ every token gets _some_ part of every other token (preceding it), but more from 
 - GPT-3 has 96 attention blocks, leading to 58B weights dedicated to attention.
 - The rest of the 175B parameters are in the in-between multilayer perceptron layers.
 
-## Notes on [How might LLMs store facts](https://www.youtube.com/watch?v=9-Jl0dxWQs8&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=8)
+### Notes on [How might LLMs store facts](https://www.youtube.com/watch?v=9-Jl0dxWQs8&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=8)
 
 - 2/3 of weights in a typical transformer live in the Multilayer Perceptron layers (MLP).
 - In MLP layers vectors don't "talk" to each other, the operations happen in isolation.
