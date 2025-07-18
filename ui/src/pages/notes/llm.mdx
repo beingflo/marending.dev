@@ -134,25 +134,20 @@ of what I want to do. Part of the reason is the absolute mess that is OpenTeleme
 
 ```md
 # Observatory: Observability and Time Series System
-
 Observatory is a new system to store observability data as well as time series data.
 
 ## Store time series data from embedded devices
-
 There are multiple embedded devices that periodically record sensor data. They should be able
 to send that time series data to Observatory.
 
 ## Store observability data from backend services
-
 There are multiple backend services implemented in Rust. They use the `tracing` crate to instrument them.
 They should be able to export their tracing data to Observatory.
 
 ## Visualization
-
 Observatory should include a web application that visualizes the data stored within.
 
 ## Questions
-
 - What storage layer is advisable?
 - Can a database be used directly to ingest observability data or is a backend application in front of
 the storage layer needed?
@@ -247,11 +242,24 @@ for this.
 
 ## How do I use LLMs now?
 
-- Humans learn, LLMs don't
-- Be fair to the model
-- If LLM struggles, so will I
-- I don't write prose with LLMs
-- No vibe coding
+With all this testing done, I'm starting to get a grip on how LLMs can be useful for me. I might add that I'm primarily
+talking about my personal projects here, at work I use LLMs significantly less for various reasons: There is so much 
+context required to produce good code that it's often faster to do it myself than it is to verbalize all this context.
+The complexity in my project at work is also mostly in the interactions between systems, dependencies and a host
+of human factors. Technologically it's quite simple. Naturally that's a bad fit for LLMs, they're not about to coordinate
+an API change with another team for me.
+Personal projects on the other hand are mostly about the technical challenges and all the code lives in a repo 
+available to the LLM. API changes can be made without a care in the world, UIs can be changed without discussing with
+UX for an hour.
+
+So for personal projects I use Claude Code in a terminal next to my normal IDE setup. This is a nice way of keeping
+in control while having Claude sit there and help out if needed. I always work on a branch and commit often to
+be able to see isolated changed in a diff. No vibe coding for me, I always check Claudes changes in detail.
+Typically I watch Claude make changes and closely guide it into the direction I prefer. This whole 'agentic' workflow 
+where people supposedly have multiple instances of LLMs running simultaneously does not work for me. 
+
+Apart from using Claude Code in the terminal, I also use the web interface often for one-off tasks, such as 
+crafting ClickHouse queries, discussing architectural approaches, proof reading stuff etc.
 
 <div class="mb-40" />
 
