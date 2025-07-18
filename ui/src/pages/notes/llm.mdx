@@ -10,9 +10,9 @@ draft: false
 import { Details, Info } from 'src/components';
 
 I've been a long-time skeptic of large language models and their applicability to intellectual work. Too readily
-do they hallucinate information, too amateurish the programming mistakes. So for too long, I didn't give them a
-proper chance to redeem themselves. Now, I spent a couple of focused days reevaluating my stance, first by catching
-up to the latest advancements in transformer architecture and then by putting these models to the test.
+do they hallucinate information, too amateurish are their programming mistakes. So for too long, I didn't give them a
+proper chance to redeem themselves. Now, I've spent a couple of focused days reevaluating my stance, first by catching
+up on the latest advancements in transformer architecture and then by putting these models to the test.
 
 <Info>
   This is mostly a worklog I was writing as I went along. The structure might be a bit weird as a result.
@@ -27,7 +27,7 @@ up to the latest advancements in transformer architecture and then by putting th
 **Explore modern LLM tools and agents**: Claude Code phenomenally useful for coding. Claude also useful for a bunch
 of other tasks.
 
-## Developing an intuition on how LLMs work
+## Developing an intuition for how LLMs work
 
 I came into this with some knowledge of machine learning and neural networks from university courses. I even read 
 [the OG transformer paper](https://arxiv.org/abs/1706.03762) back then but apparently didn't take much away from it.
@@ -35,21 +35,21 @@ So previously I would consider LLMs as the classical stochastic token predictors
 text that conforms to previous patterns, thus appearing plausibly intelligent. Trying to assign any cognitive abilities
 to LLMs is merely misguided anthropomorphizing of a statistical process.
 
-But after catching up on transformer architecture I've changed my mind. In particular, the concept that attention layers
+But after catching up on transformer architecture, I've changed my mind. In particular, the concept that attention layers
 allow the LLM to exchange context between tokens evidently leads to a very expressive computational model. Contrasting
-this to a simple feed-forward, fully connected neural network it seems obvious that this architecture is something
+this with a simple feed-forward, fully connected neural network, it seems obvious that this architecture is something
 fundamentally different. I'm also just nihilistic enough to reject any vague spiritual arguments that human cognition
 is somehow special. That leads me to consider it plausible that an LLM could actually "think". Naturally, much has been
-written about this topic, both technical as well as philosophical. This is just my semi-informed take primarily from
+written about this topic, both technical and philosophical. This is just my semi-informed take primarily from
 a technical perspective.
 
 It's worth mentioning that transformer models have obvious limitations that may not apply to human cognition: 
-Reasoning is inherently token-based, models are static and not updating weights during inference, and I'm sure many more.
+Reasoning is inherently token-based, models are static and not updating weights during inference, and I'm sure there are many more.
 
 ## Explore local models, Claude and Gemini
 
 To get a first impression of modern developments, I used local and hosted LLMs for some search queries and other tasks.
-Below are two examples with my impression for each model. For the local models I used [Msty](https://msty.app/), the hosted
+Below are two examples with my impression of each model. For the local models I used [Msty](https://msty.app/), the hosted
 ones are the free tier at this point.
 
 **Who is currently in the Swiss National Council**
@@ -84,7 +84,7 @@ I'm going with Claude for this exploration for two reasons. First, it's said to 
 for coding, which is my primary use case. Second, Anthropic seems to be the most sympathetic of the 
 AI companies out there to me. 
 
-I can't get behind Google due to privacy reasons, they can simply bring
+I can't get behind Google due to privacy reasons—they can simply bring
 together too many threads of my digital persona. OpenAI is exceptionally unpleasant in their public
 conduct. xAI also won't cut it for similar reasons.
 
@@ -100,7 +100,7 @@ line breaks as is, and it will do a fine job directly correcting typos and awkwa
 to paste back into my website.
 
 Even handles markdown tables etc. flawlessly. Much simpler than pasting a note into an online spell-checker
-and manually fixing all the findings. With having the note checked into git, it's easy to see the diff
+and manually fixing all the findings. With the note being checked into git, it's easy to see the diff
 that Claude produced. Wouldn't trust it otherwise.
 
 Addendum: I also pasted this very blog post for proofreading into Claude and was caught off-guard when it referenced
@@ -122,7 +122,7 @@ code that includes some issues. In one instance I set the main key to be `extrac
 flags as something that could be improved. Further, when passing `undefined` in the initialization vectors,
 it raises alarm bells, calling this a critical bug with catastrophic consequences.
 
-This isn't to say that an AI chatbot should be entrusted with security audits, it is still reassuring that
+This isn't to say that an AI chatbot should be entrusted with security audits, but it is still reassuring that
 it doesn't mess up on obvious issues. Overall I'm quite impressed here. Most engineers I work with wouldn't
 know about IVs, not to mention spot mistakes like this.
 
@@ -171,14 +171,14 @@ well.
 - JS editor research: Excellent.
 - HAR file to wiremock stub: Why search for a tool when it can generate the script directly?
 
-In my experience, when Claude needs up-to-date information from the web it's noticeable less useful 
+In my experience, when Claude needs up-to-date information from the web it's noticeably less useful 
 than when knowledge / skill is sufficient that it already has embedded in its weights.
 
 ### Embedded development
 
 - Failed to set up a Rust project for programming an ESP32-C6. But then again, so did I until I figured out a
-peculiarity in my toolchain
-- Interestingly, Claude prefers to generate code from memory rather than invoke
+peculiarity in my toolchain.
+- Interestingly, Claude prefers to generate code from memory rather than invoke.
 the template generator it most definitely has this code from. That leads to outdated dependencies.
 - Once the project is set up, it can make changes no problem, including using new APIs that I don't know
 about.
@@ -198,10 +198,10 @@ of immediately checking the file it just modified.
 - Not fun to use at all. Claude just messed something new up every time. An exercise in frustration. Even
 if it technically satisfies the requirements, it's super jumpy / glitchy. It has no taste whatsoever to
 build a robust solution. To be fair, it *is* building this blind. It has no channel to observe the result,
-that would be hard for me as well. But that's just the nature of these tools for now I guess.
-- I'm giving up on this. It will be faster and importantly less nerve-wracking doing this myself.
+which would be hard for me as well. But that's just the nature of these tools for now I guess.
+- I'm giving up on this. It will be faster and importantly less nerve-wracking to do this myself.
 
-A learning here is to be fair to the model. This _is_ a challenging task to do well, I secretly gave it to
+A learning here is to be fair to the model. This _is_ a challenging task to do well, and I secretly gave it to
 Claude because I don't want to do it myself. Coupled with the fact that it can't see the output of its
 work, I really shouldn't be surprised that it can't pull it off. Neither could I.
 
@@ -220,7 +220,7 @@ While bugs like this don't happen to me because I'm very meticulous in handling 
 type system throws my way (part of the reason I enjoy Rust so much), I have to restrain myself from being
 annoyed at this as the time saving is still there. It's not much different from reviewing PRs at work.
 
-### Open Telemetry shenanigans
+### OpenTelemetry shenanigans
 
 Continuing from the architecture discussions with Claude, I went on to try some of the conclusions in
 a proof of concept. I also have a more detailed write-up of this [here](/notes/clickhouse).
@@ -228,7 +228,7 @@ a proof of concept. I also have a more detailed write-up of this [here](/notes/c
 - Have Claude Code create a compose stack with ClickHouse,
 [OpenTelemetry Collector](https://github.com/open-telemetry/opentelemetry-collector-contrib) and Grafana. 
 Works flawlessly. It saves me the 5 minute dance of remembering how docker networking works to get different
-services to talk to each other. After some errors on the Collectors part, I can get Claude to make sure the 
+services to talk to each other. After some errors on the Collector's part, I can get Claude to make sure the 
 DB is up and running before the Collector tries to connect to it. It also creates the OTEL collector config easily. 
 - At this point the stack is running but trying to get Claude to juggle the 6 (!) Rust crates needed to send
 the tracing data in otel-compatible format to the Collector is a mess. Did I mention that I don't like the
@@ -236,17 +236,17 @@ OpenTelemetry ecosystem? Here, the crates are a bit too young and moving too fas
 call a function that existed in an older version of one of the crates. But even after manually intervening 
 I'm also struggling. Ultimately we managed to get it running.
 - Once tracing data is in ClickHouse I start experimenting with charting interesting metrics in Grafana. The
-table schema auto-generated by the Collector is quite involved and I have no knowledge of ClickHouse' SQL dialect.
-Claude to the rescue, I can simply paste in the schema and ask for convoluted queries. It works phenomenally well
+table schema auto-generated by the Collector is quite involved and I have no knowledge of ClickHouse's SQL dialect.
+Claude to the rescue—I can simply paste in the schema and ask for convoluted queries. It works phenomenally well
 for this.
 
 ## How do I use LLMs now?
 
 With all this testing done, I'm starting to get a grip on how LLMs can be useful for me. I might add that I'm primarily
-talking about my personal projects here, at work I use LLMs significantly less for various reasons: There is so much 
+talking about my personal projects here. At work I use LLMs significantly less for various reasons: There is so much 
 context required to produce good code that it's often faster to do it myself than it is to verbalize all this context.
 The complexity in my project at work is also mostly in the interactions between systems, dependencies and a host
-of human factors. Technologically it's quite simple. Naturally that's a bad fit for LLMs, they're not about to coordinate
+of human factors. Technologically it's quite simple. Naturally that's a bad fit for LLMs. They're not about to coordinate
 an API change with another team for me.
 Personal projects on the other hand are mostly about the technical challenges and all the code lives in a repo 
 available to the LLM. API changes can be made without a care in the world, UIs can be changed without discussing with
@@ -254,12 +254,12 @@ UX for an hour.
 
 So for personal projects I use Claude Code in a terminal next to my normal IDE setup. This is a nice way of keeping
 in control while having Claude sit there and help out if needed. I always work on a branch and commit often to
-be able to see isolated changed in a diff. No vibe coding for me, I always check Claudes changes in detail.
+be able to see isolated changes in a diff. No vibe coding for me, I always check Claude's changes in detail.
 Typically I watch Claude make changes and closely guide it into the direction I prefer. This whole 'agentic' workflow 
 where people supposedly have multiple instances of LLMs running simultaneously does not work for me. 
 
 Apart from using Claude Code in the terminal, I also use the web interface often for one-off tasks, such as 
-crafting ClickHouse queries, discussing architectural approaches, proof reading stuff etc.
+crafting ClickHouse queries, discussing architectural approaches, proofreading stuff etc.
 
 <div class="mb-40" />
 
@@ -285,7 +285,7 @@ pauses when it encounters those tokens, goes off to do the search, pastes respon
 and continues inference.
 - Interesting insight on reasoning: There is only a fixed amount of computation flowing into any 
 given token. So training data needs to be phrased in such a way that the model doesn't have to
-solve the entire problem in one token, but instead can spread out intermediary computation on more
+solve the entire problem in one token, but instead can spread out intermediary computation over more
 tokens. Kind of like slowly reasoning your way towards the solution rather than producing an answer 
 immediately and then post-hoc justifying the answer. This leads to the conclusion that LLMs need
 tokens to think. Thinking is intrinsically linked to language processing.
@@ -357,16 +357,16 @@ are not used for the prediction of a new token. This turns out to favor training
 - Unembedding matrix also has 617M weights in GPT-3.
 - Softmax is used to turn embedding vector into a probability distribution. The temperature is an extra
 parameter here to guide how "sharp" the distribution is. i.e `T = 0`, highest component gets 100% of the
-probability, `T = 5`, spreads out the probability much more evenly, thus making predictions more likely
+probability; `T = 5`, spreads out the probability much more evenly, thus making predictions more likely
 that have lower components in the vector.
-- Components in the output vector after unembedding are called Logits.
+- Components in the output vector after unembedding are called logits.
 
 ### Notes on [Attention in transformers, step-by-step](https://www.youtube.com/watch?v=eMlx5fFNoYc&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=7)
 
-- Initially, every input token gets mapped to the same embedding vector, there is no sense of context.
+- Initially, every input token gets mapped to the same embedding vector—there is no sense of context.
 - One interaction of attention may be to update the embeddings of nouns with the preceding adjectives. This should refine the embedding
 vector to one that captures the essence of the noun in context better. (this assumes tokens are words).
-- Query and key vectors determine how relevant each token is to each other. i.e. the embedding of one word _attends_ to the
+- Query and key vectors determine how relevant each token is to each other, i.e. the embedding of one word _attends_ to the
 embedding of another.
 - The dot products of each query vector with each key vector yields the _attention pattern_.
 - To improve training, not only is the last token expected to predict the next one, but all tokens are expected to predict the following.
@@ -374,7 +374,7 @@ embedding of another.
 the prediction of earlier ones.
 - Size of attention pattern is bottleneck for context window as it scales with the square.
 - Finally, embeddings of tokens are updated by multiplying attention pattern by value vectors (produced using a value matrix). This way,
-every token gets _some_ part of every other token (preceding it), but more from the ones that are attending it more strongly.
+every token gets _some_ part of every other token (preceding it), but more from the ones that are attending to it more strongly.
 - This whole process is called one _head of attention_.
 - One attention head uses approximately 6.4M weights.
 - Multi-headed attention is running multiple attention layers in parallel. 96 per block for GPT-3.
