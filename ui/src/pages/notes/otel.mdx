@@ -188,7 +188,7 @@ SELECT
   toStartOfInterval("Timestamp", toIntervalSecond(${__interval_ms}/50)) as time,
   count(*) as trace_count
 FROM
-  "events"."otel_traces"
+  "your-db"."otel_traces"
 WHERE
   (
     Timestamp >= $__fromTime
