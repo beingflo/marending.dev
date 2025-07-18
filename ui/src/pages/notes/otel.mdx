@@ -15,7 +15,7 @@ struggled for a bit to instrument a Rust application with `tracing` and send the
 data to ClickHouse. So here is a short write-up to save you a hot minute—or provide
 some inspiration to self-host your observability platform. 
 
-## Observed application
+## Rust application
 The Rust crates involved here are unstable and moving fast, part of the reason this
 was trickier than expected. But at the time of writing, here is what works.
 
@@ -66,7 +66,7 @@ tracing_subscriber::registry()
 
 ```
 
-## Compose stack to ingest data
+## Observability compose stack
 Next, we want to run the [OpenTelemetry Collector](https://github.com/open-telemetry/opentelemetry-collector-contrib)
 from the contrib repository, a ClickHouse instance as well as Grafana.
 
@@ -177,7 +177,7 @@ ClickHouse instance with something like [TablePlus](https://tableplus.com/), you
 should see an `otel_traces` table with your spans in there.
 
 
-## Visualization
+## Grafana
 
 Navigate to http://localhost:3000 for the Grafana frontend. Here you must
 [install the appropriate data source plugin](https://clickhouse.com/docs/integrations/grafana).
