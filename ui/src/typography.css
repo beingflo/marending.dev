@@ -188,12 +188,6 @@ p:has(+ ol) {
 	padding-inline-start: 1em;
 }
 
-:where(blockquote):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-	margin-top: 1;
-	margin-bottom: 1;
-	padding-inline-start: 1em;
-}
-
 blockquote p:last-child {
 	padding-bottom: 0;
 }
