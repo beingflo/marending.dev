@@ -9,67 +9,49 @@ draft: false
 
 import { Details, Info } from 'src/components';
 
+I've been a long-time skeptic of large language models and their applicability to intellectual work. Too readily
+do they hallucinate information, too amateurish the programming mistakes. So for too long, I didn't give them a
+proper chance to redeem themselves. Now, I spent a couple of focused days reevaluating my stance, first by catching
+up to the latest advancements in transformer architecture and then by putting these models to the test.
+
 <Info>
-  Work in progress...
+  This is mostly a worklog I was writing as I went along. The structure might be a bit weird as a result.
 </Info>
 
 ## Goals and summary
 
-**[x] Learn technical details of how LLMs work**
+**Learn technical details of how LLMs work**: Excellent videos by 3Blue1Brown and Andrej Karpathy.
 
-Excellent videos by 3Blue1Brown
+**Explore modern local models**: Underwhelming. Models small enough to run on my laptop leave much to be desired.
 
-**[x] Explore modern local models**
+**Try local model on my jour data set**: Not working. Context too small or they just can't keep track of anything.
 
-Not great if I want more than simple summarization or proofreading
+**Explore modern LLM tools and agents**: Claude Code phenomenally useful for coding. Claude also useful for a bunch
+of other tasks.
 
-**[x] Try local model on my jour data set**
+## Developing an intuition on how LLMs work
 
-Not working. Context too small or they just can't keep track of anything.
-
-**[x] Explore modern LLM tools and agents**
-
-Tried Gemini and Claude. I'll focus on Claude for now just to dive deep rather than wide.
-
-**[x] Explore Claude on proofreading**
-
-Works great.
-
-**[x] Explore Claude on spotting mistakes in crypto code**
-
-Excellent.
-
-**[x] Explore Claude on architecture discussions**
-
-Phenomenal.
-
-**[x] Explore Claude on search (Google replacement)**
-
-Pretty useful.
-
-**[x] Explore Claude on embedded project**
-
-Pretty useful.
-
-**[x] Explore Claude on web dev project**
-
-Mixed bag.
+TODO
 
 ## Explore local models, Claude and Gemini
 
-### Who is currently in the Swiss National Council
+To get a first impression of modern developments, I used local and hosted LLMs for some search queries and other tasks.
+Below are two examples with my impression for each model. For the local models I used [Msty](https://msty.app/), the hosted
+ones are the free tier at this point.
 
-- **Gemini 2.5 Flash**: Very good
-- **Claude Sonnet 4**: Good but slow, can't figure out presidency
-- **Gemma3:1B**: Bad, gets even the number of members wrong
+**Who is currently in the Swiss National Council**
+
+- **Gemini 2.5 Flash**: Very good.
+- **Claude Sonnet 4**: Good but slow, can't figure out presidency.
+- **Gemma3:1B**: Bad, gets even the number of members wrong.
 - **Llama 3.2**: Gets the number of members correct but has knowledge cutoff in 2023 and doesn't do web search. Also slow to load model.
 - **Qwen3**: Super slow but pretty good.
-- **Gemma3**: Gets number of seats really wrong and annoyingly agreeable to having it pointed out
+- **Gemma3**: Gets number of seats really wrong and annoyingly agreeable to having it pointed out.
 
-### Summarize my server setup blog post and explain the scripts
+**Summarize my [server setup blog post](/notes/server-setup) and explain the deployment scripts**
 
-- **Gemini 2.5 Flash**: Phenomenal
-- **Claude Sonnet 4**: Phenomenal, a bit more concise than Gemini
+- **Gemini 2.5 Flash**: Phenomenal.
+- **Claude Sonnet 4**: Phenomenal, a bit more concise than Gemini.
 - **Gemma3:1B**: Useless. When asking for typos it thinks I'm talking about typos in its response. Asking it to
 explain something in the script is fruitless.
 - **Llama 3.2**: Not good. Doesn't find any typos and can't explain script at all.
@@ -91,7 +73,7 @@ AI companies out there to me.
 
 I can't get behind Google due to privacy reasons, they can simply bring
 together too many threads of my digital persona. OpenAI is exceptionally unpleasant in their public
-conduct. Mostly Sam Altman if I'm being honest. Grok also won't cut it for similar reasons.
+conduct. xAI also won't cut it for similar reasons.
 
 Unfortunately there are no *good* options when it comes to privacy, but it seems Anthropic is the least
 bad.
@@ -108,6 +90,12 @@ Even handles markdown tables etc. flawlessly. Much simpler than pasting note int
 and manually fixing all the findings. With having the note checked into git, it's easy to see the diff
 that Claude produced. Wouldn't trust it otherwise.
 
+Addendum: I also pasted this very blog post for proofreading into Claude and was caught off-guard when it referenced
+the content in its answer:
+
+> You're welcome! The corrected version is ready to paste back into your website. With it being tracked in git, 
+> you'll be able to easily see the diff of changes I made. Happy to help with proofreading anytime!
+
 ### Spot mistakes in crypto code
 
 I'm pasting in the [encryption code](https://github.com/beingflo/write.fieldnotes/blob/main/src/components/crypto.ts)
@@ -118,11 +106,12 @@ per-note keys rather than encrypting notes directly with the main key?".
 
 To check that Claude isn't overly agreeable I ask the same question in a new context with modified crypto
 code that includes some issues. In one instance I set the main key to be `extractable`, which it correctly
-flags as something that could be improved. Further, when passing undefined in the initialization vectors,
+flags as something that could be improved. Further, when passing `undefined` in the initialization vectors,
 it raises alarm bells, calling this a critical bug with catastrophic consequences.
 
 This isn't to say that an AI chatbot should be entrusted with security audits, it is still reassuring that
-it doesn't mess up on obvious issues.
+it doesn't mess up on obvious issues. Overall I'm quite impressed here. Most engineers I work with wouldn't
+know about IVs, not to mention spot mistakes like this.
 
 ### Architecture discussion
 
@@ -156,196 +145,38 @@ Observatory should include a web application that visualizes the data stored wit
 the storage layer needed?
 ```
 
-After pasting in this document and prompting Claude to ask clarifying questions, it produces the
-updated requirements doc below. It contains a bunch of boilerplate that would satisfy an architect, but
-also some interesting stuff.
-
-<Details title="Resulting architecture document">
-## Overview
-
-Observatory will handle data ingestion from embedded devices and backend services, store the data efficiently for perpetual retention, and provide visualization through Grafana integration.
-
-## Scale and Performance Requirements
-
-- **Device Scale**: Support for less than 20 embedded devices
-- **Data Volume**: Handle at most hundreds of messages per second
-- **Retention**: Perpetual data retention (no automatic deletion)
-- **Query Performance**: Up to 5 seconds delay acceptable for visualization
-- **Downsampling**: No requirement for data downsampling or tiered storage
-
-## Data Sources
-
-### Store Time Series Data from Embedded Devices
-
-There are multiple embedded devices that periodically record sensor data. They should be able to send that time series data to Observatory.
-
-**Device Specifications:**
-- **Connectivity**: WiFi connection to Observatory
-- **Data Types**: Temperature, CO2, location, and other sensor data
-- **Flexibility**: API should allow sending arbitrary JSON data structures
-- **Frequency**: Data transmission every 30 seconds to every 10 minutes
-- **Reliability**: Devices should cache data locally if Observatory is unreachable
-- **Connection**: No intermittent connectivity issues expected
-
-### Store Observability Data from Backend Services
-
-There are multiple backend services implemented in Rust. They use the `tracing` crate to instrument them. They should be able to export their tracing data to Observatory.
-
-**Observability Specifications:**
-- **Data Types**: Both spans and events from Rust tracing
-- **Format**: Structured logging and metrics
-- **Integration**: OpenTelemetry standard for data export
-- **Services**: Multiple Rust backend services using `tracing` crate
-
-## Storage Architecture
-
-### Technology Stack
-- **Database**: ClickHouse (preferred for time-series analytics)
-- **Backend**: Rust application layer
-- **Alternative**: Open to other technologies if justified
-
-### Database Schema
-
-**Two specialized tables in ClickHouse:**
-
-```sql
--- Device sensor data
-CREATE TABLE device_data (
-    timestamp DateTime64(3),
-    device_id String,
-    sensor_type String,  -- 'temperature', 'co2', 'location', etc.
-    data JSON,
-    INDEX idx_device_id device_id TYPE bloom_filter(0.01) GRANULARITY 1,
-    INDEX idx_sensor_type sensor_type TYPE bloom_filter(0.01) GRANULARITY 1
-) ENGINE = MergeTree()
-PARTITION BY toYYYYMM(timestamp)
-ORDER BY (device_id, timestamp);
-
--- Observability data (spans + events)
-CREATE TABLE observability_data (
-    timestamp DateTime64(3),
-    service_name String,
-    trace_id String,
-    span_id String,
-    event_type Enum('span', 'event'),
-    data JSON,
-    INDEX idx_service service_name TYPE bloom_filter(0.01) GRANULARITY 1,
-    INDEX idx_trace trace_id TYPE bloom_filter(0.01) GRANULARITY 1
-) ENGINE = MergeTree()
-PARTITION BY toYYYYMM(timestamp)
-ORDER BY (service_name, timestamp);
-```
-
-### Backend Application Requirements
-
-A Rust backend application is required in front of ClickHouse rather than direct database ingestion to provide:
-
-- **Protocol Translation**: Convert device JSON and OpenTelemetry data to ClickHouse schemas
-- **Authentication**: API key management and user authentication
-- **Data Validation**: Schema validation and data transformation
-- **Performance Optimization**: Batching and buffering for efficient ingestion
-- **Flexible JSON Handling**: Support for arbitrary sensor data structures
-
-## API Specifications
-
-### Device Data Ingestion
-- **Protocol**: HTTP REST interface
-- **Endpoint**: `/api/v1/devices/{device_id}/data`
-- **Method**: POST
-- **Authentication**: API key based authentication
-- **Data Format**: JSON payload with sensor readings
-
-### Observability Data Ingestion
-- **Protocol**: OpenTelemetry Protocol (OTLP)
-- **Endpoint**: `/api/v1/otlp/v1/traces`
-- **Standard**: Full OpenTelemetry compatibility
-- **Integration**: Compatible with Rust `tracing` crate via OpenTelemetry exporters
-
-## Visualization
-
-Observatory should integrate with Grafana for data visualization rather than building a custom web application.
-
-**Visualization Requirements:**
-- **Platform**: Grafana integration with ClickHouse data source
-- **Users**: Primary users are operators
-- **Dashboards**: Support for real-time dashboards, historical analysis, and alerting
-- **Query Types**: Complex aggregations across time windows and devices
-- **Performance**: Near real-time updates (up to 5 second delay acceptable)
-
-## Authentication and Security
-
-**API Authentication:**
-- API key authentication for device data ingestion
-- API key authentication for observability data ingestion
-
-**User Authentication:**
-- User authentication system for Grafana visualization access
-- No device-level permissions required (all operators can see all device data)
-
-**Authorization Scope:**
-- Authentication required for both data ingestion and visualization
-- Single-tenant system (no multi-tenancy requirements)
-
-## Deployment and Scalability
-
-**Constraints:**
-- No specific deployment constraints (cloud/on-premises flexibility)
-- No horizontal scalability requirements given the scale
-- No specific performance SLA requirements beyond the 5-second visualization delay
-
-**Integration:**
-- No requirement to integrate with existing monitoring tools
-- No requirement to export data to other systems
-- Grafana satisfies all visualization requirements
-
-## Technical Implementation Details
-
-### Data Processing
-- **Batching**: Configurable batch insertion (2-3 second intervals) to meet 5-second delay target
-- **Error Handling**: Robust error handling for device connectivity issues
-- **Data Transformation**: Convert OpenTelemetry spans/events to unified storage format
-
-### Performance Optimization
-- **Connection Pooling**: ClickHouse connection pooling for efficient database access
-- **Indexing**: Optimized indexes for common query patterns
-- **Partitioning**: Monthly partitioning for efficient data management
-
-### Monitoring and Reliability
-- **Caching**: Local device caching when Observatory is unreachable
-- **Buffering**: Backend buffering to handle traffic spikes
-- **Health Checks**: System health monitoring capabilities
-
-## Success Criteria
-
-- Successfully ingest data from up to 20 embedded devices
-- Handle hundreds of messages per second without data loss
-- Provide real-time visualization through Grafana with sub-5-second delay
-- Support perpetual data retention without performance degradation
-- Authenticate and authorize all data access appropriately
-- Maintain system availability even when individual devices are offline
-</Details>
+After pasting in this document and prompting Claude to ask clarifying questions, it produces an
+updated requirements doc. It contains a bunch of boilerplate that would satisfy an architect, but
+also some interesting stuff. Together we iterate towards a stack with ClickHouse at the center with either a 
+custom OpenTelemetry collector in front or Jaeger using CH as the storage layer and Grafana as the visualization tool.
 
 I also ask follow-up questions regarding OpenTelemetry that I haven't been able to find answers to
-after hours of scouring the web and Claude can give competent answers. Overall, exceptionally helpful
-for this task.
+after hours of scouring the web (due to the over-engineered mess that is the OpenTelemetry ecosystem) and 
+Claude can give competent answers. Overall, exceptionally helpful for this task.
 
-### Search replacement
+### Claude as a Google Search replacement
 
-- Restaurant recommendations: Good
+- Restaurant recommendations: Good.
 - Smart plug product search: Okay, has to be pointed in some directions but can summarize options quite
 well.
-- Particulate matter sensor: Very good
-- JS editor research: Excellent
+- Particulate matter sensor: Very good.
+- JS editor research: Excellent.
 - HAR file to wiremock stub: Why search for a tool when it can generate the script directly?
+
+In my experience, when Claude needs up-to-date information from the web it's noticeable less useful 
+than when knowledge / skill is sufficient that it already has embedded in its weights.
 
 ### Embedded development
 
-- Failed to set up a Rust project for programming an ESP32-C6
-- But then again, so did I until I figured out a peculiarity in my toolchain
+- Failed to set up a Rust project for programming an ESP32-C6. But then again, so did I until I figured out a
+peculiarity in my toolchain
 - Interestingly, Claude prefers to generate code from memory rather than invoke
 the template generator it most definitely has this code from. That leads to outdated dependencies.
 - Once the project is set up, it can make changes no problem, including using new APIs that I don't know
 about.
+
+I'm starting to notice that whenever Claude is really struggling with something, chances are so will I when
+I have to inevitably do it myself.
 
 ### Web development
 
@@ -362,26 +193,45 @@ build a robust solution. To be fair, it *is* building this blind. It has no chan
 that would be hard for me as well. But that's just the nature of these tools for now I guess.
 - I'm giving up on this. It will be faster and importantly less nerve-wracking doing this myself.
 
+A learning here is to be fair to the model. This _is_ a challenging task to do well, I secretly gave it to
+Claude because I don't want to do it myself. Coupled with the fact that it can't see the output of its
+work, I really shouldn't be surprised that it can't pull it off. Neither could I.
+
 **Async image processing**
 
 - Changing an image upload endpoint from immediate compression and upload of multiple versions to one 
-where only original is uploaded and compression and upload of compressed images is happening 
+where only the original is uploaded and compression and upload of compressed images is happening 
 asynchronously: Works flawlessly on first try! Did not expect that.
 - Later, I noticed a bug that I couldn't get Claude to resolve itself. After checking the code in 
 detail I found the culprit: There were two tasks executing in parallel using `rayon::join`. The 
 error returned from this was checked, but hidden was that the individual `Response`s went 
 unchecked. In this case, an upstream storage API was sometimes throwing `500`, but that went 
-unnoticed due to missing error handling. It's bugs like this that don't happen to me, I'm too meticulous
-in handling any error the type system throws my way (part of the reason I enjoy Rust so much). That
-makes it extra annoying when I need to spend 5 minutes tracking down this bug.
+unnoticed due to missing error handling.
+
+While bugs like this don't happen to me because I'm very meticulous in handling any error the
+type system throws my way (part of the reason I enjoy Rust so much), I have to restrain myself from being
+annoyed at this as the time saving is still there. It's not much different from reviewing PRs at work.
 
 ### Open Telemetry shenanigans
+
+Continuing from the architecture discussions with Claude, I went on to try some of the conclusions in
+proof of concept.
+
 
 - The documentation on OTEL is a complete mess, Claude can help here to break down concepts that are
 not understandable otherwise.
 - Trying to get traces into Clickhouse: Collector from otel-contrib is beta
 - Claude was extremely helpful it standing up a compose stack of grafana, clickhouse and otel-collector
 - Query for grafana dashboard: Extremely useful!
+
+## How do I use LLMs now?
+
+- 
+
+## Learnings
+
+- Humans learn, LLMs don't
+- Be fair to the model
 
 ---
 

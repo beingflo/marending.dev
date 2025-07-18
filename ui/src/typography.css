@@ -183,14 +183,14 @@ p:has(+ ol) {
 	border-inline-start-width: 0.25rem;
 	border-inline-start-color: var(--prose-blockquote-border-color);
 	quotes: '\201C' '\201D' '\2018' '\2019';
-	margin-top: 1.6em;
-	margin-bottom: 1.6em;
+	margin-bottom: 1.5em;
+	margin-top: 1em;
 	padding-inline-start: 1em;
 }
 
 :where(blockquote):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-	margin-top: 1.6666667em;
-	margin-bottom: 1.6666667em;
+	margin-top: 1;
+	margin-bottom: 1;
 	padding-inline-start: 1em;
 }
 
