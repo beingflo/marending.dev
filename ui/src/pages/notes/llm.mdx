@@ -389,7 +389,6 @@ every token gets _some_ part of every other token (preceding it), but more from 
 - First operation in MLP layer is a matrix multiplication that maps input vector into higher dimension.
 - In case of GPT-3, this matrix has 49k rows.
 - In some way, each of those rows can be thought of as a question that is being asked of the input vector.
-- Matrix multiplication is like dot product between rows of matrix and vector.
 - Next, resulting vector is run through non-linear function (e.g ReLU) to nicely clip components that
 didn't satisfy question.
 - Finally a down projection matrix maps the intermediate vector down to the input dimension.
