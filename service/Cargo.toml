@@ -14,3 +14,10 @@ tower-http = { version = "0.6.1", features = ["trace", "fs"] }
 rust-embed = "8.5.0"
 mime_guess = "2.0.5"
 uuid = { version = "1.10.0", features = ["v4"] }
+opentelemetry_sdk = { version = "0.30.0", features = ["rt-tokio"] }
+opentelemetry = "0.30.0"
+opentelemetry-otlp = "0.30.0"
+tracing-opentelemetry = "0.31.0"
+opentelemetry-stdout = "0.30.0"
+opentelemetry-semantic-conventions = "0.30.0"
+dotenv = "0.15.0"

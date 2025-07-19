@@ -5,20 +5,44 @@ use axum::{
     http::{Request, Response},
     Router,
 };
+use dotenv::dotenv;
+use opentelemetry::{global, trace::TracerProvider};
+use opentelemetry_sdk::trace::SdkTracerProvider;
 use tokio::signal;
 use tower_http::{
     classify::ServerErrorsFailureClass,
     services::{ServeDir, ServeFile},
     trace::TraceLayer,
 };
-use tracing::{info, Span};
-use tracing_subscriber::fmt::format::FmtSpan;
+use tracing::{error, info, Span};
+use tracing_opentelemetry::OpenTelemetryLayer;
+use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, Layer};
 use uuid::Uuid;
 
 #[tokio::main]
 pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    tracing_subscriber::fmt()
-        .with_span_events(FmtSpan::NEW | FmtSpan::CLOSE)
+    dotenv().ok();
+
+    let tracer = opentelemetry_otlp::SpanExporter::builder()
+        .with_http()
+        .build()?;
+
+    let provider = SdkTracerProvider::builder()
+        .with_batch_exporter(tracer)
+        .build();
+
+    global::set_tracer_provider(provider.clone());
+
+    // Set up tracing with both console output and OpenTelemetry
+    tracing_subscriber::registry()
+        .with(
+            tracing_subscriber::fmt::layer()
+                .with_filter(tracing_subscriber::filter::LevelFilter::WARN),
+        )
+        .with(
+            OpenTelemetryLayer::new(provider.tracer("marending-service"))
+                .with_filter(tracing_subscriber::filter::LevelFilter::INFO),
+        )
         .init();
 
     let serve_dir = ServeDir::new("ui").not_found_service(ServeFile::new("ui/index.html"));
@@ -32,16 +56,34 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     tracing::info_span!("http-request", %request_id)
                 })
                 .on_request(|request: &Request<Body>, _span: &Span| {
-                    tracing::info!("request: {} {}", request.method(), request.uri().path())
+                    info!(
+                        message = "request",
+                        request = request.method().as_str(),
+                        uri = request.uri().path().to_string(),
+                        referrer = request
+                            .headers()
+                            .get("referer")
+                            .and_then(|v| v.to_str().ok())
+                            .unwrap_or(""),
+                        user_agent = request
+                            .headers()
+                            .get("user-agent")
+                            .and_then(|v| v.to_str().ok())
+                            .unwrap_or("")
+                    )
                 })
                 .on_response(
                     |response: &Response<Body>, latency: Duration, _span: &Span| {
-                        tracing::info!("response: {} {:?}", response.status(), latency)
+                        info!(
+                            message = "response_status",
+                            status = response.status().as_u16(),
+                            latency = latency.as_nanos()
+                        )
                     },
                 )
                 .on_failure(
                     |error: ServerErrorsFailureClass, _latency: Duration, _span: &Span| {
-                        tracing::error!("error: {}", error)
+                        error!(message = "error", error = error.to_string())
                     },
                 ),
         );
