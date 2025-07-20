@@ -63,7 +63,7 @@ docker --context arm compose --file docker-compose.prod.yml up -d
 ```
 
 `arm` is the name of the context (the VPS is an arm server), the `docker-compose.prod.yml` is a local file
-in this repo. Btw. for [_reasons_](/notes/rust-spa), this website is not a naked bundle of static assets, 
+in this repo. Btw. for [_reasons_](/notes/rust-spa/), this website is not a naked bundle of static assets, 
 but instead a Rust application that serves said bundle.
 
 And the interesting thing here is that if I want to reference secrets from a `.env` file to provide

@@ -19,7 +19,7 @@ const posts = (await getCollection('notes')).sort(
 							title={note.data.title}
 							summary={note.data.subtitle}
 							date={note.data.date}
-							link={`/notes/${note.id}`}
+							link={note.data.link}
 						/>
 					))
 			}
