@@ -8,7 +8,10 @@ services:
     restart: unless-stopped
     networks:
       - caddy_net
+      - events_net
 
 networks:
   caddy_net:
+    external: true
+  events_net:
     external: true
