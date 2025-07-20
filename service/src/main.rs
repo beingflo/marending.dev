@@ -1,4 +1,4 @@
-use std::time::Duration;
+use std::{env, time::Duration};
 
 use axum::{
     body::Body,
@@ -45,6 +45,11 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
         )
         .init();
 
+    let Some((_, port)) = env::vars().find(|v| v.0.eq("SERVE_PORT")) else {
+        error!("Port not present in environment");
+        panic!()
+    };
+
     let serve_dir = ServeDir::new("ui").not_found_service(ServeFile::new("ui/index.html"));
     let app = Router::new()
         .nest_service("/", serve_dir.clone())
@@ -88,7 +93,6 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 ),
         );
 
-    let port = 3000;
     let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", port))
         .await
         .unwrap();
