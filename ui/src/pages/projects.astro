@@ -6,6 +6,21 @@ import Layout from '../layouts/Layout.astro';
 <Layout>
 	<Page>
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-y-2 md:gap-y-24">
+			<div>events</div>
+			<div class="col-span-2 mb-8 md:mb-0 flex flex-col">
+				<span>
+					Events is an observability and metrics stack built around ClickHouse. An OTel collector
+					ingests OpenTelemetry tracing data from a multitude of services and batch writes them to
+					ClickHouse. A Grafana instance is deployed to extract and visualize metrics from these
+					traces. In parallel, a custom Rust server exposes an API to allow IoT data, GPS location
+					information and other data of interest to be ingested into the observability stack as
+					well.
+				</span>
+				<div class="mt-2 text-sm text-stone-600">
+					<span>Technologies involved:</span>
+					<span>ClickHouse, OpenTelemetry, Tracing, Grafana, Rust, Docker</span>
+				</div>
+			</div>
 			<div>
 				<A href="https://reflective.quest">reflective</A>
 			</div>
@@ -19,7 +34,7 @@ import Layout from '../layouts/Layout.astro';
 				</span>
 				<div class="mt-2 text-sm text-stone-600">
 					<span>Technologies involved:</span>
-					<span>Rust, Postgres, S3, SolidJS, Caddy, Docker</span>
+					<span>Rust, PostgreSQL, S3, SolidJS, Caddy, Docker</span>
 				</div>
 			</div>
 			<div>observatory</div>
