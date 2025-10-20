@@ -1,6 +1,5 @@
 ---
 const pathname = new URL(Astro.request.url).pathname;
-import icon from './icon.svg';
 import 'src/global.css';
 ---
 
@@ -28,10 +27,6 @@ import 'src/global.css';
 				href="/"
 				class="not-prose flex flex-row gap-3 ml-4 h-fit">
 				<div class="flex flex-row gap-2 items-center">
-					<img
-						class="w-8 h-8"
-						src={icon.src}
-					/>
 					<div class="flex flex-col w-fit">
 						<span>florian</span>
 						<span class="-mt-3">marending</span>
