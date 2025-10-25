@@ -9,3 +9,4 @@ export { Note } from './Note';
 export { NoteSummary } from './NoteSummary';
 export { Page } from './Page';
 export { Title } from './Title';
+export { ProjectEntry } from './ProjectEntry';

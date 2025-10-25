@@ -1,177 +1,109 @@
 ---
-import { A, Page } from '../components';
+import { A, Page, ProjectEntry } from '../components';
 import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout>
 	<Page>
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-y-2 md:gap-y-24">
-			<div>events</div>
-			<div class="col-span-2 mb-8 md:mb-0 flex flex-col">
-				<span>
-					Events is an observability and metrics stack built around ClickHouse. An OTel collector
-					ingests OpenTelemetry tracing data from multiple services and writes them to ClickHouse in
-					batches. A Grafana instance is deployed to extract and visualize metrics from these
-					traces. In parallel, a custom Rust server exposes an API that allows IoT data, GPS
-					location information, and other data of interest to be ingested into the observability
-					stack.
-				</span>
-				<div class="mt-2 text-sm text-stone-600">
-					<span>Technologies involved:</span>
-					<span>ClickHouse, OpenTelemetry, Tracing, Grafana, Rust, Docker</span>
-				</div>
-			</div>
-			<div>
-				<A href="https://reflective.quest">reflective</A>
-			</div>
-			<div class="col-span-2 mb-8 md:mb-0 flex flex-col">
-				<span>
-					Reflective is a personal photo gallery application to upload, view and manage photos. Born
-					from a desire to have an elegant, portfolio-like view of my pictures, Reflective is
-					designed to be minimalistic and fast. Image metadata is stored in a Postgres database, the
-					full images as well as downsized versions are stored in an S3-compatible object storage
-					bucket.
-				</span>
-				<div class="mt-2 text-sm text-stone-600">
-					<span>Technologies involved:</span>
-					<span>Rust, PostgreSQL, S3, SolidJS, Caddy, Docker</span>
-				</div>
-			</div>
-			<div>observatory</div>
-			<div class="col-span-2 mb-8 md:mb-0 flex flex-col">
-				<span>
-					Observatory stores and visualizes metrics from various data sources, including IoT devices
-					and GPS trackers. The application is designed to be light weight to deploy and operate.
-					The backend is implemented in Rust and uses DuckDB for data storage. The frontend uses
-					SolidJS and <A href="https://observablehq.com/plot/">Plot</A>.
-				</span>
-				<div class="mt-2 text-sm text-stone-600">
-					<span>Technologies involved:</span>
-					<span>Rust, DuckDB, SolidJS, Plot</span>
-				</div>
-			</div>
-			<div>
-				<A href="https://ledger.rest.quest">ledger</A>
-			</div>
-			<div class="col-span-2 mb-8 md:mb-0 flex flex-col">
-				<span>
-					Ledger is a small transaction analysis tool. The user can import bank transaction dumps in
-					csv format from <A href="https://www.neon-free.ch/en/">Neon</A>. A small query language
-					allows quickly searching for transactions and getting aggregations at a glance. Automated
-					filters categorize transactions for analysis. Charts give insight into spending or income
-					by category and over time. As with other applications in this series, ledger runs locally
-					in the browser and offers the ability for sync and backup via S3 credentials.
-				</span>
-				<div class="mt-2 text-sm text-stone-600">
-					<span>Technologies involved:</span>
-					<span>Typescript, SolidJS, S3, Caddy</span>
-				</div>
-			</div>
-			<div>
-				<A href="https://jour.rest.quest">jour</A>
-			</div>
-			<div class="col-span-2 mb-8 md:mb-0 flex flex-col">
-				<span>
-					The latest app implementing the local-first concepts originally developed for
-					<A href="https://rest.quest">rest.quest</A>: Jour is a minimalistic journaling app that
-					stores data locally in the browser, optionally synchronizing it to an S3-compatible
-					bucket. Originally intended as a lab journal to keep track of thought processes at work,
-					jour is now in use as a general purpose journal that invites the user to use it with its
-					low friction of entry.
-				</span>
-				<div class="mt-2 text-sm text-stone-600">
-					<span>Technologies involved:</span>
-					<span>Typescript, SolidJS, S3, Caddy</span>
-				</div>
-			</div>
-			<div>
-				<A href="https://dd.rest.quest">dd</A>
-			</div>
-			<div class="col-span-2 mb-8 md:mb-0 flex flex-col">
-				<span>
-					A very minimalistic snippet management web app. This app is another iteration on the
-					concepts developed for <A href="https://rest.quest">rest.quest</A> and
-					<A href="https://go.rest.quest">go</A>: State is kept on the local device, but can be
-					synchronized optionally using an object storage bucket. The single page app relies heavily
-					on shortcuts.</span
-				>
-				<div class="mt-2 text-sm text-stone-600">
-					<span>Technologies involved:</span>
-					<span>Typescript, SolidJS, S3, Caddy</span>
-				</div>
-			</div>
-			<div>
-				<A href="https://go.rest.quest">go</A>
-				<div class="text-xs font-thin">
-					<A href="/notes/go-rest-quest">/notes/go-rest-quest</A>
-				</div>
-			</div>
-			<div class="col-span-2 mb-8 md:mb-0 flex flex-col">
-				<span>
-					A tiny and opinionated bookmark management web application. This app is leaning strongly
-					on concepts developed for <A href="https://rest.quest">rest.quest</A>: State is kept on
-					the local device, but can be synchronized optionally using an object storage bucket. The
-					single page app relies almost solely on shortcuts and can be used as a lightning fast
-					redirect tool using the browser keyword search.
-				</span>
-				<div class="mt-2 text-sm text-stone-600">
-					<span>Technologies involved:</span>
-					<span>Typescript, SolidJS, S3, Caddy</span>
-				</div>
-			</div>
-			<div>
-				<A href="https://marending.dev">marending.dev</A>
-			</div>
-			<div class="col-span-2 mb-8 md:mb-0 flex flex-col">
-				<span>
-					My personal website. Custom designed and built with SolidJS and Astro. It's deployed on a
-					small VPS using Caddy as a web server.
-				</span>
-				<div class="mt-2 text-sm text-stone-600">
-					<span>Technologies involved:</span>
-					<span>Typescript, SolidJS, Astro, Caddy</span>
-				</div>
-			</div>
-			<div class="flex flex-col">
-				<A href="https://rest.quest">rest.quest</A>
-				<div class="text-xs font-thin">
-					<A href="/notes/rest-quest">/notes/rest-quest</A>
-				</div>
-			</div>
-			<div class="col-span-2 mb-8 md:mb-0 flex flex-col">
-				<span>
-					A minimal and opinionated todo web application. The user interface is designed to remove
-					friction when adding projects or tasks. The state is primarily stored locally in the
-					browser. Optionally, the user can supply object storage credentials to synchronize the
-					state across multiple browsers. The application is implemented using SolidJS to keep the
-					bundle size small.
-				</span>
-				<div class="mt-2 text-sm text-stone-600">
-					<span>Technologies involved:</span>
-					<span>Typescript, SolidJS, S3, Caddy</span>
-				</div>
-			</div>
-			<div class="flex flex-col">
-				<A href="https://write.fieldnotes.land">fieldnotes.land</A>
-				<div class="text-xs font-thin">
-					<A href="/notes/fieldnotes">/notes/fieldnotes</A>
-				</div>
-			</div>
-			<div class="col-span-2 mb-8 md:mb-0 flex flex-col">
-				<span>
-					An end-to-end encrypted note taking application. The web application features a <em>
-						wysiwyg</em
-					> markdown editor and advanced formatting including tables. Content is encrypted using a private
-					key that is only stored in the browser. By encoding the decryption key in the hash of the URL,
-					it's possible to share notes without the server ever seeing the data in plain text. The backend
-					stores encrypted content in PostgreSQL.
-				</span>
-				<div class="mt-2 text-sm text-stone-600">
-					<span>Technologies involved:</span>
-					<span>Rust, Typescript, React, Jotai, PostgreSQL, Web Crypto API, AES, Caddy, Docker</span
-					>
-				</div>
-			</div>
+			<ProjectEntry
+				name="events"
+				technologies="ClickHouse, OpenTelemetry, Tracing, Grafana, Rust, Docker">
+				Events is an observability and metrics stack built around ClickHouse. An OTel collector
+				ingests OpenTelemetry tracing data from multiple services and writes them to ClickHouse in
+				batches. A Grafana instance is deployed to extract and visualize metrics from these traces.
+				In parallel, a custom Rust server exposes an API that allows IoT data, GPS location
+				information, and other data of interest to be ingested into the observability stack.
+			</ProjectEntry>
+			<ProjectEntry
+				name="reflective"
+				link="https://reflective.quest"
+				technologies="Rust, PostgreSQL, S3, SolidJS, Caddy, Docker">
+				Reflective is a personal photo gallery application to upload, view and manage photos. Born
+				from a desire to have an elegant, portfolio-like view of my pictures, Reflective is designed
+				to be minimalistic and fast. Image metadata is stored in a Postgres database, the full
+				images as well as downsized versions are stored in an S3-compatible object storage bucket.
+			</ProjectEntry>
+			<ProjectEntry
+				name="observatory"
+				technologies="Rust, DuckDB, SolidJS, Plot">
+				Observatory stores and visualizes metrics from various data sources, including IoT devices
+				and GPS trackers. The application is designed to be light weight to deploy and operate. The
+				backend is implemented in Rust and uses DuckDB for data storage. The frontend uses SolidJS
+				and <A href="https://observablehq.com/plot/">Plot</A>.
+			</ProjectEntry>
+			<ProjectEntry
+				name="ledger"
+				link="https://ledger.rest.quest"
+				technologies="Typescript, SolidJS, S3, Caddy">
+				Ledger is a small transaction analysis tool. The user can import bank transaction dumps in
+				csv format from <A href="https://www.neon-free.ch/en/">Neon</A>. A small query language
+				allows quickly searching for transactions and getting aggregations at a glance. Automated
+				filters categorize transactions for analysis. Charts give insight into spending or income by
+				category and over time. As with other applications in this series, ledger runs locally in
+				the browser and offers the ability for sync and backup via S3 credentials.
+			</ProjectEntry>
+			<ProjectEntry
+				name="journal"
+				link="https://jour.rest.quest"
+				technologies="Typescript, SolidJS, S3, Caddy">
+				The latest app implementing the local-first concepts originally developed for
+				<A href="https://rest.quest">rest.quest</A>: Jour is a minimalistic journaling app that
+				stores data locally in the browser, optionally synchronizing it to an S3-compatible bucket.
+				Originally intended as a lab journal to keep track of thought processes at work, jour is now
+				in use as a general purpose journal that invites the user to use it with its low friction of
+				entry.
+			</ProjectEntry>
+			<ProjectEntry
+				name="dd"
+				link="https://dd.rest.quest"
+				technologies="Typescript, SolidJS, S3, Caddy">
+				A very minimalistic snippet management web app. This app is another iteration on the
+				concepts developed for <A href="https://rest.quest">rest.quest</A> and
+				<A href="https://go.rest.quest">go</A>: State is kept on the local device, but can be
+				synchronized optionally using an object storage bucket. The single page app relies heavily
+				on shortcuts.
+			</ProjectEntry>
+			<ProjectEntry
+				name="go"
+				link="https://go.rest.quest"
+				note="/notes/go-rest-quest"
+				technologies="Typescript, SolidJS, S3, Caddy">
+				A tiny and opinionated bookmark management web application. This app is leaning strongly on
+				concepts developed for <A href="https://rest.quest">rest.quest</A>: State is kept on the
+				local device, but can be synchronized optionally using an object storage bucket. The single
+				page app relies almost solely on shortcuts and can be used as a lightning fast redirect tool
+				using the browser keyword search.
+			</ProjectEntry>
+			<ProjectEntry
+				name="marending.dev"
+				link="https://marending.dev"
+				technologies="Typescript, SolidJS, Astro, Caddy">
+				My personal website. Custom designed and built with SolidJS and Astro. It's deployed on a
+				small VPS using Caddy as a web server.
+			</ProjectEntry>
+			<ProjectEntry
+				name="rest.quest"
+				link="https://rest.quest"
+				note="/notes/rest-quest"
+				technologies="Typescript, SolidJS, S3, Caddy">
+				A minimal and opinionated todo web application. The user interface is designed to remove
+				friction when adding projects or tasks. The state is primarily stored locally in the
+				browser. Optionally, the user can supply object storage credentials to synchronize the state
+				across multiple browsers. The application is implemented using SolidJS to keep the bundle
+				size small.
+			</ProjectEntry>
+			<ProjectEntry
+				name="fieldnotes"
+				link="https://write.fieldnotes.land"
+				note="/notes/fieldnotes"
+				technologies="Rust, Typescript, React, Jotai, PostgreSQL, Web Crypto API, AES, Caddy, Docker">
+				An end-to-end encrypted note taking application. The web application features a
+				<em>wysiwyg</em> markdown editor and advanced formatting including tables. Content is encrypted
+				using a private key that is only stored in the browser. By encoding the decryption key in the
+				hash of the URL, it's possible to share notes without the server ever seeing the data in plain
+				text. The backend stores encrypted content in PostgreSQL.
+			</ProjectEntry>
 		</div>
 	</Page>
 </Layout>
