@@ -1,5 +1,5 @@
 ---
-import { NoteSummary } from '../components';
+import { NoteSummary, Page } from '../components';
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 
@@ -9,18 +9,20 @@ const posts = (await getCollection('notes')).sort(
 ---
 
 <Layout>
-	<div class="p-4 py-16 md:py-32 flex flex-col gap-6 md:gap-4 w-full mx-auto">
-		{
-			posts
-				?.filter((post: any) => !post.data.draft || import.meta.env.DEV)
-				?.map((note: any) => (
-					<NoteSummary
-						title={note.data.title}
-						summary={note.data.subtitle}
-						date={note.data.date}
-						link={note.data.link}
-					/>
-				))
-		}
-	</div>
+	<Page>
+		<div class="grid md:grid-cols-2 pt-4 pb-12 gap-6 md:gap-4">
+			{
+				posts
+					?.filter((post: any) => !post.data.draft || import.meta.env.DEV)
+					?.map((note: any) => (
+						<NoteSummary
+							title={note.data.title}
+							summary={note.data.subtitle}
+							date={note.data.date}
+							link={note.data.link}
+						/>
+					))
+			}
+		</div>
+	</Page>
 </Layout>
