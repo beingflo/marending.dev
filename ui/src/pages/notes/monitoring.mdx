@@ -1,10 +1,67 @@
 ---
 title: 'Cheap and simple service monitoring'
 subtitle: 'An ode to updown.io'
-date: '23 Oct 2025'
+date: '25 Oct 2025'
 link: '/notes/monitoring/'
 layout: 'src/layouts/NoteLayout.astro'
 draft: true
 ---
 
-Test
+I'm hosting a bunch of software on a VPS. Among them a todo list, a note taking application
+and of course my personal website. It would be a hassle if that were to go down without me noticing
+for an extended period of time. Especially my notes app contains information that I sometimes 
+urgently need access to. Naturally, I want to know sooner rather than later if my server or individual
+deployments go down, for this reason I was looking around for uptime monitoring tools some time ago.
+
+Now, 2 years of using [updown.io](https://updown.io) later, I want to highlight this neat little service. I wish more software
+was built like it.
+
+## Feature set
+
+updown effectively comes with two features:
+- uptime monitoring
+- pulse monitoring
+
+Uptime monitoring is the core feature you expect from any monitoring service. It hits your website / webapp
+with a request regularly, checking the response status, response time, SSL certificate expiration etc. 
+in the process.
+
+Pulse monitoring works the other way around. You're expected to hit an endpoint at updown regularly to 
+indicate that you're alive and well. This is very useful to me to ensure backups are running: I have 
+backup scripts that upload DB dumps to S3 and send a pulse to updown upon successful completion. If that
+script stops working for some reason (e.g. expired S3 credentials), the monitor would alert me.
+
+And then there is some other stuff you would expect but I don't use: Status pages, API access, etc.
+That's pretty much it. No automated browser tests, no integrated tracing, no bells and whistles. 
+Just the rock solid essentials.
+
+And I've noticed that this kind of minimalism encourages more home-grown solutions. Say, I not only
+want to check that a service is up, but also that the API is working correctly. Some monitoring services
+offer automated API testing for this purpose. To achieve this with updown, I would instead deploy a
+container that regularly runs these tests and reports success via a pulse check.
+
+The hard thing you don't want to do yourself is the alerting, that's the part that requires independent
+hardware that won't go down along with your infrastructure. That's the part updown takes over. The rest,
+the testing framework I use, how I run them etc. I don't want to marry to a monitoring solution. Some
+platform may offer a way to write API tests in JS, but I may prefer [hurl](https://hurl.dev).
+The fact that I'm left to construct my own solution around the essentials is getting more 
+attractive the more experience I gain.
+
+Of course, one should always carefully consider the maintenance burden of building your own solution.
+But the cost of the hosted, locked-in solution is often underestimated. And I'm not just talking 
+about monetary cost.
+
+## Pricing
+Right in line with the philosophy behind this service, the pricing is extremely reasonable. You buy
+credits upfront, and then your checks consume the credits. For my modest usage, that comes out to 
+less than 50 cents per month. How *refreshing*.
+
+I often feel annoyed with the pricing services go with: A free tier that has limited functionality, 
+followed by a paid tier that goes well beyond my usage but costs, say, 15 bucks a month.
+I *want* to give them money, I want them to have a stable, sustainable business. But I also want
+to pay a fair amount based on my usage. It doesn't make sense that I pay the same amount of money
+whether I check 1 website once an hour or 10 websites every minute. There needs to be some gradation.
+
+Anyhow, I'm sure I'm preaching to the choir. I also understand the business' perspective, subscription 
+models make way more money and small fish customers are probably just not worth the support obligation.
+All the more reason to celebrate the businesses that do offer such friendly pricing.
