@@ -10,8 +10,8 @@ export type Props = {
 };
 
 export const ProjectEntry = ({ name, link, children, technologies, note }: Props) => (
-	<>
-		<div class="flex flex-col txt-right">
+	<div class="flex flex-col md:flex-row gap-x-8 gap-y-2">
+		<div class="flex flex-col w-40 md:text-right">
 			<Show
 				when={!!link}
 				fallback={<div>{name}</div>}>
@@ -23,12 +23,12 @@ export const ProjectEntry = ({ name, link, children, technologies, note }: Props
 				</div>
 			</Show>
 		</div>
-		<div class="col-span-2 mb-8 md:mb-0 flex flex-col">
+		<div class="col-span-2 mb-8 md:mb-0 w-full flex flex-col">
 			<span>{children}</span>
 			<div class="mt-2 text-sm text-stone-600">
 				<span>Technologies involved: </span>
 				<span>{technologies}</span>
 			</div>
 		</div>
-	</>
+	</div>
 );
