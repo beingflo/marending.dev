@@ -7,6 +7,27 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: true 
 ---
 
+Let me take you back to around 6 years ago. I was starting to 
+[de-Google](https://en.wikipedia.org/wiki/DeGoogle) my life, replacing Google Drive 
+and Google Photos with [pCloud](https://www.pcloud.com/). Now, while pCloud is fine as a
+cloud storage provider, it really didn't nail the photo aspect of it. At that time,
+viewing images was painfully slow, as in, taking 10 seconds for any thumbnail to load in.
+It felt as if they were regenerating thumbnails on every view.
+
+This made me wonder if hosting and efficiently serving images was really that hard, 
+or if pCloud simply didn't care about the user experience. Google was pulling it off, 
+but maybe that was a result of hundreds of engineers and specialized compression schemes.
+
+So I set out on my first ever attempt at a side project (apart from some smaller CLI tools
+and such) with _[foti](https://github.com/beingflo/foti/tree/master)_. This is code I wrote
+with around 1 month of on-the-job frontend experience. View it at your own risk. I was using
+a python server that eagerly downsampled images for thumbnails and served them up via a 
+web socket connection (for whatever reason). The whole thing was running on a Raspberry Pi 4
+in a box in my cupboard.
+
+While the result wasn't pretty, it served to validate my suspicion: Serving images at anything
+faster than a glacial pace _wasn't that hard_.
+
 ## A brief recap
 
 ## Features
