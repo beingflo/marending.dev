@@ -1,5 +1,10 @@
 @import 'tailwindcss';
 
+embed {
+	width: 100%;
+	height: 100vh;
+}
+
 :where(p):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
 	padding-bottom: 1rem;
 }

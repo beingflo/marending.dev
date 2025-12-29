@@ -7,6 +7,8 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: true 
 ---
 
+import { Details } from 'src/components';
+
 Let me take you back to around 6 years ago. I was starting to 
 [de-Google](https://en.wikipedia.org/wiki/DeGoogle) my life, replacing Google Drive 
 and Google Photos with [pCloud](https://www.pcloud.com/). Now, while pCloud is fine as a
@@ -29,6 +31,12 @@ While the result wasn't pretty, it served to validate my suspicion: Serving imag
 faster than a glacial pace _wasn't that hard_.
 
 ## A brief recap
+
+<Details title="Full UX concept">
+	<div class="w-full mx-auto">
+		<embed loading="lazy" src="/reflective.pdf" type="application/pdf" />
+	</div>
+</Details>
 
 ## Features
 
