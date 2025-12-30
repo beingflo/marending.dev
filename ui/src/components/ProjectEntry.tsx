@@ -25,7 +25,7 @@ export const ProjectEntry = ({ name, link, children, technologies, note }: Props
 		</div>
 		<div class="col-span-2 mb-8 md:mb-0 w-full flex flex-col">
 			<span>{children}</span>
-			<div class="mt-2 text-sm text-stone-600">
+			<div class="mt-2 text-sm text-stone-600 dark:text-stone-300">
 				<span>Technologies involved: </span>
 				<span>{technologies}</span>
 			</div>
