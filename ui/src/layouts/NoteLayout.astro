@@ -1,18 +1,38 @@
 ---
-import Layout from './Layout.astro';
+import Layout from './BasicLayout.astro';
 import { Note, Title } from 'src/components';
 import 'src/typography.css';
 
+const pathname = new URL(Astro.request.url).pathname;
 let { frontmatter } = Astro.props;
 ---
 
 <Layout>
-	<Note>
-		<Title
-			subtitle={frontmatter.subtitle}
-			date={frontmatter.date}>
-			{frontmatter.title}
-		</Title>
-		<slot />
-	</Note>
+	<a
+		class="not-prose text-sm font-light md:text-md hidden xl:block absolute mt-8"
+		href="/"
+		>← back</a
+	>
+	<main>
+		<Note>
+			<a
+				class="not-prose text-sm font-light md:text-md xl:hidden block mb-8"
+				href="/"
+				>← back</a
+			>
+			<Title
+				subtitle={frontmatter.subtitle}
+				date={frontmatter.date}>
+				{frontmatter.title}
+			</Title>
+			<slot />
+		</Note>
+	</main>
+	<footer>
+		<a
+			class="fixed p-2 bottom-0 right-2 text-xs font-light text-gray-600 dark:text-gray-200"
+			href={`/feedback/?path=${pathname}`}>
+			feedback
+		</a>
+	</footer>
 </Layout>

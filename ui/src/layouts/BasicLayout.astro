@@ -1,0 +1,27 @@
+---
+const pathname = new URL(Astro.request.url).pathname;
+import 'src/global.css';
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link
+			rel="icon"
+			type="image/svg+xml"
+			href="/favicon.svg"
+		/>
+		<meta
+			name="viewport"
+			content="width=device-width"
+		/>
+		<meta
+			name="generator"
+			content={Astro.generator}
+		/><title>marending</title></head
+	>
+
+	<body class="px-4 xl:p-0 dark:bg-zinc-800 dark:text-zinc-100 max-w-6xl mx-auto">
+		<slot />
+	</body>
+</html>
