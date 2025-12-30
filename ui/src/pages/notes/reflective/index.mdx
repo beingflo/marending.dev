@@ -11,34 +11,34 @@ import { Details, Hint } from 'src/components';
 
 Let me take you back to around 6 years ago. I was starting to 
 [de-Google](https://en.wikipedia.org/wiki/DeGoogle) my life, replacing Google Drive 
-and Google Photos with [pCloud](https://www.pcloud.com/). Now, while pCloud is fine as a
-cloud storage provider, it really didn't nail the photo aspect of it. At that time,
-viewing images was painfully slow, as in, taking 10 seconds for any thumbnail to load.
-It felt as if they were regenerating thumbnails on every view.
+and Google Photos with [pCloud](https://www.pcloud.com/). Now, while pCloud works fine as a
+cloud storage provider, it completely fails at the photo experience. At that time,
+viewing images was painfully slow, thumbnails took 10 seconds to load.
+It felt like they were regenerating thumbnails on every view.
 
 This made me wonder if hosting and efficiently serving images was really that hard, 
 or if pCloud simply didn't care about the user experience. Google was pulling it off, 
-but maybe that was a result of hundreds of engineers and specialized compression schemes.
+but maybe that required hundreds of engineers and specialized compression schemes.
 
-So I set out on my first ever attempt at a side project (apart from some smaller CLI tools
-and such) with _[foti](https://github.com/beingflo/foti/tree/master)_. This is code I wrote
-with around 1 month of on-the-job frontend experience. View it at your own risk. I was using
-a Python server that eagerly downsampled images for thumbnails and served them up via a 
-WebSocket connection (for whatever reason). The whole thing was running on a Raspberry Pi 4
+So I started my first real side project (apart from some smaller CLI tools)
+with _[foti](https://github.com/beingflo/foti/tree/master)_. This is code I wrote
+with around 1 month of on-the-job frontend experience. View it at your own risk. I built
+a Python server that eagerly downsampled images for thumbnails and served them via 
+a WebSocket connection (for whatever reason). The whole thing ran on a Raspberry Pi 4
 in a box in my cupboard.
 
-While the result wasn't pretty, it served to validate my suspicion: Serving images at anything
-faster than a glacial pace _wasn't that hard_. With a proof-of-concept in the bag and my appetite
+While the result wasn't pretty, it validated my suspicion: Serving images at reasonable
+speeds _wasn't that hard_. With a proof-of-concept done and my appetite
 for side projects awakened, I decided to first hone my web dev skills on an "easier" target: 
-note taking. In my mind, I would quickly build a note-taking application to satisfy a personal
-need, learning a ton in the process, and then swiftly return to my actual goal - the image gallery.
+note taking. I thought I'd quickly build a note-taking application to satisfy a personal
+need, learn a ton in the process, then swiftly return to my actual goal — the image gallery.
 
-If you've read about [fieldnotes](/notes/fieldnotes), you'll know that this was more than a short
+If you've read about [fieldnotes](/notes/fieldnotes), you'll know this became much more than a short
 intermezzo. I lost myself there for a couple of years, then a bunch of other [projects](/projects) 
-snuck in and here we are, quite a while later. Once I finally got back to it, I started sketching
-out the feature set and architecture, only to be distracted again by another project. In the second
-round of getting back to it, I drastically cut down the scope and finally pushed it over the line.
-This is the version I'm writing about now. As always, there are a bunch of learnings here. Reflecting
+snuck in, and here we are, quite a while later. When I finally returned to it, I started sketching
+out the feature set and architecture, only to be distracted again by another project. The second
+time around, I drastically cut the scope and finally pushed it over the line.
+This is the version I'm writing about now. As always, there are plenty of learnings here. Reflecting
 on those is the main reason I write these project reports.
 
 <Hint>
@@ -51,50 +51,50 @@ on those is the main reason I write these project reports.
 ## Features
 
 [Reflective](https://github.com/beingflo/reflective) is currently a simple gallery for
-distraction-free viewing of my images. The main view one is greeted with when opening the web app
-is a grid of all the images ingested into the system:
+distraction-free viewing of my images. When you open the web app,
+you're greeted with a grid of all the images ingested into the system:
 
 ![Screenshot of reflective](./_view.png)
 
-No buttons or labels around to distract from the images. When scrolling, the application seamlessly loads
-in more images. All images are cropped to a 4:3 landscape aspect ratio.
+No buttons or labels to distract from the images. When scrolling, the application seamlessly loads
+more images. All images are cropped to a 4:3 landscape aspect ratio.
 
-There is no categorization into albums or folders, it's a simple feed of images in reverse chronological order.
+There's no categorization into albums or folders, just a simple feed of images in reverse chronological order.
 
-Images can have an arbitrary number of tags associated with them. When looking for specific images, one can
+Images can have any number of tags associated with them. To find specific images, you can
 open the search bar via shortcut (`cmd+k`) and search for any tag. In the following screenshot, the images are
-filtered down to ones with a tag titled `japan`. There are 1860 images matching that query.
+filtered to ones tagged `japan`. There are 1860 images matching that query.
 
 ![Screenshot of reflective](./_search.png)
 
-To tag images, one can open the tag view (`cmd+e`) and select individual images, or all the images between two
-selections by holding down `Shift`. The tag bar now shows tags that all selected images have in common, ones that
-only some images have (in lighter gray), as well as an input field to add new tags to all selected images.
+To tag images, open the tag view (`cmd+e`) and select individual images, or select all images between two
+selections by holding down `Shift`. The tag bar shows tags that all selected images share, tags that
+only some images have (in lighter gray), and an input field to add new tags to all selected images.
 
 ![Screenshot of reflective](./_tags.png)
 
-Back in normal view mode, one can open an image in fullscreen view by clicking on it. A lightbox now fills 
-the screen, there are shortcuts to switch to the previous and next image as well as loading in a full-resolution
-version of the image to zoom in for details.
+Back in normal view mode, clicking an image opens it in fullscreen. A lightbox fills 
+the screen with shortcuts to navigate between images and load the full-resolution
+version for zooming into details.
 
 ![Screenshot of reflective](./_lightbox.png)
 
-Further, hitting `cmd+i` displays some selected metadata of the image file below the image.
+Hitting `cmd+i` displays selected metadata below the image.
 
 ![Screenshot of reflective](./_metadata.png)
 
 To ingest images into reflective, I copy files into a folder on my server and create a marker file in a 
-certain location. The server will now recognize that there are new files and will start downsampling the
-new images for thumbnails. Once that process is complete, the new images will appear in the view.
+specific location. The server recognizes the new files and starts downsampling them
+for thumbnails. Once complete, the new images appear in the view.
 
 ## Architecture
 
 As with [rest.quest](/notes/rest-quest), I first brainstormed on paper what the application should do
-and how it should work. For reflective this turned out to be quite a bit of rambling, but I do have
-to say that I enjoy this process. In hindsight, I once again over-engineered a lot - it's always easy
-to think up a mechanism or feature, but only when it's time to implement it does my pragmatism set in.
+and how it should work. For reflective, this became quite a ramble, but I
+enjoy this process. In hindsight, I once again over-engineered everything — it's always easy
+to dream up mechanisms and features, but pragmatism only kicks in when it's time to implement.
 
-In the scans you can look at below, you'll find much of my thought process detailed.
+In the scans below, you'll find my entire thought process detailed.
 
 <Details title="Full concept">
 	See if you can find the angry cow in prison.
@@ -136,34 +136,33 @@ In the scans you can look at below, you'll find much of my thought process detai
 	</div>
 </Details>
 
-At first, it was clear to me that I should store image data in S3. After all, storing images on my server
-was not scalable. It's architecturally not a good idea to collocate so much data with the application server.
-But storing the data and the metadata about the images in separate places introduces the problem of keeping
-the two in sync. You can find a lot of musing about this issue in my notes.
+At first, I was convinced I should store image data in S3. After all, storing images on my server
+wasn't scalable. Architecturally, collocating that much data with the application server is a bad idea.
+But storing the data and metadata in separate places creates a synchronization problem.
+You'll find plenty of musing about this issue in my notes.
 
-But once again, I expertly avoided the thought that this is ultimately only going to be used by me and I might
-as well just ignore this whole problem. So after already having implemented the whole ordeal with upload
-functionality, presigned S3 URLs, etc., I decided to unceremoniously rip it out and instead just store the 
-images on the server, have the server asynchronously process them for thumbnails and such, and then just 
+Once again, I expertly ignored the fact that I'm the only user and could
+just skip this whole problem. After implementing the entire system with upload
+functionality, presigned S3 URLs, and all that complexity, I unceremoniously ripped it out. Instead, I now store 
+images on the server, have the server asynchronously process them for thumbnails, and 
 serve the images directly.
 
-So as it stands right now, the architecture has been simplified to the point that it's not worth discussing 
-further.
+The architecture has been simplified to the point where there's nothing left to discuss.
 
 ## Learnings
 
-Reflective is a continuation of my eternal battle against over-engineering. By now, I have the concept of
-MVP scope down, I always try to simplify down to a barely usable application and then see where
-I go from there. The problem this time around was the scope included functionality for an imaginary 
-user-base. I hadn't yet internalized the idea of 
-[home-cooked software](https://www.robinsloan.com/notes/home-cooked-app/) yet.
+Reflective continues my eternal battle against over-engineering. By now, I have the concept of
+MVP scope down — I always try to simplify to a barely usable application and iterate from there.
+The problem this time was that my scope included functionality for an imaginary 
+user base. I hadn't yet internalized the idea of 
+[home-cooked software](https://www.robinsloan.com/notes/home-cooked-app/).
 
-Halfway through the concept I even wrote the following in my notes: 
+Halfway through the concept, I even wrote this note to myself: 
 
 > Reminder to build for yourself and not over-engineer for an imaginary user-base!
 >
 > - Me (to myself)
 
-And yet I just carried on designing a system that would scale to a large user-base instead of focusing
-on what _I_ need. Having built significant functionality that I removed again to simplify hopefully
-trained me to recognize such situations earlier next time.
+And yet I carried on designing a system that would scale to lots of users instead of focusing
+on what _I_ needed. Building significant functionality only to rip it out later hopefully
+taught me to recognize these situations earlier next time.
