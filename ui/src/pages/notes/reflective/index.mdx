@@ -50,6 +50,43 @@ on those is the main reason I write these project reports.
 
 ## Features
 
+[Reflective](https://github.com/beingflo/reflective) is currently a simple gallery for
+distraction-free viewing of my images. The main view one is greeted with when opening the web app
+is a grid of all the images ingested into the system:
+
+![Screenshot of reflective](./_view.png)
+
+No buttons or labels around to distract from the images. When scrolling, the application seamlessly loads
+in more images. All images are cropped to a 4:3 landscape aspect ratio.
+
+There is no categorization into albums or folders, it's a simple feed of images in reverse chronological order.
+
+Images can have an arbitrary number of tags associated with them. When looking for specific images, once can
+open the search bar via shortcut (`cmd+k`) and search for any tag. In the following screenshot, the images are
+filtered down to ones with a filter titled `japan`. There are 1860 images matching that query.
+
+![Screenshot of reflective](./_search.png)
+
+To tag images, one can open the tag view (`cmd+e`) and select individual images, or all the images between two
+selections by holding down `Shift`. The tag bar now shows tags that all selected images have in common, ones that
+only some images have (in lighter gray), as well as an input field to add new tags to all selected images.
+
+![Screenshot of reflective](./_tags.png)
+
+Back in normal view mode, one can open an image in fullscreen view by clicking on it. A lightbox now fills 
+the screen, there are shortcuts to switch to the previous and next image as well as loading in a full-resolution
+version of the image to zoom in for details.
+
+![Screenshot of reflective](./_lightbox.png)
+
+Further, hitting `cmd+i` displays some selected metadata of the image file below the image.
+
+![Screenshot of reflective](./_metadata.png)
+
+To ingest images into reflective, I copy files into a folder on my server and create a marker file in a 
+certain location. The server will now recognize that there are new files and will start downsampling the
+new images for thumbnails. Once that process is complete, the new images will appear in the view.
+
 ## Architecture
 
 <Details title="Full UX concept">
