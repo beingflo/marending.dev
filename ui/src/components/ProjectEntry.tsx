@@ -10,8 +10,8 @@ export type Props = {
 };
 
 export const ProjectEntry = ({ name, link, children, technologies, note }: Props) => (
-	<div class="flex flex-col md:flex-row gap-x-8 gap-y-2">
-		<div class="flex flex-col w-40 md:text-right">
+	<div class="flex flex-col md:flex-row gap-y-2">
+		<div class="flex flex-col w-40">
 			<Show
 				when={!!link}
 				fallback={<div>{name}</div>}>
