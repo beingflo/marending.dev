@@ -1,10 +1,10 @@
 ---
 title: 'Reflective: A simple self-hosted image gallery'
 subtitle: 'A project report'
-date: '25 Dec 2025'
+date: '30 Dec 2025'
 link: '/notes/reflective/'
 layout: 'src/layouts/NoteLayout.astro'
-draft: true 
+draft: false 
 ---
 
 import { Details, Hint } from 'src/components';
@@ -89,7 +89,14 @@ new images for thumbnails. Once that process is complete, the new images will ap
 
 ## Architecture
 
-<Details title="Full UX concept">
+As with [rest.quest](/notes/rest-quest), I first brainstormed on paper what the application should do
+and how it should work. For reflective this turned out to be quite a bit of rambling, but I do have
+to say that I enjoy this process. In hindsight, I once again over-engineered a lot - it's always easy
+to think up a mechanism or feature, but only when it's time to implement it does my pragmatism set in.
+
+In the scans you can look at below, you'll find much of my thought process detailed.
+
+<Details title="Full concept">
 	See if you can find the angry cow in prison.
 	<div class="md:w-3/4 w-full mx-auto">
 		![Screenshot of UX concept](./_reflective-page1.jpeg)
@@ -129,6 +136,34 @@ new images for thumbnails. Once that process is complete, the new images will ap
 	</div>
 </Details>
 
-## Deployment
+At first, it was clear to me that I should store image data in S3. After all, storing images on my server
+was not scalable. It's architecturally not a good idea to collocate so much data with the application server.
+But storing the data and the metadata about the images in separate places introduces the problem of keeping
+the two in sync. You can find a lot of musing about this issue in my notes.
+
+But once again, I expertly avoided the thought that this is ultimately only going to be used by me and I might
+as well just ignore this whole problem. So after already having implemented the whole ordeal with upload
+functionality, presigned S3 urls etc. I decided to unceremoniously rip it out and instead just store the 
+images on the server, have the server asynchronously process them for thumbnails and such, and then just 
+serve the images directly.
+
+So as it stands right now, the architecture has been simplified to the point that it's not worth discussing 
+further.
 
 ## Learnings
+
+Reflective is a continuation of my eternal battle against over-engineering. By now, I have the concept of
+MVP scope down, I always try to simplify down to a barely usable application and then see where
+I go from there. The problem this time around was the scope included functionality for an imaginary 
+user-base. I hand't yet internalized the idea of 
+[home-cooked software](https://www.robinsloan.com/notes/home-cooked-app/) yet.
+
+Half way through the concept I even wrote the following in my notes: 
+
+> Reminder to build for yourself and not over-engineer for an imaginary user-base!
+>
+> - Me (to myself)
+
+And yet I just carried on designing a system that would scale to a large user-base instead of focusing
+on what _I_ need. Having built significant functionality that I removed again to simplify hopefully
+trained me to recognize such situations earlier next time.
