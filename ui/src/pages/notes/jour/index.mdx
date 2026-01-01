@@ -7,8 +7,6 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: true 
 ---
 
-import { Info } from 'src/components';
-
 Years ago I stumbled across a [blog post on lab notebooks](https://sambleckley.com/writing/lab-notebooks.html).
 The author argues that practitioners in many fields keep a journal where they
 detail what they're up to, what's working and what's not etc. in their daily work.
@@ -34,11 +32,16 @@ Or, some surrounding factor changed in the meantime, now enabling the better app
 If I had kept notes on my attempts, failures, assumptions etc. I could simply read up on
 this now and we would have clarity. Alas, those notes don't exist.
 
-<Info>
-  Much of the technical details I will skip here as this application works very similarly to 
- [rest.quest](https://rest.quest). I would thus recommend to read [that project report](/notes/rest-quest/)
- first.
-</Info>
+Naturally, I resolved to start a lab journal. But instead of using my usual 
+[notes app](/notes/fieldnotes), I had the feeling I needed something more specialized for
+the occasion. An application that would keep entries in a chronological feed, rather than
+siloed notes. Enter [jour](https://github.com/beingflo/journal), a simple web app for
+keeping journal entries with no hassle. It's local-first with optional S3 sync.
+A hosted version is available at [jour.rest.quest](https://jour.rest.quest/).
+As you can tell by the URL, this application is another instance of my local-first series
+kicked of by [rest.quest](/notes/rest-quest). I would recommend reading that project report
+first for the technical details, here I will only go into the feature set and learnings from
+this project.
 
 ## Features
 
