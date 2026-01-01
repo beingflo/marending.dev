@@ -1,13 +1,38 @@
 ---
 title: 'jour: An opinionated lab journal'
 subtitle: 'A project report'
-date: '31 Dec 2025'
+date: '01 Jan 2026'
 link: '/notes/jour/'
 layout: 'src/layouts/NoteLayout.astro'
 draft: true 
 ---
 
 import { Info } from 'src/components';
+
+Years ago I stumbled across a [blog post on lab notebooks](https://sambleckley.com/writing/lab-notebooks.html).
+The author argues that practitioners in many fields keep a journal where they
+detail what they're up to, what's working and what's not etc. in their daily work.
+For some fields such a journal even had legal implications when patents were disputed.
+In software engineering however, this is not widespread. At the time I read the post I knew
+of no one who kept such notes. 
+
+Sure, we have documentation (maybe), but that's not the same thing. Documentation is there
+to explain how a system works, how to interact with it, maybe what constraints it operates
+in. But documentation typically doesn't explain _how_ and _why_ we arrived at this particular solution.
+Did we try to solve the problem in a different way first but failed, leading to the current
+approach? You won't find it that in the documentation. Old attempts either weren't committed
+to the code base or squashed away.
+
+This blog post opened my eyes to an issue I had at work I couldn't even put my finger on
+before. In my current project at work, I often run into situations where we're reevaluating
+a design decision from two years ago because someone thought of a better way to do it.
+Inevitably, no one remembers _why_ it was built the way it is. But I would often have this
+nagging feeling that we considered the proposed solution back then but decided against it
+for _reasons_. Now the big question (possibly worth weeks of effort) is whether we just
+didn't think of it back then or whether we're missing the reason now why we didn't do it.
+Or, some surrounding factor changed in the meantime, now enabling the better approach.
+If I had kept notes on my attempts, failures, assumptions etc. I could simply read up on
+this now and we would have clarity. Alas, those notes don't exist.
 
 <Info>
   Much of the technical details I will skip here as this application works very similarly to 
