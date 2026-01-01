@@ -45,4 +45,32 @@ this project.
 
 ## Features
 
+If you've seen the project reports for [rest.quest](/notes/rest-quest) or [go](/notes/go-rest-quest)
+you know the drill by now: Brutalist, minimalist UIs are my jam. Below is the default
+view of jour, a complete feed of every entry I've written in reverse chronological
+order. Each entry has a text body, some tags and a date. The tags are parsed out of
+the content when submitting an entry simply by looking at words starting with a `#` in
+the last line. Tags do not get a special treatment other than being displayed in a lighter
+tone below the content.
+
+![Screenshot of jour](./_view.png)
+
+On the top, there is a search bar that searches through all entries and filters down the
+feed accordingly. I started using this application a while ago and was quite satisfied with it.
+The one gripe I had was that when I was writing entries at work, I wanted to automatically have
+the entries tagged by a special tag (`nca` in my case). Instead of always having to type out
+this tag manually, I later added the things you see on the left. When clicking on `nca`, there
+is an implicit filter for this term that doesn't show up in the search bar as well as every new
+entry automatically gets tagged correspondingly. These "autofilters" can be created via shortcuts
+and deleted via a button that is revealed on hover.
+
+Next, by hitting `n`, a new entry is created at the top with a textbox and a date picker.
+By default the datepicker show the current date and time, but I quickly found that sometimes
+one wants to create entries in the past, so I added the ability to set the date. 
+With `cmd+Enter` the entry is saved.
+
+![Screenshot of jour](./_write.png)
+
+![Screenshot of jour](./_stats.png)
+
 ## Learnings
