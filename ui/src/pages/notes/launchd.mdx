@@ -1,6 +1,6 @@
 ---
 title: 'Using launchd on macOS to run periodic tasks'
-subtitle: 'Surveiling myself'
+subtitle: 'Surveilling myself'
 date: '02 Jan 2026'
 link: '/notes/launchd/'
 layout: 'src/layouts/NoteLayout.astro'
@@ -18,10 +18,9 @@ using launchd. It's quite easy to do but the documentation is lacking, hopefully
 write-up clears things up.
 
 First, I have a bash script I want to execute periodically. Below is my script for
-recording the application and window title in focus. Don't ask me why Applescript 
+recording the application and window title in focus. Don't ask me why AppleScript 
 (the thing passed to `osascript`) is so weird. If you execute this script, it will
 append the desired data to a file.
-
 ```bash
 #!/usr/bin/env bash
 application=$(osascript -e 'tell application "System Events" to tell (first process whose frontmost is true) to return {name}')
@@ -38,7 +37,6 @@ to capture two displays (if connected). Within each block you can see the weird 
 conditional, this is there to filter out black screens. It seems like the way we'll
 schedule these scripts sometimes runs them while the device is actually sleeping and 
 thus has the screen off. The `magick` invocation compresses the screenshot for storage.
-
 ```bash
 #!/usr/bin/env bash
 date=$(date +"%Y-%m-%dT%H:%M:%S")
@@ -63,11 +61,9 @@ if screencapture -D 2 "/Users/florian/Projects/aware/screenshots/data/screenshot
 fi
 ```
 
-Next, we need to describe our schedule in an xml file. Here the one for the window title
-recording. The script is called `window.sh`. Make sure to use absolute paths everywhere, 
+Next, we need to describe our schedule in an xml file. Here's the one for the window title
+recording. The script is called `windows.sh`. Make sure to use absolute paths everywhere, 
 including the shell scripts as the whole thing will run under a different user.
-
-
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -92,10 +88,9 @@ including the shell scripts as the whole thing will run under a different user.
 Finally, to install the job I run the following commands in the terminal.
 If you're doing it for the first time you can probably omit the first line.
 From what I can tell there is no easy way to determine if a job was actually
-installed correctly. I just set the interval low at first and see it works, 
+installed correctly. I just set the interval low at first and see if it works, 
 then increase it later. Also, in the `log.stderr` file you can see if your
 script didn't execute successfully.
-
 ```bash
 launchctl unload local.aware.window.plist
 cp local.aware.window.plist ~/Library/LaunchAgents/local.aware.window.plist
@@ -104,4 +99,4 @@ launchctl load -w ~/Library/LaunchAgents/local.aware.window.plist
 
 A last bit of advice: If you want to do stuff like take screenshots, this requires
 accessibility permissions on macOS. You have to grant those permissions in the settings
-to the `/usr/bin/env` process. 
+to the `/usr/bin/env` process.
