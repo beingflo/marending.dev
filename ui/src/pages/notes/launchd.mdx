@@ -1,0 +1,107 @@
+---
+title: 'Using launchd on macOS to run periodic tasks'
+subtitle: 'Surveiling myself'
+date: '02 Jan 2026'
+link: '/notes/launchd/'
+layout: 'src/layouts/NoteLayout.astro'
+draft: false
+---
+
+Some months ago I had the idea to record some data about my computer use for later analysis.
+I'm recording the window title of the focused application every 2 minutes and I take
+screenshots of my display (main as well as secondary if connected) every 10 minutes.
+Once this has been running for a while longer I can analyze how I spend my time on my
+computer.
+
+In this note I just want to briefly go into how to achieve this easily on macOS natively
+using launchd. It's quite easy to do but the documentation is lacking, hopefully this 
+write-up clears things up.
+
+First, I have a bash script I want to execute periodically. Below is my script for
+recording the application and window title in focus. Don't ask me why Applescript 
+(the thing passed to `osascript`) is so weird. If you execute this script, it will
+append the desired data to a file.
+
+```bash
+#!/usr/bin/env bash
+application=$(osascript -e 'tell application "System Events" to tell (first process whose frontmost is true) to return {name}')
+title=$(osascript -e 'tell application "System Events" to tell (first process whose frontmost is true) to return {name of window 1}')
+date=$(date +"%Y-%m-%dT%H:%M:%S")
+
+if [ -n "$title" ]; then
+  echo "$date,$application,$title" >> /Users/florian/Projects/aware/window-focus/windows.csv
+fi
+```
+
+The other script I have running is the one to take screenshots. The two code blocks are there
+to capture two displays (if connected). Within each block you can see the weird `mean` 
+conditional, this is there to filter out black screens. It seems like the way we'll
+schedule these scripts sometimes runs them while the device is actually sleeping and 
+thus has the screen off. The `magick` invocation compresses the screenshot for storage.
+
+```bash
+#!/usr/bin/env bash
+date=$(date +"%Y-%m-%dT%H:%M:%S")
+filename="screenshot_$date"
+
+# Screenshot of primary display
+if screencapture "/Users/florian/Projects/aware/screenshots/data/screenshot.png"; then
+  mean=$(/opt/homebrew/bin/magick identify -format "%[fx:mean]" "/Users/florian/Projects/aware/screenshots/data/screenshot.png")
+  if (( $(echo "$mean > 0.26" | bc -l) )); then
+    /opt/homebrew/bin/magick -quality 80% "/Users/florian/Projects/aware/screenshots/data/screenshot.png" "/Users/florian/Projects/aware/screenshots/data/$filename.jpg"
+  fi
+  rm "/Users/florian/Projects/aware/screenshots/data/screenshot.png"
+fi
+
+# Screenshot of secondary display
+if screencapture -D 2 "/Users/florian/Projects/aware/screenshots/data/screenshot-2.png"; then
+  mean=$(/opt/homebrew/bin/magick identify -format "%[fx:mean]" "/Users/florian/Projects/aware/screenshots/data/screenshot-2.png")
+  if (( $(echo "$mean > 0.26" | bc -l) )); then
+    /opt/homebrew/bin/magick -quality 80% "/Users/florian/Projects/aware/screenshots/data/screenshot-2.png" "/Users/florian/Projects/aware/screenshots/data/$filename-2.jpg"
+  fi
+  rm "/Users/florian/Projects/aware/screenshots/data/screenshot-2.png"
+fi
+```
+
+Next, we need to describe our schedule in an xml file. Here the one for the window title
+recording. The script is called `window.sh`. Make sure to use absolute paths everywhere, 
+including the shell scripts as the whole thing will run under a different user.
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>local.aware.window-focus</string>
+	<key>Program</key>
+	<string>/Users/florian/Projects/aware/window-focus/windows.sh</string>
+  <key>StartInterval</key>
+  <integer>120</integer>
+	<key>StandardOutPath</key>
+	<string>/Users/florian/Projects/aware/window-focus/log.stdout</string>
+	<key>StandardInPath</key>
+	<string>/Users/florian/Projects/aware/window-focus/log.stdin</string>
+  <key>StandardErrorPath</key>
+	<string>/Users/florian/Projects/aware/window-focus/log.stderr</string>
+</dict>
+</plist>
+```
+
+Finally, to install the job I run the following commands in the terminal.
+If you're doing it for the first time you can probably omit the first line.
+From what I can tell there is no easy way to determine if a job was actually
+installed correctly. I just set the interval low at first and see it works, 
+then increase it later. Also, in the `log.stderr` file you can see if your
+script didn't execute successfully.
+
+```bash
+launchctl unload local.aware.window.plist
+cp local.aware.window.plist ~/Library/LaunchAgents/local.aware.window.plist
+launchctl load -w ~/Library/LaunchAgents/local.aware.window.plist
+```
+
+A last bit of advice: If you want to do stuff like take screenshots, this requires
+accessibility permissions on macOS. You have to grant those permissions in the settings
+to the `/usr/bin/env` process. 
