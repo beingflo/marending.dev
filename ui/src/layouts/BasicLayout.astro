@@ -1,11 +1,20 @@
 ---
 const pathname = new URL(Astro.request.url).pathname;
 import 'src/global.css';
+import { Seo } from 'astro-seo-meta';
+
+const { title } = Astro.props;
+const { description } = Astro.props;
 ---
 
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
+		<Seo
+			title={title}
+			description={description}
+			icon="/favicon.svg"
+		/>
 		<link
 			rel="icon"
 			type="image/svg+xml"
@@ -23,5 +32,5 @@ import 'src/global.css';
 
 	<body class="px-4 xl:p-0 dark:bg-zinc-800 dark:text-zinc-100 max-w-6xl mx-auto">
 		<slot />
-	</body>
-</html>
+	</body></html
+>

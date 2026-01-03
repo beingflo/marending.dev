@@ -7,7 +7,9 @@ const pathname = new URL(Astro.request.url).pathname;
 let { frontmatter } = Astro.props;
 ---
 
-<Layout>
+<Layout
+	title={frontmatter.title}
+	description={frontmatter.subtitle}>
 	<a
 		class="not-prose text-sm font-light md:text-md hidden xl:block absolute mt-8"
 		href="/"
