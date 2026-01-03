@@ -1,4 +1,4 @@
-import { Figure } from '../../../components/Figure';
+import { Figure } from 'src/components/Figure';
 
 export const Circle = () => (
 	<Figure caption="Fig 1. Not a straight line">

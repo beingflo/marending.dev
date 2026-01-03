@@ -1,5 +1,5 @@
 import { For } from 'solid-js';
-import { Figure } from '../../../components/Figure';
+import { Figure } from 'src/components/Figure';
 
 export const ChaosAngles = () => {
 	const width = 600;

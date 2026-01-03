@@ -1,4 +1,4 @@
-import { Figure } from '../../../components/Figure';
+import { Figure } from 'src/components/Figure';
 
 export const SimpleLine = () => (
 	<Figure caption="Fig 2. A straight line">
