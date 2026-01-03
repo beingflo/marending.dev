@@ -4,7 +4,7 @@ WORKDIR /usr/src/marending-dev/service
 
 FROM node:23-bookworm AS ui-builder
 WORKDIR /usr/src/marending-dev/ui
-RUN apt update && apt install -y python3 && apt install -y libsdl-pango-dev
+RUN apt update && apt install -y python3 libsdl-pango-dev brotli gzip
 ENV TZ="Europe/Zurich"
 
 COPY ui/package.json ui/package-lock.json ./
@@ -12,6 +12,10 @@ COPY ui/package.json ui/package-lock.json ./
 RUN npm install
 COPY ./ui/ ./
 RUN npm run build
+# Compress static assets
+RUN find dist -type f \( -name "*.html" -o -name "*.js" -o -name "*.css" -o -name "*.json" -o -name "*.svg" \) \
+  -exec gzip -9 -k {} \; \
+  -exec brotli -q 11 -k {} \;
 
 FROM chef AS planner
 COPY ./service .

@@ -50,7 +50,10 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
         panic!()
     };
 
-    let serve_dir = ServeDir::new("ui").not_found_service(ServeFile::new("ui/index.html"));
+    let serve_dir = ServeDir::new("ui")
+        .precompressed_gzip()
+        .precompressed_br()
+        .not_found_service(ServeFile::new("ui/index.html"));
     let app = Router::new()
         .nest_service("/", serve_dir.clone())
         .fallback_service(serve_dir)
