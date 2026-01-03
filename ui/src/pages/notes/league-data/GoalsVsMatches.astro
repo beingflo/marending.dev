@@ -55,7 +55,7 @@ const data = Object.entries(players).map(([player, [goals, matches]]) => ({
 					{
 						x: 'matches',
 						y: 'goals',
-						text: (d) => '← yours truly',
+						text: () => '← yours truly',
 						filter: (d) => d.player === '251',
 						rotate: -90,
 						dy: -40,

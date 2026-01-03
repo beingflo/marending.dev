@@ -25,7 +25,7 @@ data.sort((a, b) => b.matches - a.matches);
 <Figure caption="Figure 6. Number of matches played by player. Limited to the top 100 players">
 	<Chart
 		options={{
-			x: { grid: true, tickSize: 0, tickFormat: (d) => '', label: 'players', type: 'band' },
+			x: { grid: true, tickSize: 0, tickFormat: () => '', label: 'players', type: 'band' },
 			y: { grid: true },
 			marks: [
 				Plot.dotY(data.slice(0, 100), {
@@ -37,7 +37,7 @@ data.sort((a, b) => b.matches - a.matches);
 				Plot.text(data.slice(0, 100), {
 					x: 'player',
 					y: 'matches',
-					text: (d) => '← this is me',
+					text: () => '← this is me',
 					filter: (d) => d.player === '251',
 					rotate: -90,
 					dy: -40,
