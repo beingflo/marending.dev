@@ -1,5 +1,19 @@
 ---
-import { Dashboard as DB } from 'src/components/dashboard/Dashboard';
+// Counter.astro
 ---
 
-<DB client:only />
+<div>
+	<p>Count: <span id="count">0</span></p>
+</div>
+
+<script>
+	let count = 0;
+	const countElement = document.getElementById('count');
+
+	setInterval(() => {
+		count++;
+		if (countElement) {
+			countElement.textContent = count.toString();
+		}
+	}, 1000);
+</script>
