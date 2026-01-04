@@ -23,6 +23,12 @@ const { description } = Astro.props;
 			name="viewport"
 			content="width=device-width"
 		/>
+		<link
+			rel="alternate"
+			type="application/rss+xml"
+			title="Florian Marending"
+			href={'/rss.xml'}
+		/>
 		<meta
 			name="generator"
 			content={Astro.generator}
