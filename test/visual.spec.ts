@@ -32,6 +32,7 @@ const notes = [
   "/notes/esp-power/",
   "/notes/performance/",
   "/notes/website/",
+  "/notes/visual-testing/",
   "/feedback/",
 ];
 
@@ -39,7 +40,7 @@ test.describe("Visual regression", () => {
   const baseUrl = "https://marending.dev";
 
   for (const note of notes) {
-    test(`capture page: ${note}`, async ({ page }) => {
+    test(`capture page: -${note}-`, async ({ page }) => {
       const url = `${baseUrl}${note}`;
 
       await page.goto(url);
