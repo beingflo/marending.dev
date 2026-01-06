@@ -10,8 +10,8 @@ draft: true
 This website is built using [Astro](https://astro.build/) to generate static pages. 
 I author the notes themselves with [mdx](https://mdxjs.com/), a nice extension to markdown
 to include inline html and other components. The static html after building this site
-is then styled using some rather convoluted css. All this is to say that if I change, 
-say, a margin of a list item only if it precedes an image element, this may
+is then styled using some rather convoluted CSS. All this is to say that if I change, 
+for example, a margin of a list item only if it precedes an image element, this may
 have unintended consequences on an older note I don't look at often.
 
 Whenever I do such changes, I find myself sampling older notes to see if something is
@@ -33,7 +33,6 @@ repo, I get an automatic history of what the site looks like at the time of the 
 Playwright makes this quite easy out of the box. After initializing a new test project
 using `npm init playwright@latest` in the same repo as the website itself, I add this
 single test file:
-
 ```js
 import { test, expect } from "@playwright/test";
 
@@ -114,8 +113,8 @@ generate a screenshot by running your suite with `--update-snapshots`.
 Second, there is some complication involved with taking full page screenshots. My website
 lazy-loads images, which means some images aren't loaded when the page is sufficiently
 long. I wouldn't care so much about that if it wasn't flaky _whether_ some images are
-loaded or not. I noticed that sometimes particular images where loaded and sometimes not,
-which is of course not very nice when trying to look for pixel differences between snapshots.
+loaded or not. I noticed that sometimes particular images were loaded and sometimes not,
+which defeats the purpose when trying to look for pixel differences between snapshots.
 For this purpose, you'll notice the whole scrolling logic in the test: I scroll down the
 whole page 200 pixels at a time to ensure all images are loaded in.
 
@@ -137,9 +136,9 @@ instead of getting a nice summary in the case where each page is its own clean t
 So how do I use this? It would be easy to over-engineer it and run this in CI periodically 
 or build it into my deployment script. Instead, I decided to keep it simple and stupid.
 I have this setup with the images checked into the same repo as the website itself and I
-ran the tests whenever I feel like I made changes that could effect some other part of 
+run the tests whenever I feel like I've made changes that could affect some other part of 
 the site. There is no point in burning energy by running them on every commit or constantly
-fail my deployment just to confirm that changing a typo on a page does in fact cause
+failing my deployment just to confirm that changing a typo on a page does in fact cause
 visual changes.
 
 With such simplicity in mind, it's easy to add real value to my workflow with maybe
