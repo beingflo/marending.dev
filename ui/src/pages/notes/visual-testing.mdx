@@ -6,3 +6,130 @@ link: '/notes/visual-testing/'
 layout: 'src/layouts/NoteLayout.astro'
 draft: true
 ---
+
+This website is built using [Astro](https://astro.build/) to generate static pages. 
+I author the notes themselves with [mdx](https://mdxjs.com/), a nice extension to markdown
+to include inline html and other components. The static html after building this site
+is then styled using some rather convoluted css. All this is to say that if I change, 
+say, a margin of a list item only if it precedes an image element, this may
+have unintended consequences on an older note I don't look at often.
+
+Whenever I do such changes, I find myself sampling older notes to see if something is
+broken. Lately, I've had the idea to use [Playwright](https://playwright.dev/) to
+do visual regression testing. For the uninitiated, this type of testing simply takes
+automated screenshots of pages (using a headless browser typically) and compares them
+against an earlier, considered golden, snapshot. Should the image deviate by more than
+some configurable threshold, the test is considered a failure. Then you either fix your
+application or in case of a legitimate change, you simply update the golden snapshot
+for that particular test.
+
+These tests would come with the obvious upside of increasing confidence that changes don't
+have unintended side-effects. Especially for a static website where the visual appearance
+is really all there is to it. But further, because I check the screenshots into the git
+repo, I get an automatic history of what the site looks like at the time of the commit.
+
+## Technical implementation
+
+Playwright makes this quite easy out of the box. After initializing a new test project
+using `npm init playwright@latest` in the same repo as the website itself, I add this
+single test file:
+
+```js
+import { test, expect } from "@playwright/test";
+
+const notes = [
+  "/",
+  "/projects/",
+  "/about/",
+  "/notes/launchd/",
+  "/notes/jour/",
+  "/notes/reflective/",
+  "/notes/monitoring/",
+  "/notes/otel/",
+  "/notes/llm/",
+  "/notes/clickhouse/",
+  "/notes/server-setup/",
+  "/notes/jpeg-raw/",
+  "/notes/go-rest-quest/",
+  "/notes/responsive-plots/",
+  "/notes/co2-loft/",
+  "/notes/sqlite-vs-duckdb/",
+  "/notes/unstructured-data/",
+  "/notes/rest-quest/",
+  "/notes/fieldnotes/",
+  "/notes/rust-spa/",
+  "/notes/16-hour-projects/",
+  "/notes/wasm-benchmark/",
+  "/notes/vps-benchmarks/",
+  "/notes/sqlite-benchmarks/",
+  "/notes/league-rating/",
+  "/notes/league-data/",
+  "/notes/co2-bedroom/",
+  "/notes/esp-protocol/",
+  "/notes/esp-power/",
+  "/notes/performance/",
+  "/notes/website/",
+  "/feedback/",
+];
+
+test.describe("Visual regression", () => {
+  const baseUrl = "https://marending.dev";
+
+  for (const note of notes) {
+    test(`capture page: ${note}`, async ({ page }) => {
+      const url = `${baseUrl}${note}`;
+
+      await page.goto(url);
+      await page.waitForTimeout(200);
+
+      const pageHeight = await page.evaluate(() => document.body.scrollHeight);
+
+      for (let scrolled = 0; scrolled < pageHeight; scrolled += 200) {
+        await page.mouse.wheel(0, 200);
+        await page.waitForTimeout(200);
+      }
+
+      await page.waitForLoadState("networkidle");
+
+      const screenshotName =
+        note
+          .replace(/^\//, "")
+          .replace(/\/$/, "")
+          .replace(/[^a-z0-9]/gi, "-")
+          .toLowerCase() || "index";
+
+      await expect(page).toHaveScreenshot(`${screenshotName}.png`, {
+        fullPage: true,
+      });
+    });
+  }
+});
+```
+
+There are a couple of things to note here. The magic happens on the `await expect(page).toHaveScreenshot`
+line. This makes Playwright take a screenshot and compare it against a stored screenshot.
+If no screenshot with this name exists, it will fail the test and you have to first
+generate a screenshot by running your suite with `--update-snapshots`.
+
+Second, there is some complication involved with taking full page screenshots. My website
+lazy-loads images, which means some images aren't loaded when the page is sufficiently
+long. I wouldn't care so much about that if it wasn't flaky _whether_ some images are
+loaded or not. I noticed that sometimes particular images where loaded and sometimes not,
+which is of course not very nice when trying to look for pixel differences between snapshots.
+For this purpose, you'll notice the whole scrolling logic in the test: I scroll down the
+whole page 200 pixels at a time to ensure all images are loaded in.
+
+Lastly, the list of pages I want to test are statically listed in the `notes` variable. 
+At first, I actually generated this dynamically by programmatically visiting the index 
+page and then extracting all linked targets. In the current design of the site, this 
+yields exactly all subpages. Another way would be to expose an "endpoint" in the site 
+that produces all the pages in the `notes` collection.  Both approaches have the 
+benefit of not requiring me to update the list manually when I publish a new note, 
+but come with the downside that I need to execute all tests in a single Playwright test. 
+
+You see, this test-inside-for-loop you can see above only works as expected when the
+array to iterate over is statically known. In the dynamic approaches I can't do that.
+And then you have to deal with the test failing once the first screenshot doesn't match,
+instead of getting a nice summary in the case where each page is its own clean test.
+
+## Workflow
