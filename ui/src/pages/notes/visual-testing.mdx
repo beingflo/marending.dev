@@ -133,3 +133,14 @@ And then you have to deal with the test failing once the first screenshot doesn'
 instead of getting a nice summary in the case where each page is its own clean test.
 
 ## Workflow
+
+So how do I use this? It would be easy to over-engineer it and run this in CI periodically 
+or build it into my deployment script. Instead, I decided to keep it simple and stupid.
+I have this setup with the images checked into the same repo as the website itself and I
+ran the tests whenever I feel like I made changes that could effect some other part of 
+the site. There is no point in burning energy by running them on every commit or constantly
+fail my deployment just to confirm that changing a typo on a page does in fact cause
+visual changes.
+
+With such simplicity in mind, it's easy to add real value to my workflow with maybe
+2 hours of effort. I need to do more things like it.
