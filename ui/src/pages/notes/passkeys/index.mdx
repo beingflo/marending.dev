@@ -70,14 +70,20 @@ A security key for instance will require the user to touch a capacitive button b
 challenge is signed. The Apple Face ID authenticator will additionally also support
 _user verification_ via biometrics or PIN.
 
-- Syncing
-- Resident keys
+Notice that how key pairs are stored is not part of the specification. Some authenticators like
+security keys will generate a key pair and never hand out a private key. This means the key
+is tied to the physical possession of the device. Password managers on the other hand will offer
+to sync passkeys between your devices. This added comfort comes at the cost of having to trust
+your password manager to keep your keys safe in transit.
 
-## relying party
+## Registration and authentication flows
+![registration flow](./register.svg)
+![authentication flow](./authenticate.svg)
+
 
 ## Misconceptions
 - loosing security key -> lose access
 - 2fa
 - biometrics
-## Inner workings
+
 ## Implementation
