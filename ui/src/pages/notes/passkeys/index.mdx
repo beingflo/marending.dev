@@ -52,7 +52,6 @@ implemented to specification by website, browser and authenticator. This should 
 process seamless and robust.
 
 ## Authenticators 
-
 As a recap, the authenticator is the component that generates public-private key pairs for
 registration and then signs challenges using the private key for authentication. It can
 come in the form of software (like a password manager), or as dedicated hardware 
@@ -77,7 +76,15 @@ to sync passkeys between your devices. This added comfort comes at the cost of h
 your password manager to keep your keys safe in transit.
 
 ## Registration and authentication flows
+Now that we have a good understanding of what authenticators do, let's check how they 
+interact with clients. The diagrams are simplified of course but should visualize how
+information flows between clients, authenticators and servers.
+First the registration flow to establish new credentials:
+
 ![registration flow](./register.svg)
+
+Following this, existing credentials are used to authenticate:
+
 ![authentication flow](./authenticate.svg)
 
 
