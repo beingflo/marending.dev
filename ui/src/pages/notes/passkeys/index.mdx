@@ -11,7 +11,7 @@ I've been wanting to start using passkeys for a while now. I even bought two
 [Yubikeys](https://www.yubico.com/products/) 5 (!) years ago and have been
 carrying one of them on my keychain ever since with the intention of putting
 them in operation any day now. Alas, it hasn't happened yet. I blame it partly
-on the terrible marketing surrounding them and partly on my laziness. So now,
+on the terrible marketing surrounding passkeys and partly on my laziness. So now,
 I finally want to dive deep, properly understand and start using them.
 
 ## What are passkeys
@@ -89,8 +89,29 @@ Following this, existing credentials are used to authenticate:
 
 
 ## Misconceptions
-- loosing security key -> lose access
-- 2fa
-- biometrics
+With the basics out of the way, let's look at some common misconceptions to clarify our
+understanding.
+
+### If you lose the device with the passkey, you're locked out
+When I first learned about passkeys and wanted to try them, they were often used synonymously
+with security keys. So my biggest misunderstanding that prevented me from adopting passkeys was
+the belief that if I lose my Yubikey, I'm going to be locked out of my accounts. The common advice
+at that time was to get a _second_ Yubikey and register a passkey to each device for every
+account. Then, deposit one security key in a safe spot so that if you lose the one that you have
+with you, there is a fallback.
+
+This misses one crucial piece of information: Passkeys simply replace passwords, they don't
+claim much more than that. So what do you do if you misplace your password? You enter a "Forgot
+my password" flow on the auth page of a service. Turns out you can do exactly the same if you
+lost your passkey. Most services will allow you to register a new passkey this way if you can
+prove your identity, usually by accessing your email account. Further, services typically don't
+disable other authentication methods just because you registered a passkey. In the case of
+Github for instance, you have the option to sign in via passkey or via username / password + two
+factor authentication.
+
+### 2fa
+### biometrics
+
+## How do I use passkeys now?
 
 ## Implementation
