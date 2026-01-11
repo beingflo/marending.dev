@@ -109,8 +109,29 @@ disable other authentication methods just because you registered a passkey. In t
 Github for instance, you have the option to sign in via passkey or via username / password + two
 factor authentication.
 
-### 2fa
-### biometrics
+Naturally this has security implications. Your shiny new passkey is only as secure as your
+email account. For this reason some services will allow you to disable other authentication
+modes and fallback mechanisms. You better know what you're doing then, though.
+
+Finally, most people are going to be saving their passkeys in synchronizing authenticators, like
+platform keychains or password managers. For these, losing a device doesn't matter much anyway as
+long as you have a way to get back into the authenticator.
+
+### Passkeys replace 2FA
+This is a quite contentious take that illustrates how poor the general understanding of security
+is around the internet. You'll read many misguided arguments that don't hold up to scrutiny.
+After some research it seems a reasonable take is as follows: If the authenticator employs
+_user verification_ during authentication, passkeys do indeed provide similar security guarantees
+as passwords with a second factor. Access to the authenticator is something _you have_ and the
+biometrics or password you use to unlock your authenticator are something _you are or know_.
+Thus, you have 2 factors. Now, if your authenticator is _not_ verifying you during authentication,
+but only tests for your presence (as the standard requires), you only have one factor, the physical
+possession of the authenticator. An example of such an authenticator is a security key that hands
+out signatures at the touch of a button.
+
+Github seems to have come to the same conclusion as they force the use of 2FA when using passwords,
+but allow using passkeys with no other factor. Also note that passkeys can be used as the second
+factor to strengthen passwords.
 
 ## How do I use passkeys now?
 
