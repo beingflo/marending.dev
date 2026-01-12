@@ -1,6 +1,6 @@
 ---
 title: 'Understanding passkeys'
-subtitle: 'And implementing a proof of concept'
+subtitle: 'Now where is my Yubikey?'
 date: '16 Jan 2026'
 link: '/notes/passkeys/'
 layout: 'src/layouts/NoteLayout.astro'
@@ -168,6 +168,8 @@ to vender lock-in. Undoubtedly this is part of the reason companies like Apple a
 passkeys and were very fast to support them. There _is_ a draft specification now that will
 allow exchanging credentials between authenticators, but it's still best to avoid it all together.
 
+-> Can get locked out (Apple gift cards, Google youtube)
+
 So password managers and security keys are still in the race. 
 Password managers boast the following advantages:
 
@@ -188,7 +190,12 @@ General:
 When wanting to use security key: First dismiss password manager prompt, then click small "other
 options" when Apple inserts itself, then select security key.
 
-Does it make sense to store secondary passkeys on yubikey incase I lose access to 1password?
+I downloaded 2fas and enabled iCloud sync. What does this do to my security surface?
+
+Fear of losing security keys is unfounded because _most services don't even let you
+disable other authentication methods_.
+
+Does it make sense to store secondary passkeys on yubikey in case I lose access to 1password?
 -> Yes probably
 
 Does it make sense to have password (1password) + 2FA app on phone?
@@ -197,8 +204,8 @@ Does it make sense to have password (1password) + 2FA app on phone?
 Do I increase my surface by adding more authentication mechanisms without taking others away?
 -> Maybe?
 
-Github:
-Either password + 2FA or passkey
+#### Github
+Either password + 2FA or passkey.
 When registering secondary passkeys on security keys I have to set up pin. It looks like
 Github requires user verification, so just touching the capacitive button on the Yubikey is not
 sufficient like with the other services below.
@@ -207,18 +214,43 @@ touch the button on the login page and I'm in. However, when I've newly plugged 
 the button doesn't do anything, instead I have to dismiss the password manager prompt, select
 security key and then I'm prompted for the PIN and can log in.
 And now that I've set PINs on my keys for Github, I have to enter them for other accounts as well.
+I suppose most services set user verification to `preferred`, which doesn't require it, but now
+that I set it, it will prompt it.
 
-Porkbun:
+#### Porkbun
 Once passkey is registered, password doesn't work anymore but it's not mentioned.
 Also has the option to force user verification.
 
-Fastmail:
+#### Fastmail
 Here I don't have the option to use my Yubikey, maybe they require attestation that the security 
 key can't fulfill?
 -> Actually I need to select "On another device", then it will allow the selection of security
 key.
 
-SSH:
+#### Hetzner
+Doesn't support WebAuthn, only 2FA using OTP via mobile device or Yubikey. 
+I set up 2fas OTP for now.
 
+#### Exoscale
+S3 object storage provider I use for backups. Doesn't support passkeys, does support OTP via
+mobile app but requires a phone number to serve as a backup second factor via SMS. Kind of
+disappointing for develop tooling. It's widely known at this point how insecure SMS-based 2FA is.
+And if it's required as a backup, well the whole chain is only as strong as the weakest link.
 
-## Implementation
+#### SSH
+
+#### 1Password
+Added OTP on 2fas and passkeys on both yubikeys as second factors. 1Password doesn't seem to
+offer registering passkeys as the only authentication mechanism, only as second factors.
+Weirdly, even if I sign out everywhere, 1password never asks for any second factors.
+Apparently this is only required on new devices.
+
+#### Galaxus
+To my surprise this swiss retailer that is normally very strong technically (their filtering UX
+for example is the gold standard), doesn't support passkeys. Set up 2fas OTP for now. Not a very
+high value account though.
+
+#### Viac
+This is a swiss pension and investment platform. To my surprise they offer only SMS based 2FA.
+Not sufficient for a financial platform in my opinion. Sure, there are restrictions before anyone
+could have actual money payed out to some random account, but it's still disappointing.
