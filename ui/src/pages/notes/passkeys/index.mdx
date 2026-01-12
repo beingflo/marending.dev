@@ -1,7 +1,7 @@
 ---
 title: 'Understanding passkeys'
 subtitle: 'And implementing a proof of concept'
-date: '10 Jan 2026'
+date: '16 Jan 2026'
 link: '/notes/passkeys/'
 layout: 'src/layouts/NoteLayout.astro'
 draft: true
@@ -147,7 +147,26 @@ solve this attack surface by binding keys to origins and eliminating shared secr
 
 Also note that passkeys can be used as the second factor to strengthen passwords.
 
-
 ## How do I use passkeys now?
+Now with a decent understanding of passkeys established, what do I do with this information?
+First, let me elaborate where I'm coming from. I was always very lazy when it comes to 2FA, to
+this date I have 2FA enabled only on the services that force me to use it. As someone that
+considers himself a well informed power user, this is a point of shame for me. However, after 
+the above revelation that properly managed passwords are actually not _that_ much worse 
+than passkeys, it's easy to feel validated and continue to do business as usual.
+
+Instead, now that the uncertainty of how this technology works exactly is gone, I can focus on
+the ease of use of passkeys. Especially _discoverable credentials_ (passkeys that contain
+metadata about the user) are just magical: You navigate to a login page, get a popup from your
+authenticator, put your finger on the fingerprint sensor, click on "Sign in" and that's it. 
+No entering usernames, no scrambling to get your phone for the OTP code. That ease of use
+coupled with the improved security actually make it a no-brainer to use passkeys.
+
+But which authenticator to use? For me, built in platform authenticators are not an option due
+to vender lock-in. Undoubtedly this is part of the reason companies like Apple are pushing
+passkeys and were very fast to support them. There is a draft specification that will
+allow exchanging credentials between authenticators, that will help with reducing lock-in. 
+But it's still best to avoid it all together. So password managers and security keys are still
+in the race.
 
 ## Implementation
