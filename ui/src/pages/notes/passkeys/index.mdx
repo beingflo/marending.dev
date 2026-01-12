@@ -129,9 +129,24 @@ but only tests for your presence (as the standard requires), you only have one f
 possession of the authenticator. An example of such an authenticator is a security key that hands
 out signatures at the touch of a button.
 
-Github seems to have come to the same conclusion as they force the use of 2FA when using passwords,
-but allow using passkeys with no other factor. Also note that passkeys can be used as the second
-factor to strengthen passwords.
+Now, this line of reasoning feels suspect to me. By this logic my use of passwords stored in a
+password manager would also qualify as two factors: Access to authenticator and biometrics to unlock.
+I suppose the big difference is that for passwords, a service can not assume that they are handled
+correctly - strong, unique, stored in a password manager. Whereas passkeys are guaranteed to have these
+properties. Another iffy aspect of the argument is what happens when your password manager is
+breached. In that scenario you're immediately compromised. A password in a password manager and an 
+OTP code provided by an authenticator app on your phone would save you from this. 
+
+So counting factors is not all that matters here, separate password store and OTP generator 
+give you two _trust anchors_, versus just the one with passkeys. Instead, we have to consider that
+2FA methods were conceived to reduce attack surface by making passwords no longer sufficient to 
+authenticate alone. This way, attackers who gain access to passwords via phishing, database breaches etc.
+can't log in without also tricking you into providing the second factor. From this perspective it's clear
+why services like Github consider passkeys sufficiently strong to replace password + 2FA, they
+solve this attack surface by binding keys to origins and eliminating shared secrets.
+
+Also note that passkeys can be used as the second factor to strengthen passwords.
+
 
 ## How do I use passkeys now?
 
