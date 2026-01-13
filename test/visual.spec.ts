@@ -33,6 +33,7 @@ const notes = [
   "/notes/performance/",
   "/notes/website/",
   "/notes/visual-testing/",
+  "/notes/passkeys/",
   "/feedback/",
 ];
 
