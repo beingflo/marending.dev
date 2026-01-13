@@ -1,32 +1,32 @@
 ---
 title: 'Understanding passkeys'
-subtitle: 'Now where is my Yubikey?'
-date: '16 Jan 2026'
+subtitle: 'And improving my online security in the process'
+date: '13 Jan 2026'
 link: '/notes/passkeys/'
 layout: 'src/layouts/NoteLayout.astro'
 draft: true
 ---
 
-I've been wanting to start using passkeys for a while now. I even bought two
-[Yubikeys](https://www.yubico.com/products/) 5 (!) years ago and have been
-carrying one of them on my keychain ever since with the intention of putting
-them in operation any day now. Alas, it hasn't happened yet. I blame it partly
-on the terrible marketing surrounding passkeys and partly on my laziness. So now,
-I finally want to dive deep, properly understand and start using them.
+I've been meaning to look into passkeys for a while now. I always enjoy being
+informed on new developments in the industry, but for some reason this particular
+technology has been eluding me. A couple of misconceptions combined with entirely
+too much misinformation on the internet made passkeys unapproachable for me.
+Finally, I want to dive deep, properly understand and start using them.
+Luckily, I already have two [Yubikeys](https://www.yubico.com/ch/product/yubikey-5-series/yubikey-5c-nfc/)
+laying about that I bought years ago for hardware-based OTP but never ended up using.
+They support the standards in question, so will come in handy when playing around with
+passkeys.
 
 ## What are passkeys
-First, we need to properly understand what we're even talking about. Passkeys are
-commonly defined as 
-[WebAuthn](https://developer.mozilla.org/en-US/docs/Web/API/Web_Authentication_API) 
-credentials. The Web Authentication API is a W3C standard to enable authentication
-with public key cryptography. It fits into the broader 
-[FIDO2](https://fidoalliance.org/passkeys/) standard, along with the Client to 
-Authenticator Protocol (CTAP). All this is to say is that if you want to use 
-passkeys in a web application, the application is asking the browser to authenticate
-with passkeys via WebAuthn and the browser is then talking to authenticators (like 
-a Yubikey or a password manager) via CTAP.
-
-So, passkeys are simply a key pair stored in an authenticator.
+First, it's important to establish a broad view of passkeys and their underlying standards.
+In practical terms, passkeys are cryptographic key pairs that are generated and handled by
+_authenticators_. Those can be hardware based like security keys or software based like platform 
+keychains or password managers. The [WebAuthn](https://developer.mozilla.org/en-US/docs/Web/API/Web_Authentication_API) 
+web standard now specifies how websites (also called relying parties) interact with the
+browser to register new passkeys and authenticate with existing passkeys. How the browser
+then talks to authenticators is captured in the Client to Authenticator Protocol (CTAP).
+Together, WebAuthn and CTAP make up the broader [FIDO2](https://fidoalliance.org/passkeys/) 
+standard.
 
 ## Advantages of passkeys
 The security industry has learned from the way traditional passwords have
@@ -38,7 +38,7 @@ accidentally generate weak passkeys, like it is commonly done with passwords. As
 passkeys are also automatically unique as the user has no chance to reuse one.
 - The key to prove your identity and the key to check your proof are not the same. 
 This means that the server does not need to store your secret in a secure way, instead,
-it can hold onto your public key carelessly. If a site is breached, nothing of value about
+it can hold onto your public key more carelessly. If a site is breached, nothing of value about
 your ability to authenticate can be stolen. Passwords on the other hand are a shared
 secret between user and server, so the server must take great care to handle it responsibly.
 - They offer protection against phishing. Passkeys are bound to an origin, that means
@@ -100,18 +100,20 @@ at that time was to get a _second_ Yubikey and register a passkey to each device
 account. Then, deposit one security key in a safe spot so that if you lose the one that you have
 with you, there is a fallback.
 
-This misses one crucial piece of information: Passkeys simply replace passwords, they don't
+This misses two crucial pieces of information: First, passkeys simply replace passwords, they don't
 claim much more than that. So what do you do if you misplace your password? You enter a "Forgot
 my password" flow on the auth page of a service. Turns out you can do exactly the same if you
 lost your passkey. Most services will allow you to register a new passkey this way if you can
-prove your identity, usually by accessing your email account. Further, services typically don't
+prove your identity, usually by accessing your email account. Second, services typically don't
 disable other authentication methods just because you registered a passkey. In the case of
 Github for instance, you have the option to sign in via passkey or via username / password + two
 factor authentication.
 
 Naturally this has security implications. Your shiny new passkey is only as secure as your
-email account. For this reason some services will allow you to disable other authentication
-modes and fallback mechanisms. You better know what you're doing then, though.
+email account or your alternative authentication methods. For this reason some services 
+will allow you to disable other authentication modes and fallback mechanisms. 
+Then, and only then, does the original fear of getting locked out materialize. You better keep
+those passkeys safe in this case.
 
 Finally, most people are going to be saving their passkeys in synchronizing authenticators, like
 platform keychains or password managers. For these, losing a device doesn't matter much anyway as
@@ -120,16 +122,16 @@ long as you have a way to get back into the authenticator.
 ### Passkeys replace 2FA
 This is a quite contentious take that illustrates how poor the general understanding of security
 is around the internet. You'll read many misguided arguments that don't hold up to scrutiny.
-After some research it seems a reasonable take is as follows: If the authenticator employs
+After some research it seems a reasonable argument goes as follows: If the authenticator employs
 _user verification_ during authentication, passkeys do indeed provide similar security guarantees
 as passwords with a second factor. Access to the authenticator is something _you have_ and the
 biometrics or password you use to unlock your authenticator are something _you are or know_.
 Thus, you have 2 factors. Now, if your authenticator is _not_ verifying you during authentication,
 but only tests for your presence (as the standard requires), you only have one factor, the physical
-possession of the authenticator. An example of such an authenticator is a security key that hands
-out signatures at the touch of a button.
+possession of the authenticator. An example of such an authenticator is a security key that is
+not configured with a PIN and hands out signatures at the touch of a button.
 
-Now, this line of reasoning feels suspect to me. By this logic my use of passwords stored in a
+Now, this line of reasoning feels suspect to me. By this logic my use of strong passwords stored in a
 password manager would also qualify as two factors: Access to authenticator and biometrics to unlock.
 I suppose the big difference is that for passwords, a service can not assume that they are handled
 correctly - strong, unique, stored in a password manager. Whereas passkeys are guaranteed to have these
@@ -139,11 +141,11 @@ OTP code provided by an authenticator app on your phone would save you from this
 
 So counting factors is not all that matters here, separate password store and OTP generator 
 give you two _trust anchors_, versus just the one with passkeys. Instead, we have to consider that
-2FA methods were conceived to reduce attack surface by making passwords no longer sufficient to 
+2FA methods were conceived to reduce a users attack surface by making passwords no longer sufficient to 
 authenticate alone. This way, attackers who gain access to passwords via phishing, database breaches etc.
 can't log in without also tricking you into providing the second factor. From this perspective it's clear
 why services like Github consider passkeys sufficiently strong to replace password + 2FA, they
-solve this attack surface by binding keys to origins and eliminating shared secrets.
+reduce this attack surface by binding keys to origins and eliminating shared secrets.
 
 Also note that passkeys can be used as the second factor to strengthen passwords.
 
@@ -153,7 +155,7 @@ First, let me elaborate where I'm coming from. I was always very lazy when it co
 this date I have 2FA enabled only on the services that force me to use it. As someone that
 considers himself a well informed power user, this is a point of shame for me (hence I'm writing
 this note finally). However, after the above revelation that properly managed passwords 
-are actually not _that_ much worse than passkeys, it's easy to feel validated and 
+are actually not _that_ much worse than passkeys, it would be easy to feel validated and 
 continue to do business as usual.
 
 Instead, now that the uncertainty of how this technology works exactly is gone, I can focus on
@@ -164,11 +166,14 @@ No entering usernames, no scrambling to get your phone for the OTP code. That ea
 coupled with the improved security actually make it a no-brainer to use passkeys.
 
 But which authenticator to use? For me, built in platform authenticators are not an option due
-to vender lock-in. Undoubtedly this is part of the reason companies like Apple are pushing
-passkeys and were very fast to support them. There _is_ a draft specification now that will
-allow exchanging credentials between authenticators, but it's still best to avoid it all together.
+to vender lock-in. There _is_ a draft specification now that will allow exchanging credentials
+between authenticators, but I'd rather use an authenticator that is portable from the get-go.
 
--> Can get locked out (Apple gift cards, Google youtube)
+Further, there is also the opposite problem of vender "lock-out": Apple may ban your Apple ID
+just for [buying a couple of gift cards](https://hey.paris/posts/appleid/) and Google may ban
+your entire account for buying Youtube Premium via a VPN in turkey. This is also the reason
+I don't use Gmail anymore, I would be putting too many of my digital eggs into one basket.
+An independent authenticator sounds more reasonable to me.
 
 So password managers and security keys are still in the race. 
 Password managers boast the following advantages:
@@ -181,28 +186,34 @@ lost when a device breaks.
 Security keys on the other hand have one main strength: Security. Passkeys on a Yubikey are 
 hardware-bound. No breach of any online service is going to compromise credentials.
 
-Ultimately I think I don't fit the profile of a high-security user that would need hardware
-based security. The convenience of password managers wins out for my use cases.
+### Threat model considerations
+The more I think about this, the more I realize that (apart from getting phished of course) I
+worry more about getting locked out of accounts than to trust nobody.
+I _could_ only use security keys and eliminate trust in a password manager, but I believe
+the chances that I lose two security keys are higher than 1Password getting compromised.
 
-### Some observations
+Ultimately I think hardware based security is not worth the effort for me. The usability of 
+password managers wins out for my use cases. But security keys can still have their place
+in my security theater. Not as exclusive auth methods, but as additional ones.
 
-General:
+For critical services I really don't want to lose access to like email, password manager
+and domain registrar, I'm going to register additional passkeys to both of my security keys.
+This way I always have backup access if I lose access to my primary passkey. This could 
+also serve as a nice way into my accounts for a spouse should something happen to me.
+Does this increase my overall attack surface? Probably. An attacker can now choose between
+phishing my password and tricking me into providing a 2FA code _or_ breaking into my place,
+stealing my Yubikey and somehow getting their hands on the PIN, whichever is easier. But
+again, I consider getting locked out more likely than someone targeting me to this degree.
+And if they do, the good old wrench method is anyway the most effective.
+
+For the accounts that don't support passkeys I'll now enable 2FA with a TOTP authenticator
+on my phone everywhere. Why not use the password managers TOTP functionality and do away
+with the phone altogether? Honestly not sure. I suppose when I trust the password manager
+not to be compromise there is little benefit to have a second device.
+
+### Some observations about passkey usage in the wild
 When wanting to use security key: First dismiss password manager prompt, then click small "other
 options" when Apple inserts itself, then select security key.
-
-I downloaded 2fas and enabled iCloud sync. What does this do to my security surface?
-
-Fear of losing security keys is unfounded because _most services don't even let you
-disable other authentication methods_.
-
-Does it make sense to store secondary passkeys on yubikey in case I lose access to 1password?
--> Yes probably
-
-Does it make sense to have password (1password) + 2FA app on phone?
--> Probably not, if I lose access to 1password I also lose access to the password.
-
-Do I increase my surface by adding more authentication mechanisms without taking others away?
--> Maybe?
 
 #### Github
 Either password + 2FA or passkey.
@@ -236,6 +247,7 @@ S3 object storage provider I use for backups. Doesn't support passkeys, does sup
 mobile app but requires a phone number to serve as a backup second factor via SMS. Kind of
 disappointing for develop tooling. It's widely known at this point how insecure SMS-based 2FA is.
 And if it's required as a backup, well the whole chain is only as strong as the weakest link.
+At least I set up 2fas now.
 
 #### SSH
 
@@ -254,3 +266,6 @@ high value account though.
 This is a swiss pension and investment platform. To my surprise they offer only SMS based 2FA.
 Not sufficient for a financial platform in my opinion. Sure, there are restrictions before anyone
 could have actual money payed out to some random account, but it's still disappointing.
+
+## Closing thoughts
+security hygiene
