@@ -70,10 +70,10 @@ passkeys:
 accidentally generate weak passkeys, as is commonly done with passwords. As a result,
 passkeys are also automatically unique, as the user has no chance to reuse one.
 - The key to prove your identity and the key to check your proof are not the same.
-This means that the server does not need to store your secret in a secure way, instead,
-it can hold onto your public key more carelessly. If a site is breached, nothing of value about
-your ability to authenticate can be stolen. Passwords on the other hand are a shared
-secret between user and server, so the server must take great care to handle them responsibly.
+This means that the server does not need to protect a shared secret. If a site is breached,
+nothing of value about your ability to authenticate can be stolen. Passwords on the
+other hand are a shared secret between user and server, so the server must take great
+care to handle them responsibly.
 - They offer protection against phishing. Passkeys are bound to an origin, that means
 an attacker cloning a website cannot coax your authenticator into signing a challenge.
 Users with passwords on the other hand readily type them into a fake site that looks real.
@@ -268,11 +268,11 @@ any second factors. Apparently, this is only required on new devices.
 
 #### Google
 
-This is the first service where I get a popup from Firefox warning me that the website is requesting
-extended information about my security key. Apparently, this exposes the serial number
-of the security key to enable security-critical websites to disallow insecure or compromised keys.
-A (surely only accidentally useful for Google) side effect is that your keys could be tracked
-across multiple websites this way.
+This is the first service where I get a popup from Firefox warning me that the website is
+requesting extended information about my security key. Apparently, this exposes device
+identifiers of the security key to enable security-critical websites to disallow
+insecure or compromised keys. A (surely only accidentally useful for Google) side
+effect is that your keys could be tracked across multiple websites this way.
 
 ## Closing thoughts
 
