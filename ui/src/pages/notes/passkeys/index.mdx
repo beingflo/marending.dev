@@ -22,11 +22,41 @@ First, it's important to establish a broad view of passkeys and their underlying
 In practical terms, passkeys are cryptographic key pairs that are generated and handled by
 _authenticators_. Those can be hardware based like security keys or software based like platform 
 keychains or password managers. The [WebAuthn](https://developer.mozilla.org/en-US/docs/Web/API/Web_Authentication_API) 
-web standard now specifies how websites (also called relying parties) interact with the
-browser to register new passkeys and authenticate with existing passkeys. How the browser
-then talks to authenticators is captured in the Client to Authenticator Protocol (CTAP).
-Together, WebAuthn and CTAP make up the broader [FIDO2](https://fidoalliance.org/passkeys/) 
-standard.
+web standard now specifies how websites interact with the browser to register new passkeys 
+and authenticate with existing passkeys. How the browser then talks to authenticators is 
+captured in the Client to Authenticator Protocol (CTAP). Together, WebAuthn and CTAP 
+make up the broader [FIDO2](https://fidoalliance.org/passkeys/) standard.
+
+## Registration and authentication flows
+Let's now have a simplified look at how clients, browser and authenticator interact.
+First the registration flow to establish new credentials:
+
+![registration flow](./_register.svg)
+
+Following this, existing credentials are used to authenticate:
+
+![authentication flow](./_authenticate.svg)
+
+## Authenticators 
+Authenticators are worth having a closer look, as they play a central role in passkey handling.
+They are commonly separated into platform and cross-platform (or roaming).
+Platform authenticators come built into your device, like Apple Face ID or Windows Hello.
+Cross-platform authenticators are portable. For instance security keys or password managers
+are cross-platform as they can be used from multiple devices. Smartphones can simultaneously
+be platform authenticators when signing in _on device_ or roaming authenticators when used
+to sign in _on another device_.
+
+The FIDO2 standard requires authenticators to at least support testing for _user presence_. 
+A security key for instance will require the user to touch a capacitive button before a
+challenge is signed. The Apple Face ID authenticator will additionally also support
+_user verification_ via biometrics or PIN.
+
+Notice that how key pairs are stored is not part of the specification. Some authenticators like
+security keys will generate a key pair and never hand out a private key. This means the key
+is tied to the physical possession of the device. Password managers on the other hand will offer
+to sync passkeys between your devices. This added comfort comes at the cost of having to trust
+your password manager to keep your keys safe in transit.
+
 
 ## Advantages of passkeys
 The security industry has learned from the way traditional passwords have
@@ -50,43 +80,6 @@ with appropriate attributes. Many sites do this wrong, leading to having to copy
 passwords. Passkeys on the other hand build on proper programmatic APIs that can be easily
 implemented to specification by website, browser and authenticator. This should make the
 process seamless and robust.
-
-## Authenticators 
-As a recap, the authenticator is the component that generates public-private key pairs for
-registration and then signs challenges using the private key for authentication. It can
-come in the form of software (like a password manager), or as dedicated hardware 
-(like a security key).
-
-They are commonly separated into platform and cross-platform (or roaming).
-Platform authenticators come built into your device, like Apple Face ID or Windows Hello.
-Cross-platform authenticators are portable. For instance security keys or password managers
-are cross-platform as they can be used from multiple devices. Smartphones can simultaneously
-be platform authenticators when signing in _on device_ or roaming authenticators when used
-to sign in _on another device_.
-
-The FIDO2 standard requires authenticators to at least support testing for _user presence_. 
-A security key for instance will require the user to touch a capacitive button before a
-challenge is signed. The Apple Face ID authenticator will additionally also support
-_user verification_ via biometrics or PIN.
-
-Notice that how key pairs are stored is not part of the specification. Some authenticators like
-security keys will generate a key pair and never hand out a private key. This means the key
-is tied to the physical possession of the device. Password managers on the other hand will offer
-to sync passkeys between your devices. This added comfort comes at the cost of having to trust
-your password manager to keep your keys safe in transit.
-
-## Registration and authentication flows
-Now that we have a good understanding of what authenticators do, let's check how they 
-interact with clients. The diagrams are simplified of course but should visualize how
-information flows between clients, authenticators and servers.
-First the registration flow to establish new credentials:
-
-![registration flow](./register.svg)
-
-Following this, existing credentials are used to authenticate:
-
-![authentication flow](./authenticate.svg)
-
 
 ## Misconceptions
 With the basics out of the way, let's look at some common misconceptions to clarify our
@@ -119,7 +112,7 @@ Finally, most people are going to be saving their passkeys in synchronizing auth
 platform keychains or password managers. For these, losing a device doesn't matter much anyway as
 long as you have a way to get back into the authenticator.
 
-### Passkeys replace 2FA
+### Passkeys don't replace 2FA
 This is a quite contentious take that illustrates how poor the general understanding of security
 is around the internet. You'll read many misguided arguments that don't hold up to scrutiny.
 After some research it seems a reasonable argument goes as follows: If the authenticator employs
@@ -211,7 +204,7 @@ on my phone everywhere. Why not use the password managers TOTP functionality and
 with the phone altogether? Honestly not sure. I suppose when I trust the password manager
 not to be compromise there is little benefit to have a second device.
 
-### Some observations about passkey usage in the wild
+### Passkeys in the wild
 First impressions on using passkeys with a password manager are good. It's fast and smooth.
 The first problem arises when wanting to use a security key: First one must dismiss the 
 password manager prompt, then when the native prompt presents itself with Apples keychain 
@@ -258,16 +251,6 @@ Added OTP for password login and passkeys on both security keys as second factor
 only as second factors. Weirdly, even if I sign out everywhere, 1Password never asks for
 any second factors. Apparently this is only required on new devices.
 
-#### Galaxus
-To my surprise this swiss retailer that is normally very strong technically (their filtering UX
-for example is the gold standard), doesn't support passkeys. Not a very high value account either
-way.
-
-#### Viac
-This is a swiss pension and investment platform. To my surprise they offer only SMS based 2FA.
-Not sufficient for a financial platform in my opinion. Sure, there are restrictions before anyone
-could have actual money payed out to some random account, but it's still disappointing.
-
 #### Google
 This is the first service where I get a popup from Firefox warning me that the website is requesting
 extended information about my security key. Apparently this exposes for example the serial number
@@ -275,7 +258,15 @@ of the security key to enable security-critical websites to disallow insecure or
 A (surely only accidentally useful for Google) side effect is that your keys could be tracked
 across multiple websites this way.
 
-#### SSH
-
 ## Closing thoughts
-security hygiene
+I'm glad I finally looked into passkeys. Not only are they convenient as a user, I'm inclined
+to also look into WebAuthn as the only authentication for future side projects. To this end I'll
+probably write up a proof-of-concept implementation in a future note.
+
+This was also helpful do finally get my security hygiene in order. I'd say I'm now in a fairly
+good spot, every account of value has at least 2FA enabled. While I'm at it I'll also look into
+putting my SSH keys into 1Password or a security key to avoid having them laying around on my
+system.
+
+As the resident tech person in my circle, I'll recommend people start adopting passkeys using
+a password manager going forward.
