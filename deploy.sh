@@ -22,6 +22,10 @@ docker push "ghcr.io/beingflo/marending-dev:${new_version}" || die "Failed to pu
 
 sed -i '' -e "s/image: \"ghcr.io\/beingflo\/marending-dev:${version}\"/image: \"ghcr.io\/beingflo\/marending-dev:${new_version}\"/" ./compose.prod.yml || die "Failed to write new version to docker compose file"
 
+trap "rm -f .env" EXIT
+export SOPS_AGE_KEY=$(op item get "SOPS age key - marending.dev" --reveal --fields "private key") || die "Failed to get age key from 1Password"
+sops -d --input-type dotenv --output-type dotenv .env.enc > .env || die "Failed to decrypt .env file"
+
 docker --context arm compose --file compose.prod.yml pull || die "Failed to pull new image"
 docker --context arm compose --file compose.prod.yml up -d || die "Failed to bring compose up"
 
