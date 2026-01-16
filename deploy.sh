@@ -31,4 +31,5 @@ docker --context arm compose --file compose.prod.yml up -d || die "Failed to bri
 
 git commit -am "Release ${new_version}"
 git tag "${new_version}"
+git push
 git push origin --tags
