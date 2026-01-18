@@ -126,7 +126,7 @@ sops -d --input-type dotenv --output-type dotenv .env.prod.enc > .env.prod
 
 The `op` command is the 1Password CLi that allows retrieving items from my vault
 programmatically. In this case, I'm reading out the "private key" field from the
-appropriate item. Then, with the appropriate key in an environment variable, I decrypt
+appropriate item. Then, with the key in an environment variable, I decrypt
 `.env.prod.enc` and store it in a plaintext `.env.prod` file. After this the actual
 deployment takes place. Finally, the trap we set up in the first line is going to ensure
 that the plaintext file is deleted when the script exits, be that cleanly or failing
