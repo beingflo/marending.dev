@@ -3,6 +3,8 @@
 **/target/
 service/ui
 
+.env
+
 # generated types
 **/.astro/
 
