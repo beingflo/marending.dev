@@ -4,7 +4,7 @@ subtitle: 'Ensuring my laptop is not a one-stop shop for attackers'
 date: '18 Jan 2026'
 link: '/notes/keys-in-pm/'
 layout: 'src/layouts/NoteLayout.astro'
-draft: true
+draft: false
 ---
 
 I like to [keep my hosting setup simple](/notes/server-setup/). That includes
@@ -133,8 +133,15 @@ that the plaintext file is deleted when the script exits, be that cleanly or fai
 somewhere. If you're wondering about the environment variable, rest assured that this
 is not accessible to processes outside the script.
 
-So for a brief moment during a deployment, the plaintext secrets are on disk, but then
+So for a brief moment during deployment, the plaintext secrets are on disk, but then
 promptly deleted again. This is a big improvement over having them always lie around.
+My attack surface _does_ expand to include 1Password, but if that were breached, I, and
+my software would be toast anyway with all my passkeys to Github, Hetzner, Porkbun etc.
+in there. In conclusion, I think this approach improves my security (and that of my
+users) significantly, at least in the face of straight-forward attacks. But now that I
+think about this, an attacker that has read-write access to my system _could_ modify my
+deployment script to send the private key off somewhere and I might not notice as I expect
+the verification prompt from 1Password.
 
-
-Security impact
+If I get too pensive about these things, I start to realize all hope is lost anyway and 
+I might as well go off-grid with some chickens.
