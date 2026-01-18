@@ -57,12 +57,12 @@ the dots with the conundrum in the back of my head.
 
 Let's consider the SSH key I use to log in to my server first. I created a new key in
 1Password, set up the agent, transferred the public key to the server and then deleted
-the old key. Now, whenever I want to `ssh` into the server, the ssh client talks to the
-ssh agent for authentication with the private key. At that point, 1Password pops up a 
-dialog that has me unlock the vault (using password or biometrics). Neat! To my surprise,
-this also works flawlessly when I run docker commands towards a remote ssh context.
-I did the same for my Github SSH key, as that could also be used to push malicious code
-to my projects.
+the old key. Now, whenever I want to `ssh` into the server, the ssh client asks the
+agent to perform cryptographic operations using the private key. At that point,
+1Password pops up a dialog that has me unlock the vault (using password or biometrics).
+Neat! To my surprise, this also works flawlessly when I run docker commands towards a
+remote ssh context.  I did the same for my Github SSH key, as that could also be used
+to push malicious code to my projects.
 
 As for my `.env` files, I now started using [SOPS](https://github.com/getsops/sops) with
 [age](https://github.com/FiloSottile/age) to encrypt the files and commit them to their
@@ -76,7 +76,7 @@ Here's how this works. First, I generate a new `age` keypair.
 AGE-SECRET-KEY-1KKX7L4J7EXQQJA4K6XCS4SLZANGXEVKAX3H0T2L8Z7QYCUV5T3KQ5LX7TW
 ```
 
-I store public and private key in 1Password. Then, I create a new `.sops.yaml` file
+I store public and private keys in 1Password. Then, I create a new `.sops.yaml` file
 in the project.
 
 ```yaml
@@ -130,17 +130,18 @@ appropriate item. Then, with the appropriate key in an environment variable, I d
 `.env.prod.enc` and store it in a plaintext `.env.prod` file. After this the actual
 deployment takes place. Finally, the trap we set up in the first line is going to ensure
 that the plaintext file is deleted when the script exits, be that cleanly or failing
-somewhere. If you're wondering about the environment variable, rest assured that this
-is not accessible to processes outside the script.
+somewhere. If you're wondering about the environment variable, rest assured that it's
+only visible to the script and any child processes it spawns, not to unrelated process
+on the system.
 
 So for a brief moment during deployment, the plaintext secrets are on disk, but then
 promptly deleted again. This is a big improvement over having them always lie around.
 My attack surface _does_ expand to include 1Password, but if that were breached, I, and
 my software would be toast anyway with all my passkeys to Github, Hetzner, Porkbun etc.
 in there. In conclusion, I think this approach improves my security (and that of my
-users) significantly, at least in the face of straight-forward attacks. But now that I
-think about this, an attacker that has read-write access to my system _could_ modify my
-deployment script to send the private key off somewhere and I might not notice as I expect
+users) significantly, at least in the face of opportunistic and automated attacks. But now
+that I think about this, an attacker that has read-write access to my system _could_ modify
+my deployment script to send the private key off somewhere and I might not notice as I expect
 the verification prompt from 1Password.
 
 If I get too pensive about these things, I start to realize all hope is lost anyway and 
