@@ -6,3 +6,58 @@ link: '/notes/keys-in-pm/'
 layout: 'src/layouts/NoteLayout.astro'
 draft: true
 ---
+
+I like to [keep my hosting setup simple](/notes/server-setup/). That includes
+not operating a service for secret management on my server. Instead, I've opted
+to keep secrets in local `.env` files that are transmitted to the server during
+deployment. I also don't run continuous integration pipelines for deployment, but
+just issue docker commands via a remote context to the server, which uses SSH for
+authentication. Naturally, for maximum comfort I don't have a passphrase on my key. 
+This simplicity comes at a security cost that I haven't explicitly thought about
+before. But after looking into [passkeys](/notes/passkeys) lately, security has
+been more present in my mind, so I'm writing this note to reason my way through
+this whole mess.
+
+First, my approach of keeping secrets locally comes with a very practical concern:
+it's _very_ easy to accidentally commit `.env` files to the repo, exposing your 
+API keys and such to everybody. This risk is quite obvious and, dare I say, not something
+I think would happen to me. Regardless, a mechanism where it's so easy to do the 
+catastrophically wrong thing is arguably badly designed either way.
+But more importantly, I've always considered my laptop, my local files, a sanctuary.
+A _server_ hosting services that are exposed to the internet obviously need to be protected
+from all the bad actors out there, but my laptop? How could anyone possibly gain access
+to it? I could have easily listed a bunch of ways how that could happen _theoretically_,
+but I wouldn't seriously have considered that I would have to take precautions against it.
+"Times of peace ..." and all that.
+
+A string of supply chain attacks have made me reconsider my stance. Not only do I myself
+use a bunch of dependencies on my projects, software I use have a bunch of dependencies.
+Did you know that an NPM package can run arbitrary code in lifecycle scripts? I.e. 
+any one of your NPM dependencies can declare a `postinstall` script that is run on your
+machine after installing the package. Such a script could easily read your `.env` file
+or even your `.ssh/id_rsa` key and send it off to wherever! Or maybe it could install
+a little hook on your project that will modify the generated code subtly even after
+you've removed the dependency. The possibilities are endless. Even if you have _your_
+dependencies under control, any piece of software that runs on your system could have
+an exploit snuck in via one of _their_ dependencies. Conversely not only does access
+to my computer compromise my productive secrets, it also allows an attacker to deploy
+malicious software on _my_ behalf. It's kind of depressing to think about. 
+
+After the "Shai-Hulud" compromise, of course the entire industry is trying to find
+solutions to this issue. In the meantime, I'm primarily concerned with trying to
+avoid having sensitive files lie around on my system. I don't want to give up on
+the simplicity of my setup though, I still want to directly deploy software from
+my laptop to my server, and I also want to avoid secrets management on my server.
+So it's time for one of my signature simple-yet-complicated solutions.
+
+I use 1Password as my password manager of choice. It's solid. Only recently did I
+learn that there is a [CLI](https://developer.1password.com/docs/cli/) as well as
+an [SSH agent](https://developer.1password.com/docs/ssh/agent/). I immediately connected
+the dots with the conundrum in the back of my head.
+
+Let's consider the SSH key I use to log in to my server first. I created a new key in
+1Password, set up the agent, transferred the public key to the server and then deleted
+the old key. Now, whenever I want to `ssh` into the server, the ssh client talks to the
+agent for authentication with the private key. At that point 1Password pop up a dialog
+that has me unlock the vault (using password or biometrics). Neat! To my surprise,
+this also works flawlessly when I run docker commands towards a remote ssh context.
