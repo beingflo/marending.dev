@@ -58,6 +58,62 @@ the dots with the conundrum in the back of my head.
 Let's consider the SSH key I use to log in to my server first. I created a new key in
 1Password, set up the agent, transferred the public key to the server and then deleted
 the old key. Now, whenever I want to `ssh` into the server, the ssh client talks to the
-agent for authentication with the private key. At that point 1Password pop up a dialog
-that has me unlock the vault (using password or biometrics). Neat! To my surprise,
+ssh agent for authentication with the private key. At that point, 1Password pops up a 
+dialog that has me unlock the vault (using password or biometrics). Neat! To my surprise,
 this also works flawlessly when I run docker commands towards a remote ssh context.
+I did the same for my Github SSH key, as that could also be used to push malicious code
+to my projects.
+
+As for my `.env` files, I now started using [SOPS](https://github.com/getsops/sops) with
+[age](https://github.com/FiloSottile/age) to encrypt the files and commit them to their
+respective repos.
+Here's how this works. First, I generate a new `age` keypair.
+
+```bash
+> age-keygen
+# created: 2026-01-18T19:10:14+01:00
+# public key: age1kasp3na0g9vmp9htuduhn6fdxu2yc7am45lvg48ta97t66nypqys0zvm70
+AGE-SECRET-KEY-1KKX7L4J7EXQQJA4K6XCS4SLZANGXEVKAX3H0T2L8Z7QYCUV5T3KQ5LX7TW
+```
+
+I store public and private key in 1Password. Then, I create a new `.sops.yaml` file
+in the project.
+
+```yaml
+creation_rules:
+  - path_regex: \.env.*$
+    age: "age1kasp3na0g9vmp9htuduhn6fdxu2yc7am45lvg48ta97t66nypqys0zvm70"
+
+```
+
+Now, when you run a SOPS encryption in this project, it will take the configured
+public key from this file.
+
+```bash
+> sops -e --input-type dotenv --output-type dotenv .env.prod > .env.prod.enc
+
+# .env.prod.enc
+OTEL_SERVICE_NAME=ENC[AES256_GCM,data:RfR0yTaqEbhh,iv:Lkx6qiB46iKye3ZUKPTXzjSv1VctQ0qWfZXYHmxOE1Q=,tag:IMxdFIF4aDX1AxuFEG9ZAg==,type:str]
+OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=ENC[AES256_GCM,data:vkHPgvhiLrjYAZeVGzPcxy+yMtLcdHQXehaW2XI1GJAIIPMp,iv:5SL6MO9HTKbsGh0U9bR7Xa1MzKP8FDBanaLHkXqAzRg=,tag:Mo3N1qes8ZLpuflkP1a+MA==,type:str]
+OTEL_BSP_MAX_QUEUE_SIZE=ENC[AES256_GCM,data:PIETWdtc,iv:3aoQpSb9EDOAb8Qa0hU/LIafxa5t5VnKM6cRjmGcD6o=,tag:oCR8/cIbffN4lP410WpHcg==,type:str]
+OTEL_BSP_MAX_EXPORT_BATCH_SIZE=ENC[AES256_GCM,data:xSdryjU=,iv:0xs74ILRRzpbUkWMhx5t3MYzODZYrjwAiXZPg9QbCaI=,tag:KXT93vSRIUxJQW2DkjcEEA==,type:str]
+SERVE_PORT=ENC[AES256_GCM,data:I/XPtQ==,iv:+vjGknnpXIHX0HCThT/8SzBiFs7IsYjsl66faf78cGk=,tag:XnK5jT/hTOVijajfl53AUg==,type:str]
+sops_age__list_0__map_enc=-----BEGIN AGE ENCRYPTED FILE-----\nYWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBRQ0hObVJ0VS91cktzcHZG\nM0xHZFZLdDVLSUlocVFpck8wM1g2YlBNdVZvClovbWs5UmVpVVo1MDlpZFg3U29i\nNFk0ZFZ2cUMwWUIyS1JpczdVTHlJdG8KLS0tIFNGNzl2V1RqN2s2SG9tbUEwc2or\nNzBncVg4L2s4MHNMUjB3MUU3WHJrVzAKoQUYuztqDD4Z2HJYoUhABXJmJGAGbGIr\nKnfZWZRpjawijjkPdW8WNslrxCQx5j3FFr4Fr1h+V1ueX14aHAvyKg==\n-----END AGE ENCRYPTED FILE-----\n
+sops_age__list_0__map_recipient=age1tlteuzp4uwd7ld28s2ncstgmh92jja84y4a4frrl0hhwc04vpyzsqpqkyl
+sops_lastmodified=2026-01-16T21:08:17Z
+sops_mac=ENC[AES256_GCM,data:JjD3VlHY0ih4kItPRH7zmMOT5Qvklx8+xJxmTKKqa8OH6+j5bpM3hFXStcyXZ9qpNM/DNu50Hn6y7QKW3IrrLylF5EYLeFWk9Ys6/VmtbsjWUXuoEmsmHDcERtHo8AwBatzqwny+M1YRs/hJEqmgRQydKxg1c6ducIPv6fmlXfM=,iv:J0i6WWiccFtBbyUPvAU+KC3EmlYg+fIr3xXxjcmg+Rc=,tag:a2RmQ7P3XcuCnHTNOtcz/A==,type:str]
+sops_unencrypted_suffix=_unencrypted
+sops_version=3.11.0
+```
+
+The `dotenv` type is so that the resulting file is easier to diff in git. You can try
+without it and see the `json` format it defaults to (unless the input filename fits a
+pattern, don't ask me). 
+As long as the `age` private key is not compromised, this file is now safe to commit to
+the repo and the original `.env.prod` file is deleted.
+
+At this point, there is nothing sensitive on disk in plaintext. But how can my deployment
+script still see the secrets? This brings us to the 1Password CLI.
+
+
+Security impact
