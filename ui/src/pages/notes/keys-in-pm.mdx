@@ -80,6 +80,7 @@ I store public and private key in 1Password. Then, I create a new `.sops.yaml` f
 in the project.
 
 ```yaml
+# .sops.yaml
 creation_rules:
   - path_regex: \.env.*$
     age: "age1kasp3na0g9vmp9htuduhn6fdxu2yc7am45lvg48ta97t66nypqys0zvm70"
@@ -114,6 +115,26 @@ the repo and the original `.env.prod` file is deleted.
 
 At this point, there is nothing sensitive on disk in plaintext. But how can my deployment
 script still see the secrets? This brings us to the 1Password CLI.
+At the appropriate spot in my script (again, go read [this](/notes/server-setup/) for
+details) I insert the following lines.
+
+```bash
+trap "rm -f .env.prod" EXIT
+export SOPS_AGE_KEY=$(op item get "SOPS age key - marending.dev" --reveal --fields "private key")
+sops -d --input-type dotenv --output-type dotenv .env.prod.enc > .env.prod
+```
+
+The `op` command is the 1Password CLi that allows retrieving items from my vault
+programmatically. In this case, I'm reading out the "private key" field from the
+appropriate item. Then, with the appropriate key in an environment variable, I decrypt
+`.env.prod.enc` and store it in a plaintext `.env.prod` file. After this the actual
+deployment takes place. Finally, the trap we set up in the first line is going to ensure
+that the plaintext file is deleted when the script exits, be that cleanly or failing
+somewhere. If you're wondering about the environment variable, rest assured that this
+is not accessible to processes outside the script.
+
+So for a brief moment during a deployment, the plaintext secrets are on disk, but then
+promptly deleted again. This is a big improvement over having them always lie around.
 
 
 Security impact
