@@ -124,7 +124,7 @@ export SOPS_AGE_KEY=$(op item get "SOPS age key - marending.dev" --reveal --fiel
 sops -d --input-type dotenv --output-type dotenv .env.prod.enc > .env.prod
 ```
 
-The `op` command is the 1Password CLi that allows retrieving items from my vault
+The `op` command is the 1Password CLI that allows retrieving items from my vault
 programmatically. In this case, I'm reading out the "private key" field from the
 appropriate item. Then, with the key in an environment variable, I decrypt
 `.env.prod.enc` and store it in a plaintext `.env.prod` file. After this the actual
