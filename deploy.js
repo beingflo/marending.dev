@@ -64,8 +64,6 @@ await $`sops -d --input-type dotenv --output-type dotenv .env.enc > .env`.env({
   SOPS_AGE_KEY: ageKey.trim(),
 });
 
-await $`sleep 6`;
-
 // Pull and deploy
 await $`docker --context arm compose --file compose.prod.yml pull`;
 await $`docker --context arm compose --file compose.prod.yml up -d`;
