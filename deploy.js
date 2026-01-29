@@ -1,7 +1,14 @@
 #!/usr/bin/env bun
 import { $ } from "bun";
+import { unlinkSync } from "fs";
 
+// Exit on error and ensure decrypted .env file is cleaned up
 $.throws(true);
+process.on("exit", () => {
+  try {
+    unlinkSync(".env");
+  } catch {}
+});
 
 console.log("Deploying marending.dev to production!");
 
@@ -47,29 +54,24 @@ const newImageLine = `image: "ghcr.io/beingflo/marending-dev:${newVersion}"`;
 const updatedCompose = composeFile.replace(oldImageLine, newImageLine);
 await Bun.write("./compose.prod.yml", updatedCompose);
 
-try {
-  // Get age key from 1Password
-  const ageKey =
-    await $`op item get "SOPS age key - marending.dev" --reveal --fields "private key"`.text();
+// Get age key from 1Password
+const ageKey =
+  await $`op item get "SOPS age key - marending.dev" --reveal --fields "private key"`.text();
 
-  // Decrypt .env file
-  await $`sops -d --input-type dotenv --output-type dotenv .env.enc > .env`.env(
-    {
-      ...process.env,
-      SOPS_AGE_KEY: ageKey.trim(),
-    },
-  );
+// Decrypt .env file
+await $`sops -d --input-type dotenv --output-type dotenv .env.enc > .env`.env({
+  ...process.env,
+  SOPS_AGE_KEY: ageKey.trim(),
+});
 
-  // Pull and deploy
-  await $`docker --context arm compose --file compose.prod.yml pull`;
-  await $`docker --context arm compose --file compose.prod.yml up -d`;
+await $`sleep 6`;
 
-  // Git operations
-  await $`git commit -am "Release ${newVersion}"`;
-  await $`git tag ${newVersion}`;
-  await $`git push`;
-  await $`git push origin --tags`;
-} finally {
-  // Cleanup .env file
-  await $`rm -f .env`.nothrow();
-}
+// Pull and deploy
+await $`docker --context arm compose --file compose.prod.yml pull`;
+await $`docker --context arm compose --file compose.prod.yml up -d`;
+
+// Git operations
+await $`git commit -am "Release ${newVersion}"`;
+await $`git tag ${newVersion}`;
+await $`git push`;
+await $`git push origin --tags`;
