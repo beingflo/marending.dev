@@ -1,0 +1,49 @@
+---
+title: 'My first firefox extension'
+subtitle: 'Personalize your software'
+date: '22 Mar 2026'
+link: '/notes/extension/'
+layout: 'src/layouts/NoteLayout.astro'
+draft: true
+---
+
+I wouldn't say I have an addictive personality, but the seemingly educational content on
+Youbute certainly hits a soft spot in my brain. Too broad the scope, from woodworking and
+lathe work to photography and physics, too nicely packaged, fast-paced and information
+packed, for me to resist. The content is designed to attract engagement after all. 
+This is to say if I have the choice of what to do at home, I'm on Youtube entirely 
+to often. It's devious in that it's hard to look back on 2 hours spent without having
+learned a bunch of stuff (most of it is useless but I digress). In that way it keeps me
+trapped, it's not like I'm wasting my time here, right?
+
+I've been aware of this pattern for years, but didn't do anything about it. Then, I installed
+[LeechBlock](https://addons.mozilla.org/en-US/firefox/addon/leechblock-ng/), a Firefox extension
+that allows you to set up block rules for certain websites. Like say, at most 30 of Youtube per
+day and after that it will block further access. I overruled the block entirely too often anyway.
+
+Then, a couple of weeks ago I had an idea. What if I don't just allow myself a maximum 
+duration of Youtube per day that resets every day but instead kept a rolling balance 
+that increases by X minutes every day and decreases by however much I use of it. 
+Effectively allowing a roll over of unused time.
+I postulated that this may help pyschologicaly as not spending time on Youtube today is not
+lost opportunity, but rather delayed gratification.
+
+While LeechBlock has the option to roll-over time, it doesn't quite work the way I need
+it to. So I set out to build my own.
+
+Starting out with a tutorial on MDN, I was surprised how easy it is to get a first demo
+extension built and installed. From there, I was iterating with Claude to get the behaviour
+I need. And boy did it take some prompting. While Claude understands the APIs available
+to an extension just fine, it struggled with concepts like timers not firing when the
+device is sleeping etc.
+
+The result is this [tiny extension](https://github.com/beingflo/block-extension). It
+keeps track of the last time budget and when it was updated in local storage. Whenever
+Youtube is in focus, it updates the budget and update timestamp every second.
+When there is a visibility change, it checks when the budget was last updated and
+adds time as appropriate. I currently have it afford 2.5 minutes every hour, this comes to
+1 hour of Youtube per day. You gotta start somewhere.
+
+It worked well so far. As theorized, I have an easier time doing something else and
+not feeling like I'm missing out, as I'm just _postponing_ watching that video where
+the guy explains how dishwashers work.
