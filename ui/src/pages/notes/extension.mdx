@@ -7,7 +7,7 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: true
 ---
 
-I wouldn't say I have an addictive personality, but I do spend to much time on YouTube.
+I wouldn't say I have an addictive personality, but I do spend too much time on YouTube.
 It's a devious pattern where I'm watching educational content, learning a bunch of useless
 stuff and feeling like I'm not wasting my time doing it. I don't want to stop watching
 videos on YouTube entirely, there _is_ some genuinely fantastic content on there. But I need
@@ -16,14 +16,14 @@ to limit my time on it.
 I've been aware of this pattern for years, but didn't do anything about it. Then, I installed
 [LeechBlock](https://addons.mozilla.org/en-US/firefox/addon/leechblock-ng/), a Firefox extension
 that allows you to set up block rules for certain websites. Like say, at most 30 minutes of 
-Youtube per day and after that it will block further access. Depending on my mood, I would then
+Tube per day and after that it will block further access. Depending on my mood, I would then
 overrule the block habitually. So it wasn't exactly working.
 
 Then, a couple of weeks ago I had an idea. What if I don't just allow myself a maximum 
-duration of Youtube per day that resets every day but instead kept a rolling balance 
+duration of YouTube per day that resets every day but instead kept a rolling balance 
 that increases by X minutes every day and decreases by however much I use of it. 
 Effectively allowing a roll over of unused time. I postulated that this may help
-pyschologicaly as not spending time on Youtube today is not lost opportunity, but
+psychologically as not spending time on YouTube today is not lost opportunity, but
 rather delayed gratification.
 
 While LeechBlock has the option to roll-over time, it doesn't quite work the way I need
@@ -37,11 +37,12 @@ device is sleeping etc.
 
 The result is this [tiny extension](https://github.com/beingflo/block-extension). It
 keeps track of the last time budget and when it was updated in local storage. Whenever
-Youtube is in focus, it updates the budget and update timestamp every second.
+YouTube is in focus, it updates the budget and update timestamp every second.
 When there is a visibility change, it checks when the budget was last updated and
 adds time as appropriate. I currently have it afford 2.5 minutes every hour, this comes to
-1 hour of Youtube per day. You gotta start somewhere.
+1 hour of YouTube per day. You gotta start somewhere.
 
 It worked well so far. As theorized, I have an easier time doing something else and
 not feeling like I'm missing out, as I'm just _postponing_ watching that video where
-the guy explains how dishwashers work.
+the guy explains how dishwashers work. I should build software that fits my
+needs exactly more often.
