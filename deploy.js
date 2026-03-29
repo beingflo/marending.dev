@@ -12,13 +12,6 @@ process.on("exit", () => {
 
 console.log("Deploying marending.dev to production!");
 
-// Check for uncommitted changes
-const status = await $`git status --porcelain`.text();
-if (status.trim()) {
-  console.error("There are uncommitted changes");
-  process.exit(1);
-}
-
 // Get current version from Cargo.toml
 const metadata = await $`cargo metadata --format-version=1 --no-deps`
   .cwd("service")
@@ -68,8 +61,8 @@ await $`sops -d --input-type dotenv --output-type dotenv .env.enc > .env`.env({
 await $`docker --context arm compose --file compose.prod.yml pull`;
 await $`docker --context arm compose --file compose.prod.yml up -d`;
 
-// Git operations
-await $`git commit -am "Release ${newVersion}"`;
-await $`git tag ${newVersion}`;
-await $`git push`;
-await $`git push origin --tags`;
+// JJ operations
+await $`jj describe -m "Release ${newVersion}"`;
+await $`jj bookmark create ${newVersion}`;
+await $`jj git push`;
+await $`jj new`;
