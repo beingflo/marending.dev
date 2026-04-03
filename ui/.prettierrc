@@ -1,11 +1,10 @@
 {
-	"useTabs": false,
-	"singleQuote": true,
-	"trailingComma": "es5",
-	"printWidth": 100,
-	"pluginSearchDirs": ["."],
-	"htmlWhitespaceSensitivity": "strict",
-	"bracketSameLine": true,
-	"singleAttributePerLine": true,
-	"proseWrap": "always"
+  "useTabs": false,
+  "singleQuote": true,
+  "trailingComma": "es5",
+  "printWidth": 100,
+  "htmlWhitespaceSensitivity": "strict",
+  "bracketSameLine": true,
+  "singleAttributePerLine": true,
+  "proseWrap": "always"
 }

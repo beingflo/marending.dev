@@ -4,20 +4,20 @@ subtitle: "This shouldn't be this hard"
 date: '19 Jul 2025'
 link: '/notes/otel/'
 layout: 'src/layouts/NoteLayout.astro'
-draft: false 
+draft: false
 ---
 
-I don't like the OpenTelemetry ecosystem. It's complicated. Not just because
-it's solving a hard problem, but it feels needlessly complicated. I get the impression
-the observability vendors are begrudgingly adopting an open standard but want to 
-make it a daunting task to host your own observability stack. Anyway, I've recently
-struggled for a bit to instrument a Rust application with `tracing` and send the
-data to ClickHouse. So here is a short write-up to save you a hot minute—or provide
-some inspiration to self-host your observability platform. 
+I don't like the OpenTelemetry ecosystem. It's complicated. Not just because it's solving a hard
+problem, but it feels needlessly complicated. I get the impression the observability vendors are
+begrudgingly adopting an open standard but want to make it a daunting task to host your own
+observability stack. Anyway, I've recently struggled for a bit to instrument a Rust application with
+`tracing` and send the data to ClickHouse. So here is a short write-up to save you a hot minute—or
+provide some inspiration to self-host your observability platform.
 
 ## Rust application
-The Rust crates involved here are unstable and moving fast, part of the reason this
-was trickier than expected. But at the time of writing, here is what works.
+
+The Rust crates involved here are unstable and moving fast, part of the reason this was trickier
+than expected. But at the time of writing, here is what works.
 
 ```toml
 // Cargo.toml
@@ -67,8 +67,10 @@ tracing_subscriber::registry()
 ```
 
 ## Observability compose stack
-Next, we want to run the [OpenTelemetry Collector](https://github.com/open-telemetry/opentelemetry-collector-contrib)
-from the contrib repository, a ClickHouse instance as well as Grafana.
+
+Next, we want to run the
+[OpenTelemetry Collector](https://github.com/open-telemetry/opentelemetry-collector-contrib) from
+the contrib repository, a ClickHouse instance as well as Grafana.
 
 ```yaml
 // compose.yaml
@@ -171,11 +173,10 @@ service:
 
 ```
 
-Once you bring up these containers, you should be able to run your Rust application
-and start sending tracing data to the collector. By manually connecting to the
-ClickHouse instance with something like [TablePlus](https://tableplus.com/), you
-should see an `otel_traces` table with your spans in there.
-
+Once you bring up these containers, you should be able to run your Rust application and start
+sending tracing data to the collector. By manually connecting to the ClickHouse instance with
+something like [TablePlus](https://tableplus.com/), you should see an `otel_traces` table with your
+spans in there.
 
 ## Grafana
 
