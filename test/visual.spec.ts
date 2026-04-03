@@ -35,6 +35,7 @@ const notes = [
   "/notes/visual-testing/",
   "/notes/passkeys/",
   "/notes/keys-in-pm/",
+  "/notes/extension/",
   "/feedback/",
 ];
 
