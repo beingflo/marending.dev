@@ -6,5 +6,6 @@
 	"pluginSearchDirs": ["."],
 	"htmlWhitespaceSensitivity": "strict",
 	"bracketSameLine": true,
-	"singleAttributePerLine": true
+	"singleAttributePerLine": true,
+	"proseWrap": "always"
 }

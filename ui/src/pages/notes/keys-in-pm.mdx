@@ -7,67 +7,59 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-I like to [keep my hosting setup simple](/notes/server-setup/). That includes
-not operating a service for secret management on my server. Instead, I've opted
-to keep secrets in local `.env` files that are transmitted to the server during
-deployment. I also don't run continuous integration pipelines for deployment, but
-just issue docker commands via a remote context to the server, which uses SSH for
-authentication. Naturally, for maximum comfort I don't have a passphrase on my key. 
-This simplicity comes at a security cost that I haven't explicitly thought about
-before. But after looking into [passkeys](/notes/passkeys) lately, security has
-been more present in my mind, so I'm writing this note to reason my way through
-this whole mess.
+I like to [keep my hosting setup simple](/notes/server-setup/). That includes not operating a
+service for secret management on my server. Instead, I've opted to keep secrets in local `.env`
+files that are transmitted to the server during deployment. I also don't run continuous integration
+pipelines for deployment, but just issue docker commands via a remote context to the server, which
+uses SSH for authentication. Naturally, for maximum comfort I don't have a passphrase on my key.
+This simplicity comes at a security cost that I haven't explicitly thought about before. But after
+looking into [passkeys](/notes/passkeys) lately, security has been more present in my mind, so I'm
+writing this note to reason my way through this whole mess.
 
-First, my approach of keeping secrets locally comes with a very practical concern:
-it's _very_ easy to accidentally commit `.env` files to the repo, exposing your 
-API keys and such to everybody. This risk is quite obvious and, dare I say, not something
-I think would happen to me. Regardless, a mechanism where it's so easy to do the 
-catastrophically wrong thing is arguably badly designed either way.
-But more importantly, I've always considered my laptop, my local files, a sanctuary.
-A _server_ hosting services that are exposed to the internet obviously need to be protected
-from all the bad actors out there, but my laptop? How could anyone possibly gain access
-to it? I could have easily listed a bunch of ways how that could happen _theoretically_,
-but I wouldn't seriously have considered that I would have to take precautions against it.
-"Times of peace ..." and all that.
+First, my approach of keeping secrets locally comes with a very practical concern: it's _very_ easy
+to accidentally commit `.env` files to the repo, exposing your API keys and such to everybody. This
+risk is quite obvious and, dare I say, not something I think would happen to me. Regardless, a
+mechanism where it's so easy to do the catastrophically wrong thing is arguably badly designed
+either way. But more importantly, I've always considered my laptop, my local files, a sanctuary. A
+_server_ hosting services that are exposed to the internet obviously need to be protected from all
+the bad actors out there, but my laptop? How could anyone possibly gain access to it? I could have
+easily listed a bunch of ways how that could happen _theoretically_, but I wouldn't seriously have
+considered that I would have to take precautions against it. "Times of peace ..." and all that.
 
-A string of supply chain attacks have made me reconsider my stance. Not only do I myself
-use a bunch of dependencies on my projects, software I use have a bunch of dependencies.
-Did you know that an NPM package can run arbitrary code in lifecycle scripts? I.e. 
-any one of your NPM dependencies can declare a `postinstall` script that is run on your
-machine after installing the package. Such a script could easily read your `.env` file
-or even your `.ssh/id_rsa` key and send it off to wherever! Or maybe it could install
-a little hook on your project that will modify the generated code subtly even after
-you've removed the dependency. The possibilities are endless. Even if you have _your_
-dependencies under control, any piece of software that runs on your system could have
-an exploit snuck in via one of _their_ dependencies. Conversely not only does access
-to my computer compromise my productive secrets, it also allows an attacker to deploy
-malicious software on _my_ behalf. It's kind of depressing to think about. 
+A string of supply chain attacks have made me reconsider my stance. Not only do I myself use a bunch
+of dependencies on my projects, software I use have a bunch of dependencies. Did you know that an
+NPM package can run arbitrary code in lifecycle scripts? I.e. any one of your NPM dependencies can
+declare a `postinstall` script that is run on your machine after installing the package. Such a
+script could easily read your `.env` file or even your `.ssh/id_rsa` key and send it off to
+wherever! Or maybe it could install a little hook on your project that will modify the generated
+code subtly even after you've removed the dependency. The possibilities are endless. Even if you
+have _your_ dependencies under control, any piece of software that runs on your system could have an
+exploit snuck in via one of _their_ dependencies. Conversely not only does access to my computer
+compromise my productive secrets, it also allows an attacker to deploy malicious software on _my_
+behalf. It's kind of depressing to think about.
 
-After the "Shai-Hulud" compromise, of course the entire industry is trying to find
-solutions to this issue. In the meantime, I'm primarily concerned with trying to
-avoid having sensitive files lie around on my system. I don't want to give up on
-the simplicity of my setup though, I still want to directly deploy software from
-my laptop to my server, and I also want to avoid secrets management on my server.
-So it's time for one of my signature simple-yet-complicated solutions.
+After the "Shai-Hulud" compromise, of course the entire industry is trying to find solutions to this
+issue. In the meantime, I'm primarily concerned with trying to avoid having sensitive files lie
+around on my system. I don't want to give up on the simplicity of my setup though, I still want to
+directly deploy software from my laptop to my server, and I also want to avoid secrets management on
+my server. So it's time for one of my signature simple-yet-complicated solutions.
 
-I use 1Password as my password manager of choice. It's solid. Only recently did I
-learn that there is a [CLI](https://developer.1password.com/docs/cli/) as well as
-an [SSH agent](https://developer.1password.com/docs/ssh/agent/). I immediately connected
-the dots with the conundrum in the back of my head.
+I use 1Password as my password manager of choice. It's solid. Only recently did I learn that there
+is a [CLI](https://developer.1password.com/docs/cli/) as well as an
+[SSH agent](https://developer.1password.com/docs/ssh/agent/). I immediately connected the dots with
+the conundrum in the back of my head.
 
-Let's consider the SSH key I use to log in to my server first. I created a new key in
-1Password, set up the agent, transferred the public key to the server and then deleted
-the old key. Now, whenever I want to `ssh` into the server, the ssh client asks the
-agent to perform cryptographic operations using the private key. At that point,
-1Password pops up a dialog that has me unlock the vault (using password or biometrics).
-Neat! To my surprise, this also works flawlessly when I run docker commands towards a
-remote ssh context.  I did the same for my Github SSH key, as that could also be used
-to push malicious code to my projects.
+Let's consider the SSH key I use to log in to my server first. I created a new key in 1Password, set
+up the agent, transferred the public key to the server and then deleted the old key. Now, whenever I
+want to `ssh` into the server, the ssh client asks the agent to perform cryptographic operations
+using the private key. At that point, 1Password pops up a dialog that has me unlock the vault (using
+password or biometrics). Neat! To my surprise, this also works flawlessly when I run docker commands
+towards a remote ssh context. I did the same for my Github SSH key, as that could also be used to
+push malicious code to my projects.
 
 As for my `.env` files, I now started using [SOPS](https://github.com/getsops/sops) with
-[age](https://github.com/FiloSottile/age) to encrypt the files and commit them to their
-respective repos.
-Here's how this works. First, I generate a new `age` keypair.
+[age](https://github.com/FiloSottile/age) to encrypt the files and commit them to their respective
+repos. Here's how this works. First, I generate a new `age` keypair.
 
 ```bash
 > age-keygen
@@ -76,19 +68,17 @@ Here's how this works. First, I generate a new `age` keypair.
 AGE-SECRET-KEY-1KKX7L4J7EXQQJA4K6XCS4SLZANGXEVKAX3H0T2L8Z7QYCUV5T3KQ5LX7TW
 ```
 
-I store public and private keys in 1Password. Then, I create a new `.sops.yaml` file
-in the project.
+I store public and private keys in 1Password. Then, I create a new `.sops.yaml` file in the project.
 
 ```yaml
 # .sops.yaml
 creation_rules:
   - path_regex: \.env.*$
-    age: "age1kasp3na0g9vmp9htuduhn6fdxu2yc7am45lvg48ta97t66nypqys0zvm70"
-
+    age: 'age1kasp3na0g9vmp9htuduhn6fdxu2yc7am45lvg48ta97t66nypqys0zvm70'
 ```
 
-Now, when you run a SOPS encryption in this project, it will take the configured
-public key from this file.
+Now, when you run a SOPS encryption in this project, it will take the configured public key from
+this file.
 
 ```bash
 > sops -e --input-type dotenv --output-type dotenv .env.prod > .env.prod.enc
@@ -107,16 +97,14 @@ sops_unencrypted_suffix=_unencrypted
 sops_version=3.11.0
 ```
 
-The `dotenv` type is so that the resulting file is easier to diff in git. You can try
-without it and see the `json` format it defaults to (unless the input filename fits a
-pattern, don't ask me). 
-As long as the `age` private key is not compromised, this file is now safe to commit to
-the repo and the original `.env.prod` file is deleted.
+The `dotenv` type is so that the resulting file is easier to diff in git. You can try without it and
+see the `json` format it defaults to (unless the input filename fits a pattern, don't ask me). As
+long as the `age` private key is not compromised, this file is now safe to commit to the repo and
+the original `.env.prod` file is deleted.
 
-At this point, there is nothing sensitive on disk in plaintext. But how can my deployment
-script still see the secrets? This brings us to the 1Password CLI.
-At the appropriate spot in my script (again, go read [this](/notes/server-setup/) for
-details) I insert the following lines.
+At this point, there is nothing sensitive on disk in plaintext. But how can my deployment script
+still see the secrets? This brings us to the 1Password CLI. At the appropriate spot in my script
+(again, go read [this](/notes/server-setup/) for details) I insert the following lines.
 
 ```bash
 trap "rm -f .env.prod" EXIT
@@ -124,25 +112,23 @@ export SOPS_AGE_KEY=$(op item get "SOPS age key - marending.dev" --reveal --fiel
 sops -d --input-type dotenv --output-type dotenv .env.prod.enc > .env.prod
 ```
 
-The `op` command is the 1Password CLI that allows retrieving items from my vault
-programmatically. In this case, I'm reading out the "private key" field from the
-appropriate item. Then, with the key in an environment variable, I decrypt
-`.env.prod.enc` and store it in a plaintext `.env.prod` file. After this the actual
-deployment takes place. Finally, the trap we set up in the first line is going to ensure
-that the plaintext file is deleted when the script exits, be that cleanly or failing
-somewhere. If you're wondering about the environment variable, rest assured that it's
-only visible to the script and any child processes it spawns, not to unrelated process
-on the system.
+The `op` command is the 1Password CLI that allows retrieving items from my vault programmatically.
+In this case, I'm reading out the "private key" field from the appropriate item. Then, with the key
+in an environment variable, I decrypt `.env.prod.enc` and store it in a plaintext `.env.prod` file.
+After this the actual deployment takes place. Finally, the trap we set up in the first line is going
+to ensure that the plaintext file is deleted when the script exits, be that cleanly or failing
+somewhere. If you're wondering about the environment variable, rest assured that it's only visible
+to the script and any child processes it spawns, not to unrelated process on the system.
 
-So for a brief moment during deployment, the plaintext secrets are on disk, but then
-promptly deleted again. This is a big improvement over having them always lie around.
-My attack surface _does_ expand to include 1Password, but if that were breached, I, and
-my software would be toast anyway with all my passkeys to Github, Hetzner, Porkbun etc.
-in there. In conclusion, I think this approach improves my security (and that of my
-users) significantly, at least in the face of opportunistic and automated attacks. But now
-that I think about this, an attacker that has read-write access to my system _could_ modify
-my deployment script to send the private key off somewhere and I might not notice as I expect
-the verification prompt from 1Password.
+So for a brief moment during deployment, the plaintext secrets are on disk, but then promptly
+deleted again. This is a big improvement over having them always lie around. My attack surface
+_does_ expand to include 1Password, but if that were breached, I, and my software would be toast
+anyway with all my passkeys to Github, Hetzner, Porkbun etc. in there. In conclusion, I think this
+approach improves my security (and that of my users) significantly, at least in the face of
+opportunistic and automated attacks. But now that I think about this, an attacker that has
+read-write access to my system _could_ modify my deployment script to send the private key off
+somewhere and I might not notice as I expect the verification prompt from 1Password.
 
-If I get too pensive about these things, I start to realize all hope is lost anyway and 
-I might as well go off-grid with some chickens.
+If I get too pensive about these things, I start to realize all hope is lost anyway and I might as
+well go off-grid with some chickens.
+
