@@ -7,37 +7,36 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-[WebAssembly](https://developer.mozilla.org/en-US/docs/WebAssembly) has recently caught
-my eye to be used in a plugin system. Imagine this: You want to allow your users to augment the
-behaviour of your system at predefined points. Say, structure a payload of data before your system
-calls a webhook endpoint. Or perform some evaluation to determine if your system should send a
-notification email about some event.
+[WebAssembly](https://developer.mozilla.org/en-US/docs/WebAssembly) has recently caught my eye to be
+used in a plugin system. Imagine this: You want to allow your users to augment the behaviour of your
+system at predefined points. Say, structure a payload of data before your system calls a webhook
+endpoint. Or perform some evaluation to determine if your system should send a notification email
+about some event.
 
-In my case, I'm building a metric collection and visualization system. Think Grafana /
-Prometheus but custom. In Prometheus you can transform your data using PromQL before it is
-handed off to Grafana for visualization. Needless to say for my application I'm not too keen
-on buliding my own DSL for this. Instead, I want to use Webassembly as a secure way to run
-user provided modules that transform data to the users liking. First experiments proved
-successful. But before I get to deep into this I want to quickly evaluate how much performance
-I'm leaving on the table.
+In my case, I'm building a metric collection and visualization system. Think Grafana / Prometheus
+but custom. In Prometheus you can transform your data using PromQL before it is handed off to
+Grafana for visualization. Needless to say for my application I'm not too keen on buliding my own
+DSL for this. Instead, I want to use Webassembly as a secure way to run user provided modules that
+transform data to the users liking. First experiments proved successful. But before I get to deep
+into this I want to quickly evaluate how much performance I'm leaving on the table.
 
 For my microbenchmark, I compile the following snippet of Rust code into Webassembly:
 
 ```rust
 pub fn run(Json(x): Json<Vec<i64>>) -> FnResult<Json<Vec<i64>>> {
-	let mut values = Vec::new();
+  let mut values = Vec::new();
 
-	for (idx, a) in x.iter().enumerate() {
-		for b in x.iter() {
-			if values.len() > idx {
-				values[idx] += b;
-			} else {
-				values.push(a * b);
-			}
-		}
-	}
+  for (idx, a) in x.iter().enumerate() {
+    for b in x.iter() {
+      if values.len() > idx {
+        values[idx] += b;
+      } else {
+        values.push(a * b);
+      }
+    }
+  }
 
-	Ok(Json(values))
+  Ok(Json(values))
 }
 ```
 
@@ -46,22 +45,23 @@ the inputs and outputs have to be serialized / deserialized to JSON. That's an u
 limitation of Webassembly currently for more complex types, like vectors here.
 
 Next, I use [extism](https://github.com/extism/extism) (which internally uses
-[wasmtime](https://github.com/bytecodealliance/wasmtime)) to load this plugin and run it.
-I then run this same code also natively in Rust. Below you find the results.
+[wasmtime](https://github.com/bytecodealliance/wasmtime)) to load this plugin and run it. I then run
+this same code also natively in Rust. Below you find the results.
 
+{/* prettier-ignore */}
 <div>
-	|             | Throughput | Average duration | 90 percentile duration |
-	| :---------- | ---------: | ---------------: | ---------------------: |
-	| Native Rust | 4.85/s     | 206ms            | 206ms                  |
-	| Webassembly	| 4.59/s     | 217ms            | 218ms                  |
+ |             | Throughput | Average duration | 90 percentile duration |
+ | :---------- | ---------: | ---------------: | ---------------------: |
+ | Native Rust | 4.85/s     | 206ms            | 206ms                  |
+ | Webassembly | 4.59/s     | 217ms            | 218ms                  |
 </div>
 <p class='caption'>Table 1: Performance comparison of native Rust and Rust compiled to Webassembly.</p>
 
-At first I was sure I was making a mistake, no way the Webassembly is so close in performance to
-the native code, right? I'm starting to believe it's actually correct. What's incredible, this
-difference has to account for JSON serialization and deserialization of the inputs and outputs,
-the invocation overhead of spinning up wasmtime and running the plugin as well as the actual
-difference in execution speed.
+At first I was sure I was making a mistake, no way the Webassembly is so close in performance to the
+native code, right? I'm starting to believe it's actually correct. What's incredible, this
+difference has to account for JSON serialization and deserialization of the inputs and outputs, the
+invocation overhead of spinning up wasmtime and running the plugin as well as the actual difference
+in execution speed.
 
-The astounding performance of Webassembly is just another reason for it being an excellent choice
-in a plugin system.
+The astounding performance of Webassembly is just another reason for it being an excellent choice in
+a plugin system.
