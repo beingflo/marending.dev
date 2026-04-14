@@ -64,5 +64,4 @@ await $`docker --context arm compose --file compose.prod.yml up -d`;
 // JJ operations
 await $`jj describe -m "Release ${newVersion}"`;
 await $`jj bookmark create ${newVersion}`;
-await $`jj git push`;
 await $`jj new`;
