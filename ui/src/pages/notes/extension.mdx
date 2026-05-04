@@ -7,6 +7,8 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
+import { Hint } from 'src/components';
+
 I wouldn't say I have an addictive personality, but I do spend too much time on YouTube. It's a
 devious pattern where I watch educational content, learn a bunch of useless stuff and feel like I'm
 not wasting my time doing it. I don't want to stop watching videos on YouTube entirely, there _is_
@@ -41,3 +43,12 @@ minutes every hour, which comes to 1 hour of YouTube per day. You gotta start so
 It's worked well so far. As theorized, I have an easier time doing something else and not feeling
 like I'm missing out, as I'm just _postponing_ watching that video where the guy explains how
 dishwashers work. I should build software that fits my needs exactly more often.
+
+<Hint>
+  Update from the future: Overall this has worked well so far. One loophole I started to exploit is
+  that the hourly refill of 2.5 minutes gives enough time to find an interesting video (which is
+  then surely quite a bit longer than 2.5 minutes). Coupled with only blocking access on page reload
+  and not in the middle of watching a video, this is problematic. Instead, I've not resorted to
+  affording 45 minutes at midnight. This way the budget is used up for the day, not just for the
+  hour.
+</Hint>
