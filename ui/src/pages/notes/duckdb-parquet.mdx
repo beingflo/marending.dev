@@ -6,3 +6,15 @@ link: '/notes/duckdb-parquet/'
 layout: 'src/layouts/NoteLayout.astro'
 draft: true
 ---
+
+I've had observability [on my mind](/notes/unstructured-data/) [for quite](/notes/sqlite-vs-duckdb/)
+[some time now](/notes/clickhouse/). After a year or so of sticking to my ClickHouse based setup,
+I'm back to it. This time the motivation is to eliminate the somewhat heavy DB from my homeserver.
+Ideally I would have my own service store and query data without a DB server running. No queries, no
+load.
+
+The hard part is still how to store arbitrary JSON payloads in such a way that aggregations on
+fields are performant. My current solution heavily relies on the excellent Map type in Clickhouse.
+To replace it, some storage engine is going to have to do some heavy lifting. My hope is that DuckDB
+can take that role if we massage the data just a bit. I recently spent some time brainstorming and
+got this idea into my head:
