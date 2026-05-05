@@ -16,10 +16,10 @@ ClickHouse and found it [amazingly fast for my purposes](/notes/clickhouse/).
 
 Ever since, I've run a ClickHouse instance to store arbitrary JSON payloads fed by GPS location
 data, sensor readings and tracing data. But a couple of days ago that nagging feeling came back:
-What if this can be simplified? ClickHouse is by far the heaviest service I operate on my home
-server. It randomly fills up my disk with logging tables, too. Look, ClickHouse is an engineering
-marvel, but it's not _my_ marvel. It's someone elses marvel. And I have a need to create my own.
-Thing, not marvel I mean. So here we are.
+What if this can be simplified? ClickHouse is by far the heaviest service I operate on my server. It
+randomly fills up my disk with logging tables, too. Look, ClickHouse is an engineering marvel, but
+it's not _my_ marvel. It's someone elses marvel. And I have a need to create my own. Thing, not
+marvel, I mean. So here we are.
 
 The hard part is still how to store arbitrary JSON payloads in such a way that aggregations on
 fields are performant. My current solution heavily relies on the excellent `Map` type in ClickHouse.
@@ -27,6 +27,61 @@ To replace it, some storage engine is going to have to do some heavy lifting. My
 can take that role if we massage the data just a bit. Since I last used DuckDB, quite a bit has
 changed. Particularly interesting for me: Parquet got a Variant type and DuckDB supports it.
 
+But before we get into the weeds let me set the scene. Let's say I have a service that sends
+structured logs (or wide events) to my observability system. Today they might look like this:
+
+```json
+{
+  "timestamp": "2026-05-05T08:00:00Z",
+  "service": "marending-dev",
+  "severity": "error",
+  "message": "User Bobby Tables doesn't exist"
+}
+```
+
+But then I want to track more information.
+
+```json
+{
+  "timestamp": "2026-05-05T08:00:00Z",
+  "service": "marending-dev",
+  "severity": "error",
+  "message": "User Bobby Tables doesn't exist",
+  "user_id": "null",
+  "ip": "85.0.1.42",
+  "path": "/user/login"
+}
+```
+
+You get the picture. The question is, how can we store these JSON blobs such that we can then
+efficiently compute, say, error rate grouped by `user_id`? We can't have a static schema as we might
+want to add properties to this event at any time. We _can_ chuck this as a JSON string into any
+database, file format or what have you. But then any query that attempts to read from properties of
+that JSON string is going to incur the significant cost of extracting the appropriate fields for
+every row of interest. One way to get reasonable performance here is to ensure severity and user_id
+are each contiguously laid out so that they can be efficiently aggregated.
+
 ## Parquet and Variant
 
-First, [Apache Parquet](https://parquet.apache.org/) is a column-oriented file format.
+That brings us to [Apache Parquet](https://parquet.apache.org/). Parquet is a column-oriented file
+format. While DuckDB has its own file format for storing data, one of its strengths is exactly
+supporting a wide variety of other formats, including Parquet. So you can write and query Parquet
+files natively with SQL within DuckDB.
+
+Recently Parquet added the Variant type, a binary encoding of a primitives, arrays or object of
+arbitrary types. It allows representing structured data in such a way that it can be queried more
+efficiently than if the same data was serialized and stored as a string type. But the real kicker is
+"Variant shredding". It's the process of extracting some of the properties within the Variant into
+their own columns. This should then give us maximum performance when aggregating on those columns.
+And DuckDB apparently supports this!
+
+Once I learned about this, a path towards my dream observability system emerged. Step 1: Write a
+service that accepts arbitrary JSON payloads, buffers them in memory and writes them to Parquet
+files with the payload being of type Variant every 10 seconds or so. Step 2: Every hour, read all
+the small Parquet files and **shred** them into a larger hourly file. Step 3: Possibly aggregate the
+hourly files into even broader files, but I'll see when I get to it.
+
+Now at query time, I will have at most an hour worth of data in inefficient, _unshredded_ form. That
+should be easy enough to deal with. Data older than that will be in highly efficient form. And the
+best part? DuckDB should be able to query across many Parquet file using glob syntax, even when some
+have concrete, shredded columns and some don't.
