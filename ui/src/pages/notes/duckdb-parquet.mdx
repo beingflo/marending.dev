@@ -84,4 +84,134 @@ hourly files into even broader files, but I'll see when I get to it.
 Now at query time, I will have at most an hour worth of data in inefficient, _unshredded_ form. That
 should be easy enough to deal with. Data older than that will be in highly efficient form. And the
 best part? DuckDB should be able to query across many Parquet file using glob syntax, even when some
-have concrete, shredded columns and some don't.
+have concrete, shredded columns and some don't. But we'll see this for ourselves.
+
+## Exploration
+
+Let's start with the example given in DuckDBs documentation.
+
+```sql
+CREATE TABLE events (id INTEGER, data VARIANT);
+INSERT INTO events VALUES
+    (1, 42::VARIANT),
+    (2, 'hello world'::VARIANT),
+    (3, [1, 2, 3]::VARIANT),
+    (4, {'name': 'Alice', 'age': 30}::VARIANT);
+```
+
+Querying the table presents the expected result.
+
+```sql
+SELECT * FROM events;
+┌───────┬────────────────────────────┐
+│  id   │            data            │
+│ int32 │          variant           │
+├───────┼────────────────────────────┤
+│     1 │ 42                         │
+│     2 │ hello world                │
+│     3 │ [1, 2, 3]                  │
+│     4 │ {'name': Alice, 'age': 30} │
+└───────┴────────────────────────────┘
+
+SELECT id, data, variant_typeof(data) AS vtype FROM events;
+┌───────┬────────────────────────────┬───────────────────┐
+│  id   │            data            │       vtype       │
+│ int32 │          variant           │      varchar      │
+├───────┼────────────────────────────┼───────────────────┤
+│     1 │ 42                         │ INT32             │
+│     2 │ hello world                │ VARCHAR           │
+│     3 │ [1, 2, 3]                  │ ARRAY(3)          │
+│     4 │ {'name': Alice, 'age': 30} │ OBJECT(name, age) │
+└───────┴────────────────────────────┴───────────────────┘
+```
+
+We can now also query nested fields in a Variant.
+
+```sql
+SELECT data.name FROM events;
+┌─────────┐
+│  name   │
+│ variant │
+├─────────┤
+│ NULL    │
+│ NULL    │
+│ NULL    │
+│ Alice   │
+└─────────┘
+```
+
+Writing this data as is to a parquet file is now as simple as
+`COPY events TO 'events.parquet' (FORMAT parquet);`. And indeed, having DuckDB describe the parquet
+files shape yields the expected.
+
+```sql
+DESCRIBE SELECT * FROM 'events.parquet';
+┌────────────────┐
+│ events.parquet │
+│                │
+│ id     integer │
+│ data   variant │
+└────────────────┘
+```
+
+But hold one. According to the docs, writing to a Parquet file should automatically shred the
+variant type. Shouldn't I see the individual columns then? Turns out shredding is only a storage
+detail, not a logical schema change. The type stays as is. To see how the data is actually stored,
+we have to inspect the files metadata.
+
+```sql
+SELECT name, type, converted_type, logical_type FROM parquet_schema('events.parquet');
+┌───────────────┬────────────┬────────────────┬──────────────┐
+│     name      │    type    │ converted_type │ logical_type │
+│    varchar    │  varchar   │    varchar     │   varchar    │
+├───────────────┼────────────┼────────────────┼──────────────┤
+│ duckdb_schema │ NULL       │ NULL           │ NULL         │
+│ id            │ INT32      │ INT_32         │ NULL         │
+│ data          │ NULL       │ NULL           │ NULL         │
+│ metadata      │ BYTE_ARRAY │ NULL           │ NULL         │
+│ value         │ BYTE_ARRAY │ NULL           │ NULL         │
+│ typed_value   │ INT32      │ INT_32         │ NULL         │
+└───────────────┴────────────┴────────────────┴──────────────┘
+```
+
+Well, the way this is supposed to be read is as follows. `id` is of type `INT32`, the `data` variant
+is comprised of three parts. `metadata`, `value` and `typed_value`. Of interest are `value` and
+`typed_value`. Each row with the `data` logical column is either going to have the (fallback)
+byte-array `value` representation set, or the shredded `typed_value` column. In this case, DuckDBs
+autoshredder apparently decided that row 1 with the integer data variant deserves to have its
+representation shredded, but not the other rows.
+
+If instead we instruct DuckDB to shred data to a struct like so
+
+```sql
+COPY events TO 'events.parquet' (
+    FORMAT parquet,
+    SHREDDING {'data': 'STRUCT(name VARCHAR, age INTEGER)'}
+);
+```
+
+we get this
+
+```sql
+SELECT name, type, converted_type, logical_type FROM parquet_schema('events.parquet');
+┌───────────────┬────────────┬────────────────┬──────────────┐
+│     name      │    type    │ converted_type │ logical_type │
+│    varchar    │  varchar   │    varchar     │   varchar    │
+├───────────────┼────────────┼────────────────┼──────────────┤
+│ duckdb_schema │ NULL       │ NULL           │ NULL         │
+│ id            │ INT32      │ INT_32         │ NULL         │
+│ data          │ NULL       │ NULL           │ NULL         │
+│ metadata      │ BYTE_ARRAY │ NULL           │ NULL         │
+│ value         │ BYTE_ARRAY │ NULL           │ NULL         │
+│ typed_value   │ NULL       │ NULL           │ NULL         │
+│ name          │ NULL       │ NULL           │ NULL         │
+│ value         │ BYTE_ARRAY │ NULL           │ NULL         │
+│ typed_value   │ BYTE_ARRAY │ UTF8           │ NULL         │
+│ age           │ NULL       │ NULL           │ NULL         │
+│ value         │ BYTE_ARRAY │ NULL           │ NULL         │
+│ typed_value   │ INT32      │ INT_32         │ NULL         │
+└───────────────┴────────────┴────────────────┴──────────────┘
+```
+
+Now we have `name` with its fallback BYTE_ARRAY `value` and its shredded UTF8 `typed_value` and
+`age` with its fallback BYTE_ARRAY `value` and its INT_32 `typed_value`.
