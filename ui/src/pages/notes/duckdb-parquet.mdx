@@ -1,20 +1,32 @@
 ---
 title: 'Exploring the Variant type in Parquet'
-subtitle: 'Using DuckDB'
+subtitle: "Let's get shredding"
 date: '04 May 2026'
 link: '/notes/duckdb-parquet/'
 layout: 'src/layouts/NoteLayout.astro'
 draft: true
 ---
 
-I've had observability [on my mind](/notes/unstructured-data/) [for quite](/notes/sqlite-vs-duckdb/)
-[some time now](/notes/clickhouse/). After a year or so of sticking to my ClickHouse based setup,
-I'm back to it. This time the motivation is to eliminate the somewhat heavy DB from my homeserver.
-Ideally I would have my own service store and query data without a DB server running. No queries, no
-load.
+I've had observability on my mind for quite some time now. 2 years ago I was trying to expand my
+metrics setup with structured logs emitted by some services. The ensuing
+[exploration](/notes/unstructured-data/) only yielded the obvious: Storing and efficiently querying
+arbitrary data is hard. DuckDB was all the rage back then, so naturally I had to see
+[how it handles analytics workloads](/notes/sqlite-vs-duckdb/). Finally, a year later, I checked out
+ClickHouse and found it [amazingly fast for my purposes](/notes/clickhouse/).
+
+Ever since, I've run a ClickHouse instance to store arbitrary JSON payloads fed by GPS location
+data, sensor readings and tracing data. But a couple of days ago that nagging feeling came back:
+What if this can be simplified? ClickHouse is by far the heaviest service I operate on my home
+server. It randomly fills up my disk with logging tables, too. Look, ClickHouse is an engineering
+marvel, but it's not _my_ marvel. It's someone elses marvel. And I have a need to create my own.
+Thing, not marvel I mean. So here we are.
 
 The hard part is still how to store arbitrary JSON payloads in such a way that aggregations on
-fields are performant. My current solution heavily relies on the excellent Map type in Clickhouse.
+fields are performant. My current solution heavily relies on the excellent `Map` type in ClickHouse.
 To replace it, some storage engine is going to have to do some heavy lifting. My hope is that DuckDB
-can take that role if we massage the data just a bit. I recently spent some time brainstorming and
-got this idea into my head:
+can take that role if we massage the data just a bit. Since I last used DuckDB, quite a bit has
+changed. Particularly interesting for me: Parquet got a Variant type and DuckDB supports it.
+
+## Parquet and Variant
+
+First, [Apache Parquet](https://parquet.apache.org/) is a column-oriented file format.
