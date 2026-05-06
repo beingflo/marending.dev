@@ -154,32 +154,32 @@ DESCRIBE SELECT * FROM 'events.parquet';
 └────────────────┘
 ```
 
-But hold one. According to the docs, writing to a Parquet file should automatically shred the
-variant type. Shouldn't I see the individual columns then? Turns out shredding is only a storage
-detail, not a logical schema change. The type stays as is. To see how the data is actually stored,
-we have to inspect the files metadata.
+But hold on. According to the docs, writing to a Parquet file should automatically shred the variant
+type. Shouldn't I see the individual columns then? Turns out shredding is only a storage detail, not
+a logical schema change. The type stays as is. To see how the data is actually stored, we have to
+inspect the files metadata.
 
 ```sql
-SELECT name, type, converted_type, logical_type FROM parquet_schema('events.parquet');
-┌───────────────┬────────────┬────────────────┬──────────────┐
-│     name      │    type    │ converted_type │ logical_type │
-│    varchar    │  varchar   │    varchar     │   varchar    │
-├───────────────┼────────────┼────────────────┼──────────────┤
-│ duckdb_schema │ NULL       │ NULL           │ NULL         │
-│ id            │ INT32      │ INT_32         │ NULL         │
-│ data          │ NULL       │ NULL           │ NULL         │
-│ metadata      │ BYTE_ARRAY │ NULL           │ NULL         │
-│ value         │ BYTE_ARRAY │ NULL           │ NULL         │
-│ typed_value   │ INT32      │ INT_32         │ NULL         │
-└───────────────┴────────────┴────────────────┴──────────────┘
+SELECT name, type, converted_type FROM parquet_schema('events.parquet');
+┌───────────────┬────────────┬────────────────┐
+│     name      │    type    │ converted_type │
+│    varchar    │  varchar   │    varchar     │
+├───────────────┼────────────┼────────────────┤
+│ duckdb_schema │ NULL       │ NULL           │
+│ id            │ INT32      │ INT_32         │
+│ data          │ NULL       │ NULL           │
+│ metadata      │ BYTE_ARRAY │ NULL           │
+│ value         │ BYTE_ARRAY │ NULL           │
+│ typed_value   │ INT32      │ INT_32         │
+└───────────────┴────────────┴────────────────┘
 ```
 
 Well, the way this is supposed to be read is as follows. `id` is of type `INT32`, the `data` variant
-is comprised of three parts. `metadata`, `value` and `typed_value`. Of interest are `value` and
-`typed_value`. Each row with the `data` logical column is either going to have the (fallback)
-byte-array `value` representation set, or the shredded `typed_value` column. In this case, DuckDBs
-autoshredder apparently decided that row 1 with the integer data variant deserves to have its
-representation shredded, but not the other rows.
+itself doesn't really have a type but it is comprised of three parts. `metadata`, `value` and
+`typed_value`. Of interest are `value` and `typed_value`. Each row with the `data` logical column is
+either going to have the (fallback) byte-array `value` representation set, or the shredded
+`typed_value` column. In this case, DuckDBs autoshredder apparently decided that row 1 with the
+integer data variant deserves to have its representation shredded, but not the other rows.
 
 If instead we instruct DuckDB to shred data to a struct like so
 
@@ -194,24 +194,139 @@ we get this
 
 ```sql
 SELECT name, type, converted_type, logical_type FROM parquet_schema('events.parquet');
-┌───────────────┬────────────┬────────────────┬──────────────┐
-│     name      │    type    │ converted_type │ logical_type │
-│    varchar    │  varchar   │    varchar     │   varchar    │
-├───────────────┼────────────┼────────────────┼──────────────┤
-│ duckdb_schema │ NULL       │ NULL           │ NULL         │
-│ id            │ INT32      │ INT_32         │ NULL         │
-│ data          │ NULL       │ NULL           │ NULL         │
-│ metadata      │ BYTE_ARRAY │ NULL           │ NULL         │
-│ value         │ BYTE_ARRAY │ NULL           │ NULL         │
-│ typed_value   │ NULL       │ NULL           │ NULL         │
-│ name          │ NULL       │ NULL           │ NULL         │
-│ value         │ BYTE_ARRAY │ NULL           │ NULL         │
-│ typed_value   │ BYTE_ARRAY │ UTF8           │ NULL         │
-│ age           │ NULL       │ NULL           │ NULL         │
-│ value         │ BYTE_ARRAY │ NULL           │ NULL         │
-│ typed_value   │ INT32      │ INT_32         │ NULL         │
-└───────────────┴────────────┴────────────────┴──────────────┘
+┌───────────────┬────────────┬────────────────┐
+│     name      │    type    │ converted_type │
+│    varchar    │  varchar   │    varchar     │
+├───────────────┼────────────┼────────────────┤
+│ duckdb_schema │ NULL       │ NULL           │
+│ id            │ INT32      │ INT_32         │
+│ data          │ NULL       │ NULL           │
+│ metadata      │ BYTE_ARRAY │ NULL           │
+│ value         │ BYTE_ARRAY │ NULL           │
+│ typed_value   │ NULL       │ NULL           │
+│ name          │ NULL       │ NULL           │
+│ value         │ BYTE_ARRAY │ NULL           │
+│ typed_value   │ BYTE_ARRAY │ UTF8           │
+│ age           │ NULL       │ NULL           │
+│ value         │ BYTE_ARRAY │ NULL           │
+│ typed_value   │ INT32      │ INT_32         │
+└───────────────┴────────────┴────────────────┘
 ```
 
-Now we have `name` with its fallback BYTE_ARRAY `value` and its shredded UTF8 `typed_value` and
-`age` with its fallback BYTE_ARRAY `value` and its INT_32 `typed_value`.
+Now we see `data` with its `metadata`, `value` and `typed_value` properties and also a `value` and
+`typed_value` logical column for both `name` and `age`. For these the shredded types are UTF8 and
+INT32 respectively.
+
+To get an intuitive understanding, it is interesting to look at the output of
+`parquet-tools meta events.parquet` from [this tool](https://github.com/hangxie/parquet-tools):
+
+```json
+{
+  "NumRowGroups": 1,
+  "RowGroups": [
+    {
+      "NumRows": 4,
+      "TotalByteSize": 725,
+      "Columns": [
+        {
+          "PathInSchema": ["id"],
+          "Type": "INT32",
+          "ConvertedType": "convertedtype=INT_32",
+          "Encodings": ["PLAIN"],
+          "CompressedSize": 41,
+          "UncompressedSize": 39,
+          "NumValues": 4,
+          "NullCount": 0,
+          "MaxValue": 4,
+          "MinValue": 1,
+          "CompressionCodec": "SNAPPY"
+        },
+        {
+          "PathInSchema": ["data", "metadata"],
+          "Type": "BYTE_ARRAY",
+          "Encodings": ["PLAIN"],
+          "CompressedSize": 52,
+          "UncompressedSize": 60,
+          "NumValues": 4,
+          "NullCount": 0,
+          "CompressionCodec": "SNAPPY"
+        },
+        {
+          "PathInSchema": ["data", "value"],
+          "Type": "BYTE_ARRAY",
+          "Encodings": ["PLAIN"],
+          "CompressedSize": 81,
+          "UncompressedSize": 137,
+          "NumValues": 4,
+          "NullCount": 1,
+          "CompressionCodec": "SNAPPY"
+        },
+        {
+          "PathInSchema": ["data", "typed_value", "name", "value"],
+          "Type": "BYTE_ARRAY",
+          "Encodings": ["PLAIN"],
+          "CompressedSize": 34,
+          "UncompressedSize": 119,
+          "NumValues": 4,
+          "NullCount": 4,
+          "CompressionCodec": "SNAPPY"
+        },
+        {
+          "PathInSchema": ["data", "typed_value", "name", "typed_value"],
+          "Type": "BYTE_ARRAY",
+          "ConvertedType": "convertedtype=UTF8",
+          "Encodings": ["PLAIN"],
+          "CompressedSize": 44,
+          "UncompressedSize": 128,
+          "NumValues": 4,
+          "NullCount": 3,
+          "CompressionCodec": "SNAPPY"
+        },
+        {
+          "PathInSchema": ["data", "typed_value", "age", "value"],
+          "Type": "BYTE_ARRAY",
+          "Encodings": ["PLAIN"],
+          "CompressedSize": 34,
+          "UncompressedSize": 119,
+          "NumValues": 4,
+          "NullCount": 4,
+          "CompressionCodec": "SNAPPY"
+        },
+        {
+          "PathInSchema": ["data", "typed_value", "age", "typed_value"],
+          "Type": "INT32",
+          "ConvertedType": "convertedtype=INT_32",
+          "Encodings": ["PLAIN"],
+          "CompressedSize": 39,
+          "UncompressedSize": 123,
+          "NumValues": 4,
+          "NullCount": 3,
+          "CompressionCodec": "SNAPPY"
+        }
+      ]
+    }
+  ]
+}
+```
+
+Let's take this line for example `["data", "typed_value", "name", "typed_value"]`. A row in our
+dataset is going to populate this logical column when the `name` property in the variant is a UTF8
+string, otherwise it will fallback to the BYTE_ARRAY `data.value`. And indeed we see that 3 out of 4
+values in this column are NULL as row 4 is the only one that can populate this `typed_value`.
+Conversely, the `["data", "value"]` entry only has a single NULL value. Only row 4 does not populate
+the fallback column but the typed values instead.
+
+If we look at `["data", "typed_value", "name", "value"]` we can see that not a single non-NULL value
+is here. I suppose this would be populated if we had a row with an object that contains the `name`
+property, but with a type other than string.
+
+I'll just leave
+[this blog post](https://parquet.apache.org/blog/2026/02/27/variant-type-in-apache-parquet-for-semi-structured-data/)
+on the official Parquet website here for further reading. It has some nice visualizations that
+further explain how this works.
+
+## Autoshredding
+
+So far so good. But we don't want to have to specify how the values should be shredded. The whole
+point would be for DuckDB to figure it out from the data, but somehow in our first attempt it just
+chose the "materialize" the integer and not our
