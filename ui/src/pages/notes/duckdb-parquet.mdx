@@ -329,4 +329,81 @@ further explain how this works.
 
 So far so good. But we don't want to have to specify how the values should be shredded. The whole
 point would be for DuckDB to figure it out from the data, but somehow in our first attempt it just
-chose the "materialize" the integer and not our
+chose the "materialize" the integer and not our object.
+
+Well, it looks like DuckDB decides what to shred based on how often a specific type occurs in the
+table. If I add two more rows that have the same shape as the object in row 4
+
+```sql
+INSERT INTO events VALUES (5, {'name': 'Bob', 'age': 27}::VARIANT);
+INSERT INTO events VALUES (6, {'name': 'Flo', 'age': 31}::VARIANT);
+COPY events TO 'events-more-structs.parquet' (FORMAT parquet);
+```
+
+I get our familiar shredding, this time without having to specify the type.
+
+```sql
+SELECT name, type, converted_type FROM parquet_schema('events-more-structs.parquet');
+┌───────────────┬────────────┬────────────────┐
+│     name      │    type    │ converted_type │
+│    varchar    │  varchar   │    varchar     │
+├───────────────┼────────────┼────────────────┤
+│ duckdb_schema │ NULL       │ NULL           │
+│ id            │ INT32      │ INT_32         │
+│ data          │ NULL       │ NULL           │
+│ metadata      │ BYTE_ARRAY │ NULL           │
+│ value         │ BYTE_ARRAY │ NULL           │
+│ typed_value   │ NULL       │ NULL           │
+│ age           │ NULL       │ NULL           │
+│ value         │ BYTE_ARRAY │ NULL           │
+│ typed_value   │ INT32      │ INT_32         │
+│ name          │ NULL       │ NULL           │
+│ value         │ BYTE_ARRAY │ NULL           │
+│ typed_value   │ BYTE_ARRAY │ UTF8           │
+└───────────────┴────────────┴────────────────┘
+```
+
+If I add a bunch more string columns now, I can get the autoshredder to only shred the UTF8 type.
+Initially I would have expected that it should be possible to have both, shredded `age` and `name`
+values as well as a fallback not to an untyped BYTE_ARRAY but to a UTF8 string. But thinking about
+this, I guess the `typed_value` for data is now an object of `name` and `age` (although its not
+readily visible on the above representation), so it can't be a string simultaneously.
+
+It should be possible however if the string columns were in a new property inside an object. Let me
+give this a shot.
+
+```sql
+INSERT INTO events VALUES (10, {'message': 'Hello world'}::VARIANT);
+INSERT INTO events VALUES (11, {'message': 'message'}::VARIANT);
+INSERT INTO events VALUES (12, {'message': '42'}::VARIANT);
+
+COPY events TO 'events-message.parquet' (FORMAT parquet);
+SELECT name, type, converted_type FROM parquet_schema('events-message.parquet');
+┌───────────────┬────────────┬────────────────┐
+│     name      │    type    │ converted_type │
+│    varchar    │  varchar   │    varchar     │
+├───────────────┼────────────┼────────────────┤
+│ duckdb_schema │ NULL       │ NULL           │
+│ id            │ INT32      │ INT_32         │
+│ data          │ NULL       │ NULL           │
+│ metadata      │ BYTE_ARRAY │ NULL           │
+│ value         │ BYTE_ARRAY │ NULL           │
+│ typed_value   │ NULL       │ NULL           │
+│ message       │ NULL       │ NULL           │
+│ value         │ BYTE_ARRAY │ NULL           │
+│ typed_value   │ BYTE_ARRAY │ UTF8           │
+│ age           │ NULL       │ NULL           │
+│ value         │ BYTE_ARRAY │ NULL           │
+│ typed_value   │ INT32      │ INT_32         │
+│ name          │ NULL       │ NULL           │
+│ value         │ BYTE_ARRAY │ NULL           │
+│ typed_value   │ BYTE_ARRAY │ UTF8           │
+└───────────────┴────────────┴────────────────┘
+```
+
+Indeed we can see that it now materialized `age`, `name` and `message`. Neat!
+
+## Real world data
+
+With my mental model starting to get less foggy, I think it's time to start digging into some real
+world data from my existing observability setup.
