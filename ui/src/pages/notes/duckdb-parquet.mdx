@@ -491,26 +491,160 @@ benchmark how queries behave.
 
 ## Benchmarks
 
-To get an overview of the performance of the Variant type I'm going to focus on two types of data I
-have stored here, GPS location data and access logs to this website. For both data sets I will come
-up with two queries, one that touches only a fraction of the data and one that has to do sweeping
-aggregations across most of the data set. Then I'm going to wrangle the payload into the following
-types to see how the different approaches stack up:
+To get an overview of the performance of the Variant type, I'm going to wrangle the payload into the
+following types to see how the different approaches stack up:
 
 - JSON
 - Map / Array
 - Variant
 - Fully materialized
 
----
+For simplicity, I'm going to focus on two types of data I have stored in my system, GPS location
+data and access logs to this website. For both data sets I'll run a query that can benefit from
+prefiltering data down to the relevant rows and another one that has to run expensive aggregations
+across the whole data set.
 
-two scenarios: gps location data and marending.dev access logs. for each: one query that touches
-little data and one that touches most
+For the GPS data, the first query should get distinct days I've visited a particular location. And
+the second query will get average speed and altitude per day for the whole timespan.
 
-string parsing, JSON type, map type, variant, columns
+### GPS location data
 
-indices?
+#### JSON
 
-small files and mixed files
+This nifty query gets the relevant data from my GPS entries and stores it into a new Parquet file
+with the data stored as JSON.
 
-comparison against clickhouse
+```sql
+COPY (
+    SELECT
+    Timestamp,
+    'gps-location' AS service,
+    CAST(SpanAttributes AS JSON) AS data
+    FROM 'otel_traces.parquet'
+    WHERE SpanName = 'gps-location'
+) TO 'gps_location_json.parquet' (FORMAT PARQUET);
+
+DESCRIBE SELECT * FROM 'gps_location_json.parquet';
+┌────────────────────────────────────┐
+│        gps_location.parquet        │
+│                                    │
+│ Timestamp timestamp with time zone │
+│ service   varchar                  │
+│ data      json                     │
+└────────────────────────────────────┘
+```
+
+The nested structures inside the data field are unfortunately not parsed into JSON as well, but
+rather stay string values to the top-level properties. But as the DuckDB JSON type is anyhow just
+backed by a VARCHAR, I don't expect too much impact for this.
+
+Now here is the query to list distinct days where I've visited a particular location. _Pasting these
+coordinates into a map and is left as an excercise to the reader._
+
+```sql
+SELECT DISTINCT
+  DATE_TRUNC('day',
+    CAST(json_extract_string(
+           CAST(json_extract_string(data, '$.location') AS JSON),
+           '$.properties.timestamp'
+         ) AS TIMESTAMP)
+  ) AS day
+FROM 'gps_location_json.parquet'
+WHERE CAST(json_extract(
+        CAST(json_extract_string(data, '$.location') AS JSON),
+        '$.geometry.coordinates[0]'
+      ) AS DOUBLE) BETWEEN 8.486986 AND 8.493896
+  AND CAST(json_extract(
+        CAST(json_extract_string(data, '$.location') AS JSON),
+        '$.geometry.coordinates[1]'
+      ) AS DOUBLE) BETWEEN 47.348284 AND 47.353111
+ORDER BY day DESC;
+```
+
+The benchmark results will follow at the end.
+
+#### Map
+
+For the Map type I could just leave the data as is as the original Parquet file already has the
+`SpanAttributes` property as `map(varchar, varchar)`. But due to the nesting of the data I care
+about, this would actually end up being the JSON type just with a detour. Instead, I'm flattening
+the structure into a proper Map below. Of course, this kind of defeats the purpose of not having to
+care about the exact schema of the data coming my way. But for benchmarking the data types it will
+do.
+
+```sql
+COPY (
+  WITH src AS (
+    SELECT
+      Timestamp,
+      CAST(SpanAttributes['location'] AS JSON) AS loc
+    FROM 'otel_traces.parquet'
+    WHERE SpanName = 'gps-location'
+  )
+  SELECT
+    Timestamp,
+    'gps-location' AS service,
+    MAP {
+      'location.type':                           json_extract_string(loc, '$.type'),
+      'location.geometry.type':                  json_extract_string(loc, '$.geometry.type'),
+      'location.geometry.coordinates[0]':        json_extract_string(loc, '$.geometry.coordinates[0]'),
+      'location.geometry.coordinates[1]':        json_extract_string(loc, '$.geometry.coordinates[1]'),
+      'location.properties.altitude':            json_extract_string(loc, '$.properties.altitude'),
+      'location.properties.battery_level':       json_extract_string(loc, '$.properties.battery_level'),
+      'location.properties.battery_state':       json_extract_string(loc, '$.properties.battery_state'),
+      'location.properties.course':              json_extract_string(loc, '$.properties.course'),
+      'location.properties.course_accuracy':     json_extract_string(loc, '$.properties.course_accuracy'),
+      'location.properties.horizontal_accuracy': json_extract_string(loc, '$.properties.horizontal_accuracy'),
+      'location.properties.motion[0]':           json_extract_string(loc, '$.properties.motion[0]'),
+      'location.properties.speed':               json_extract_string(loc, '$.properties.speed'),
+      'location.properties.speed_accuracy':      json_extract_string(loc, '$.properties.speed_accuracy'),
+      'location.properties.timestamp':           json_extract_string(loc, '$.properties.timestamp'),
+      'location.properties.vertical_accuracy':   json_extract_string(loc, '$.properties.vertical_accuracy'),
+      'location.properties.wifi':                json_extract_string(loc, '$.properties.wifi')
+    } AS data
+  FROM src
+) TO 'gps_location_map.parquet' (FORMAT PARQUET);
+
+DESCRIBE SELECT * FROM 'gps_location_map.parquet';
+┌────────────────────────────────────┐
+│      gps_location_map.parquet      │
+│                                    │
+│ Timestamp timestamp with time zone │
+│ service   varchar                  │
+│ data      map(varchar, varchar)    │
+└────────────────────────────────────┘
+```
+
+```sql
+SELECT DISTINCT
+  DATE_TRUNC('day', CAST(data['location.properties.timestamp'] AS TIMESTAMP)) AS day
+FROM 'gps_location_map.parquet'
+WHERE CAST(data['location.geometry.coordinates[0]'] AS DOUBLE)
+        BETWEEN 8.486986 AND 8.493896
+  AND CAST(data['location.geometry.coordinates[1]'] AS DOUBLE)
+        BETWEEN 47.348284 AND 47.353111
+ORDER BY day DESC;
+```
+
+#### Variant
+
+#### Materialized
+
+### marending.dev access logs
+
+```sql
+COPY (
+    SELECT
+    Timestamp,
+    'gps-location' AS service,
+    'Events.Attributes' AS data
+    FROM 'otel_traces.parquet'
+    WHERE SpanName = 'gps-location'
+) TO 'gps_location_map.parquet' (FORMAT PARQUET);
+```
+
+## Index
+
+## Multiple small Parquet files
+
+## ClickHouse comparison
