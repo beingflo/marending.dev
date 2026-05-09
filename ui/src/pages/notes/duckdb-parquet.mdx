@@ -329,7 +329,7 @@ further explain how this works.
 
 So far so good. But we don't want to have to specify how the values should be shredded. The whole
 point would be for DuckDB to figure it out from the data, but somehow in our first attempt it just
-chose the "materialize" the integer and not our object.
+chose to "materialize" the integer and not our object.
 
 Well, it looks like DuckDB decides what to shred based on how often a specific type occurs in the
 table. If I add two more rows that have the same shape as the object in row 4
@@ -406,4 +406,111 @@ Indeed we can see that it now materialized `age`, `name` and `message`. Neat!
 ## Real world data
 
 With my mental model starting to get less foggy, I think it's time to start digging into some real
-world data from my existing observability setup.
+world data from my existing observability setup. Luckily ClickHouse makes it really easy to get my
+data out: `SELECT * FROM events.otel_traces INTO OUTFILE './otel_traces.parquet' FORMAT Parquet`.
+This dumps all of the data into a single Parquet file with just over 10 milion rows and weighing 800
+MB.
+
+The shape of this file is determined by the standard schema the OpenTelemetry collector created when
+I started ingesting data. In ClickHouse this looks like this:
+
+```sql
+CREATE TABLE default.otel_traces
+(
+        `Timestamp` DateTime64(9) CODEC(Delta(8), ZSTD(1)),
+        `TraceId` String CODEC(ZSTD(1)),
+        `SpanId` String CODEC(ZSTD(1)),
+        `ParentSpanId` String CODEC(ZSTD(1)),
+        `TraceState` String CODEC(ZSTD(1)),
+        `SpanName` LowCardinality(String) CODEC(ZSTD(1)),
+        `SpanKind` LowCardinality(String) CODEC(ZSTD(1)),
+        `ServiceName` LowCardinality(String) CODEC(ZSTD(1)),
+        `ResourceAttributes` Map(LowCardinality(String), String) CODEC(ZSTD(1)),
+        `ScopeName` String CODEC(ZSTD(1)),
+        `ScopeVersion` String CODEC(ZSTD(1)),
+        `SpanAttributes` Map(LowCardinality(String), String) CODEC(ZSTD(1)),
+        `Duration` Int64 CODEC(ZSTD(1)),
+        `StatusCode` LowCardinality(String) CODEC(ZSTD(1)),
+        `StatusMessage` String CODEC(ZSTD(1)),
+        `Events.Timestamp` Array(DateTime64(9)) CODEC(ZSTD(1)),
+        `Events.Name` Array(LowCardinality(String)) CODEC(ZSTD(1)),
+        `Events.Attributes` Array(Map(LowCardinality(String), String)) CODEC(ZSTD(1)),
+        `Links.TraceId` Array(String) CODEC(ZSTD(1)),
+        `Links.SpanId` Array(String) CODEC(ZSTD(1)),
+        `Links.TraceState` Array(String) CODEC(ZSTD(1)),
+        `Links.Attributes` Array(Map(LowCardinality(String), String)) CODEC(ZSTD(1)),
+        INDEX idx_trace_id TraceId TYPE bloom_filter(0.001) GRANULARITY 1,
+        INDEX idx_res_attr_key mapKeys(ResourceAttributes) TYPE bloom_filter(0.01) GRANULARITY 1,
+        INDEX idx_res_attr_value mapValues(ResourceAttributes) TYPE bloom_filter(0.01) GRANULARITY 1,
+        INDEX idx_span_attr_key mapKeys(SpanAttributes) TYPE bloom_filter(0.01) GRANULARITY 1,
+        INDEX idx_span_attr_value mapValues(SpanAttributes) TYPE bloom_filter(0.01) GRANULARITY 1,
+        INDEX idx_duration Duration TYPE minmax GRANULARITY 1
+)
+ENGINE = MergeTree
+PARTITION BY toDate(Timestamp)
+ORDER BY (ServiceName, SpanName, toUnixTimestamp(Timestamp), TraceId)
+TTL toDateTime(Timestamp) + toIntervalDay(3)
+SETTINGS ttl_only_drop_parts = 1
+```
+
+Once dumped to the Parquet file, we can see the shape as read by DuckDB here:
+
+```sql
+DESCRIBE SELECT * FROM 'otel_traces.parquet';
+┌───────────────────────────────────────────────┐
+│              otel_traces.parquet              │
+│                                               │
+│ Timestamp          timestamp with time zone   │
+│ TraceId            varchar                    │
+│ SpanId             varchar                    │
+│ ParentSpanId       varchar                    │
+│ TraceState         varchar                    │
+│ SpanName           varchar                    │
+│ SpanKind           varchar                    │
+│ ServiceName        varchar                    │
+│ ResourceAttributes map(varchar, varchar)      │
+│ ScopeName          varchar                    │
+│ ScopeVersion       varchar                    │
+│ SpanAttributes     map(varchar, varchar)      │
+│ Duration           ubigint                    │
+│ StatusCode         varchar                    │
+│ StatusMessage      varchar                    │
+│ Events.Timestamp   timestamp with time zone[] │
+│ Events.Name        varchar[]                  │
+│ Events.Attributes  map(varchar, varchar)[]    │
+│ Links.TraceId      varchar[]                  │
+│ Links.SpanId       varchar[]                  │
+│ Links.TraceState   varchar[]                  │
+│ Links.Attributes   map(varchar, varchar)[]    │
+└───────────────────────────────────────────────┘
+```
+
+You can see a clear correspondance between the Parquet and ClickHouse types. Notably, this file is
+not in the shape we want yet. For this we'll need to slice and dice it into different forms to
+benchmark how queries behave.
+
+## Benchmarks
+
+To get an overview of the performance of the Variant type I'm going to focus on two types of data I
+have stored here, GPS location data and access logs to this website. For both data sets I will come
+up with two queries, one that touches only a fraction of the data and one that has to do sweeping
+aggregations across most of the data set. Then I'm going to wrangle the payload into the following
+types to see how the different approaches stack up:
+
+- JSON
+- Map / Array
+- Variant
+- Fully materialized
+
+---
+
+two scenarios: gps location data and marending.dev access logs. for each: one query that touches
+little data and one that touches most
+
+string parsing, JSON type, map type, variant, columns
+
+indices?
+
+small files and mixed files
+
+comparison against clickhouse
