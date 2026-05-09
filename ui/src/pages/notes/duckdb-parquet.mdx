@@ -628,7 +628,115 @@ ORDER BY day DESC;
 
 #### Variant
 
+Finally, let's get to real meat of the story. Here we store the gps location data into a Parquet
+file where the relevant data is stored as a Variant.
+
+```sql
+COPY (
+  SELECT
+    Timestamp,
+    'gps-location' AS service,
+    CAST(CAST(SpanAttributes['location'] AS JSON) AS VARIANT) AS data
+  FROM 'otel_traces.parquet'
+  WHERE SpanName = 'gps-location'
+) TO 'gps_location_variant.parquet' (FORMAT PARQUET);
+
+DESCRIBE SELECT * FROM 'gps_location_variant.parquet';
+┌────────────────────────────────────┐
+│    gps_location_variant.parquet    │
+│                                    │
+│ Timestamp timestamp with time zone │
+│ service   varchar                  │
+│ data      variant                  │
+└────────────────────────────────────┘
+```
+
+```sql
+SELECT DISTINCT
+  DATE_TRUNC('day', CAST(data.properties.timestamp AS TIMESTAMP)) AS day
+FROM 'gps_location_variant.parquet'
+WHERE CAST(data.geometry.coordinates[1] AS DOUBLE) BETWEEN 8.486986 AND 8.493896
+  AND CAST(data.geometry.coordinates[2] AS DOUBLE) BETWEEN 47.348284 AND 47.353111
+ORDER BY day DESC;
+```
+
+The double casting to JSON and then Variant is apparently doing heavy lifting to ensure nested
+values are also properly typed. I can confirm that everything is nicely shredded after I save this
+file. But somehow I see worse performance here than with JSON, which doesn't make much sense. I
+might be hitting [this issue](https://github.com/duckdb/duckdb/issues/22024). Although at the time
+of writing, I get similar performance on a nightly build of DuckDB even though it's supposedly fixed
+on main.
+
 #### Materialized
+
+This one again is not going to be an actual option for my usecase as I need to know the schema up
+front, but it serves as a comparison.
+
+```sql
+COPY (
+  WITH src AS (
+    SELECT
+      Timestamp,
+      CAST(SpanAttributes['location'] AS JSON) AS loc
+    FROM 'otel_traces.parquet'
+    WHERE SpanName = 'gps-location'
+  )
+  SELECT
+    Timestamp,
+    'gps-location' AS service,
+    json_extract_string(loc, '$.type')                                      AS location_type,
+    json_extract_string(loc, '$.geometry.type')                             AS geometry_type,
+    CAST(json_extract(loc, '$.geometry.coordinates[0]') AS DOUBLE)          AS lon,
+    CAST(json_extract(loc, '$.geometry.coordinates[1]') AS DOUBLE)          AS lat,
+    CAST(json_extract(loc, '$.properties.altitude') AS DOUBLE)              AS altitude,
+    CAST(json_extract(loc, '$.properties.battery_level') AS DOUBLE)         AS battery_level,
+    json_extract_string(loc, '$.properties.battery_state')                  AS battery_state,
+    CAST(json_extract(loc, '$.properties.course') AS DOUBLE)                AS course,
+    CAST(json_extract(loc, '$.properties.course_accuracy') AS DOUBLE)       AS course_accuracy,
+    CAST(json_extract(loc, '$.properties.horizontal_accuracy') AS DOUBLE)   AS horizontal_accuracy,
+    json_extract_string(loc, '$.properties.motion[0]')                      AS motion,
+    CAST(json_extract(loc, '$.properties.speed') AS DOUBLE)                 AS speed,
+    CAST(json_extract(loc, '$.properties.speed_accuracy') AS DOUBLE)        AS speed_accuracy,
+    CAST(json_extract_string(loc, '$.properties.timestamp') AS TIMESTAMP)   AS gps_timestamp,
+    CAST(json_extract(loc, '$.properties.vertical_accuracy') AS DOUBLE)     AS vertical_accuracy,
+    json_extract_string(loc, '$.properties.wifi')                           AS wifi
+  FROM src
+) TO 'gps_location_materialized.parquet' (FORMAT PARQUET);
+
+DESCRIBE SELECT * FROM 'gps_location_materialized.parquet';
+┌──────────────────────────────────────────────┐
+│      gps_location_materialized.parquet       │
+│                                              │
+│ Timestamp           timestamp with time zone │
+│ service             varchar                  │
+│ location_type       varchar                  │
+│ geometry_type       varchar                  │
+│ lon                 double                   │
+│ lat                 double                   │
+│ altitude            double                   │
+│ battery_level       double                   │
+│ battery_state       varchar                  │
+│ course              double                   │
+│ course_accuracy     double                   │
+│ horizontal_accuracy double                   │
+│ motion              varchar                  │
+│ speed               double                   │
+│ speed_accuracy      double                   │
+│ gps_timestamp       timestamp                │
+│ vertical_accuracy   double                   │
+│ wifi                varchar                  │
+└──────────────────────────────────────────────┘
+```
+
+The query here is very straight-forward.
+
+```sql
+SELECT DISTINCT DATE_TRUNC('day', gps_timestamp) AS day
+FROM 'gps_location_materialized.parquet'
+WHERE lon BETWEEN 8.486986 AND 8.493896
+  AND lat BETWEEN 47.348284 AND 47.353111
+ORDER BY day DESC;
+```
 
 ### marending.dev access logs
 
