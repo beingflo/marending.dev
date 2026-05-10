@@ -8,6 +8,7 @@ draft: true
 ---
 
 import GPS_results from './GPS_results.astro';
+import Marending_results from './marending_results.astro';
 
 I've had observability on my mind for quite some time now. 2 years ago I was trying to expand my
 metrics setup with structured logs emitted by some services. The ensuing
@@ -907,6 +908,148 @@ GROUP BY uri
 ORDER BY error_count DESC
 LIMIT 50;
 ```
+
+And the second query to get the daily traffic by browser:
+
+```sql
+WITH r AS (
+  SELECT
+    Timestamp,
+    json_extract_string(data, '$[0].user_agent') AS user_agent,
+    CAST(json_extract(data, '$[1].latency') AS DOUBLE) AS latency_us
+  FROM 'marending_json.parquet'
+)
+SELECT
+  DATE_TRUNC('day', Timestamp) AS day,
+  CASE
+    WHEN user_agent LIKE '%Firefox%' THEN 'Firefox'
+    WHEN user_agent LIKE '%Chrome%' AND user_agent NOT LIKE '%Edg%' THEN 'Chrome'
+    WHEN user_agent LIKE '%Safari%' AND user_agent NOT LIKE '%Chrome%' THEN 'Safari'
+    WHEN user_agent LIKE '%Edg%' THEN 'Edge'
+    WHEN user_agent LIKE '%bot%' OR user_agent LIKE '%Bot%' THEN 'Bot'
+    ELSE 'Other'
+  END AS browser,
+  COUNT(*) AS requests,
+  AVG(latency_us) AS avg_latency_us
+FROM r
+GROUP BY day, browser
+ORDER BY day, requests DESC;
+```
+
+### Map
+
+```sql
+COPY (
+  SELECT
+    Timestamp,
+    'marending' AS service,
+    "Events.Attributes" AS data
+  FROM 'otel_traces.parquet'
+  WHERE ServiceName = 'marending'
+) TO 'marending_map.parquet' (FORMAT PARQUET);
+
+DESCRIBE SELECT * FROM 'marending_map.parquet';
+┌────────────────────────────────────┐
+│       marending_map.parquet        │
+│                                    │
+│ Timestamp timestamp with time zone │
+│ service   varchar                  │
+│ data      map(varchar, varchar)[]  │
+└────────────────────────────────────┘
+```
+
+```sql
+SELECT
+  data[1]['uri'] AS uri,
+  COUNT(*) AS error_count
+FROM 'marending_map.parquet'
+WHERE data[2]['status'] LIKE '4%'
+   OR data[2]['status'] LIKE '5%'
+GROUP BY uri
+ORDER BY error_count DESC
+LIMIT 50;
+```
+
+```sql
+WITH r AS (
+  SELECT
+    Timestamp,
+    data[1]['user_agent'] AS user_agent,
+    CAST(data[2]['latency'] AS DOUBLE) AS latency_us
+  FROM 'marending_map.parquet'
+)
+SELECT
+  DATE_TRUNC('day', Timestamp) AS day,
+  CASE
+    WHEN user_agent LIKE '%Firefox%' THEN 'Firefox'
+    WHEN user_agent LIKE '%Edg%'     THEN 'Edge'
+    WHEN user_agent LIKE '%Chrome%'  THEN 'Chrome'
+    WHEN user_agent LIKE '%Safari%'  THEN 'Safari'
+    WHEN user_agent ILIKE '%bot%'    THEN 'Bot'
+    ELSE 'Other'
+  END AS browser,
+  COUNT(*) AS requests,
+  AVG(latency_us) AS avg_latency_us
+FROM r
+GROUP BY day, browser
+ORDER BY day, requests DESC;
+```
+
+### Variant
+
+```sql
+COPY (
+  SELECT
+    Timestamp,
+    'marending' AS service,
+    CAST(CAST("Events.Attributes" AS JSON) AS VARIANT) AS data
+  FROM 'otel_traces.parquet'
+  WHERE ServiceName = 'marending'
+) TO 'marending_variant.parquet' (FORMAT PARQUET);
+```
+
+```sql
+SELECT
+  CAST(data[1].uri AS VARCHAR) AS uri,
+  COUNT(*) AS error_count
+FROM 'marending_variant.parquet'
+WHERE CAST(data[2].status AS VARCHAR) LIKE '4%'
+   OR CAST(data[2].status AS VARCHAR) LIKE '5%'
+GROUP BY uri
+ORDER BY error_count DESC
+LIMIT 50;
+```
+
+```sql
+WITH r AS (
+  SELECT
+    Timestamp,
+    CAST(data[1].user_agent AS VARCHAR) AS user_agent,
+    CAST(data[2].latency AS DOUBLE) AS latency_us
+  FROM 'marending_variant.parquet'
+)
+SELECT
+  DATE_TRUNC('day', Timestamp) AS day,
+  CASE
+    WHEN user_agent LIKE '%Firefox%' THEN 'Firefox'
+    WHEN user_agent LIKE '%Edg%'     THEN 'Edge'
+    WHEN user_agent LIKE '%Chrome%'  THEN 'Chrome'
+    WHEN user_agent LIKE '%Safari%'  THEN 'Safari'
+    WHEN user_agent ILIKE '%bot%'    THEN 'Bot'
+    ELSE 'Other'
+  END AS browser,
+  COUNT(*) AS requests,
+  AVG(latency_us) AS avg_latency_us
+FROM r
+GROUP BY day, browser
+ORDER BY day, requests DESC;
+```
+
+### Materialized
+
+### Results
+
+<Marending_results />
 
 ## Index
 
