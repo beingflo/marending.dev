@@ -1,0 +1,44 @@
+---
+import Chart from 'src/components/Chart.astro';
+import { Figure } from 'src/components/Figure';
+import * as Plot from '@observablehq/plot';
+
+let results = [
+	{ type: 'json', query: 'geofence', duration: 71 },
+	{ type: 'json', query: 'aggregation', duration: 98 },
+	{ type: 'map', query: 'geofence', duration: 44 },
+	{ type: 'map', query: 'aggregation', duration: 53 },
+	{ type: 'variant', query: 'geofence', duration: 224 },
+	{ type: 'variant', query: 'aggregation', duration: 270 },
+	{ type: 'materialized', query: 'geofence', duration: 5 },
+	{ type: 'materialized', query: 'aggregation', duration: 9 }
+];
+---
+
+<Figure caption="Figure 1. Duration of queries against different Parquet files">
+	<Chart
+		options={{
+    		marginRight: 80,
+    		marginLeft: 80,
+			x: { grid: true, label: '→ duration (ms)' },
+			y: { inset: 2, label: null },
+			marks: [
+				Plot.frame(),
+				Plot.barX(results, {
+					x: 'duration',
+					y: 'type',
+					fy: 'query',
+				}),
+				Plot.text(results, {
+					text: (d) => `${Math.floor(d.duration)}`,
+					y: 'type',
+					x: 'duration',
+					textAnchor: 'end',
+					dx: -2,
+					fill: 'white',
+					fy: 'query',
+				}),
+			],
+		}}
+	/>
+</Figure>

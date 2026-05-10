@@ -7,6 +7,8 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: true
 ---
 
+import GPS_results from './GPS_results.astro';
+
 I've had observability on my mind for quite some time now. 2 years ago I was trying to expand my
 metrics setup with structured logs emitted by some services. The ensuing
 [exploration](/notes/unstructured-data/) only yielded the obvious: Storing and efficiently querying
@@ -505,7 +507,10 @@ prefiltering data down to the relevant rows and another one that has to run expe
 across the whole data set.
 
 For the GPS data, the first query should get distinct days I've visited a particular location. And
-the second query will get average speed and altitude per day for the whole timespan.
+the second query will get average speed and altitude hourly for the whole timespan.
+
+For the access logs, the first query will count error responses per URI, and the second one will
+aggregate daily traffic per browser.
 
 ### GPS location data
 
@@ -560,6 +565,32 @@ WHERE CAST(json_extract(
       ) AS DOUBLE) BETWEEN 47.348284 AND 47.353111
 ORDER BY day DESC;
 ```
+
+The second query to aggregate some data into hourly buckets.
+
+```sql
+WITH g AS (
+  SELECT
+    CAST(json_extract_string(data, '$.location') AS JSON) AS loc
+  FROM 'gps_location_json.parquet'
+)
+SELECT
+  TIME_BUCKET(INTERVAL '1 hour',
+    CAST(json_extract_string(loc, '$.properties.timestamp') AS TIMESTAMP)
+  ) AS hour,
+  AVG(CAST(json_extract(loc, '$.properties.speed') AS DOUBLE))               AS avg_speed,
+  AVG(CAST(json_extract(loc, '$.properties.altitude') AS DOUBLE))            AS avg_altitude,
+  MAX(CAST(json_extract(loc, '$.properties.horizontal_accuracy') AS DOUBLE)) AS worst_accuracy,
+  COUNT(*) AS points
+FROM g
+GROUP BY hour
+ORDER BY hour;
+```
+
+Note how in those two queries we use the nested `timestamp` from within the payload instead of the
+top level `Timestamp`. That's due to getting those proper timestamps messed up when migrating data
+from an even older system into the one I use currently. If want I'm trying here comes to fruition,
+I'm going to fix this up.
 
 The benchmark results will follow at the end.
 
@@ -626,6 +657,19 @@ WHERE CAST(data['location.geometry.coordinates[0]'] AS DOUBLE)
 ORDER BY day DESC;
 ```
 
+```sql
+SELECT
+  TIME_BUCKET(INTERVAL '1 hour',
+    CAST(data['location.properties.timestamp'] AS TIMESTAMP)) AS hour,
+  AVG(CAST(data['location.properties.speed'] AS DOUBLE))               AS avg_speed,
+  AVG(CAST(data['location.properties.altitude'] AS DOUBLE))            AS avg_altitude,
+  MAX(CAST(data['location.properties.horizontal_accuracy'] AS DOUBLE)) AS worst_accuracy,
+  COUNT(*) AS points
+FROM 'gps_location_map.parquet'
+GROUP BY hour
+ORDER BY hour;
+```
+
 #### Variant
 
 Finally, let's get to real meat of the story. Here we store the gps location data into a Parquet
@@ -658,6 +702,19 @@ FROM 'gps_location_variant.parquet'
 WHERE CAST(data.geometry.coordinates[1] AS DOUBLE) BETWEEN 8.486986 AND 8.493896
   AND CAST(data.geometry.coordinates[2] AS DOUBLE) BETWEEN 47.348284 AND 47.353111
 ORDER BY day DESC;
+```
+
+```sql
+SELECT
+  TIME_BUCKET(INTERVAL '1 hour',
+    CAST(data.properties.timestamp AS TIMESTAMP)) AS hour,
+  AVG(CAST(data.properties.speed AS DOUBLE))               AS avg_speed,
+  AVG(CAST(data.properties.altitude AS DOUBLE))            AS avg_altitude,
+  MAX(CAST(data.properties.horizontal_accuracy AS DOUBLE)) AS worst_accuracy,
+  COUNT(*) AS points
+FROM 'gps_location_variant.parquet'
+GROUP BY hour
+ORDER BY hour;
 ```
 
 The double casting to JSON and then Variant is apparently doing heavy lifting to ensure nested
@@ -738,17 +795,117 @@ WHERE lon BETWEEN 8.486986 AND 8.493896
 ORDER BY day DESC;
 ```
 
+```sql
+SELECT
+  TIME_BUCKET(INTERVAL '1 hour', gps_timestamp) AS hour,
+  AVG(speed)               AS avg_speed,
+  AVG(altitude)            AS avg_altitude,
+  MAX(horizontal_accuracy) AS worst_accuracy,
+  COUNT(*) AS points
+FROM 'gps_location_materialized.parquet'
+GROUP BY hour
+ORDER BY hour;
+```
+
+### Results
+
+<GPS_results />
+
+JSON, Map and materialized columns behave pretty much exactly like I would have expected. Only the
+one I actually cared about, Variant, is dissapointing. I think this must truly be a limitation in
+DuckDB that will be addressed at some point. Looking at the query plan with `EXPLAIN ANALYZE`, it's
+clear that a lot of variant extractions happen, even though in my understanding it shouldn't have to
+do that. In a follow-up note I'll have to see how different query engines handle this.
+
+In general, I'm impressed with the performance of DuckDB here. There are just over 30'000 rows in
+this data set and it churns through that in no time even with JSON types.
+
+Interesting are also the file sizes of the different parquet files, one can clearly see how the
+faster formats also compress the data better.
+
+- JSON: 2.2MB
+- Map: 1.3MB
+- Variant: 1.1MB
+- Materialized: 1.0MB
+
 ### marending.dev access logs
+
+Now let's look towards another dataset I have in my observability system: Access logs to this
+website. I build this page into a static bundle which I then serve using a Rust service. The only
+reason I have this service and reverse proxy via Caddy instead of just letting Caddy serve the
+static page directly is exactly these access logs. Caddy doesn't give you insights per domain, but
+only aggregated metrics. So
+[this code](https://github.com/beingflo/marending.dev/blob/main/service/src/main.rs) sets up an
+OpenTelemetry exporter and then logs events
+[on request](https://github.com/beingflo/marending.dev/blob/main/service/src/main.rs#L67) and
+[on response](https://github.com/beingflo/marending.dev/blob/main/service/src/main.rs#L85).
+
+The way OpenTelemetry ingests this data, the `Events.Attributes` property then takes the following
+form. The two objects correspond to the two `info!` invocations in the code.
+
+```json
+[
+  {
+    "code.filepath": "src/main.rs",
+    "code.lineno": "67",
+    "code.namespace": "marending_dev",
+    "level": "INFO",
+    "referrer": "",
+    "request": "HEAD",
+    "target": "marending_dev",
+    "uri": "/",
+    "user_agent": "updown.io daemon 2.11"
+  },
+  {
+    "code.filepath": "src/main.rs",
+    "code.lineno": "85",
+    "code.namespace": "marending_dev",
+    "latency": "424164",
+    "level": "INFO",
+    "status": "200",
+    "target": "marending_dev"
+  }
+]
+```
+
+### JSON
+
+Now, going through the same spiel again, here we extract the relevant data into a Parquet file with
+the relevant data cast to JSON.
 
 ```sql
 COPY (
-    SELECT
+  SELECT
     Timestamp,
-    'gps-location' AS service,
-    'Events.Attributes' AS data
-    FROM 'otel_traces.parquet'
-    WHERE SpanName = 'gps-location'
-) TO 'gps_location_map.parquet' (FORMAT PARQUET);
+    'marending' AS service,
+    CAST("Events.Attributes" AS JSON) AS data
+  FROM 'otel_traces.parquet'
+  WHERE ServiceName = 'marending'
+) TO 'marending_json.parquet' (FORMAT PARQUET);
+
+DESCRIBE SELECT * FROM 'marending_json.parquet';
+┌────────────────────────────────────┐
+│       marending_json.parquet       │
+│                                    │
+│ Timestamp timestamp with time zone │
+│ service   varchar                  │
+│ data      json                     │
+└────────────────────────────────────┘
+```
+
+Here's the first query that counts error responses by URI. The top result is `/robots.txt` if you
+cared to know. `.env` is not much further down the list though.
+
+```sql
+SELECT
+  json_extract_string(data, '$[0].uri') AS uri,
+  COUNT(*) AS error_count
+FROM 'marending_json.parquet'
+WHERE json_extract_string(data, '$[1].status') LIKE '4%'
+   OR json_extract_string(data, '$[1].status') LIKE '5%'
+GROUP BY uri
+ORDER BY error_count DESC
+LIMIT 50;
 ```
 
 ## Index
