@@ -23,7 +23,7 @@ Ever since, I've run a ClickHouse instance to store arbitrary JSON payloads fed 
 data, sensor readings and tracing data. But a couple of days ago that nagging feeling came back:
 What if this can be simplified? ClickHouse is by far the heaviest service I operate on my server. It
 randomly fills up my disk with logging tables, too. Look, ClickHouse is an engineering marvel, but
-it's not _my_ marvel. It's someone elses marvel. And I have a need to create my own. Thing, not
+it's not _my_ marvel. It's someone else's marvel. And I have a need to create my own. Thing, not
 marvel, I mean. So here we are.
 
 The hard part is still how to store arbitrary JSON payloads in such a way that aggregations on
@@ -73,7 +73,7 @@ format. While DuckDB has its own file format for storing data, one of its streng
 supporting a wide variety of other formats, including Parquet. So you can write and query Parquet
 files natively with SQL within DuckDB.
 
-Recently Parquet added the Variant type, a binary encoding of a primitives, arrays or object of
+Recently Parquet added the Variant type, a binary encoding of primitives, arrays or object of
 arbitrary types. It allows representing structured data in such a way that it can be queried more
 efficiently than if the same data was serialized and stored as a string type. But the real kicker is
 "Variant shredding". It's the process of extracting some of the properties within the Variant into
@@ -93,7 +93,7 @@ have concrete, shredded columns and some don't. But we'll see this for ourselves
 
 ## Exploration
 
-Let's start with the example given in DuckDBs documentation.
+Let's start with the example given in DuckDB's documentation.
 
 ```sql
 CREATE TABLE events (id INTEGER, data VARIANT);
@@ -147,7 +147,7 @@ SELECT data.name FROM events;
 
 Writing this data as is to a parquet file is now as simple as
 `COPY events TO 'events.parquet' (FORMAT parquet);`. And indeed, having DuckDB describe the parquet
-files shape yields the expected.
+file's shape yields the expected.
 
 ```sql
 DESCRIBE SELECT * FROM 'events.parquet';
@@ -162,7 +162,7 @@ DESCRIBE SELECT * FROM 'events.parquet';
 But hold on. According to the docs, writing to a Parquet file should automatically shred the variant
 type. Shouldn't I see the individual columns then? Turns out shredding is only a storage detail, not
 a logical schema change. The type stays as is. To see how the data is actually stored, we have to
-inspect the files metadata.
+inspect the file's metadata.
 
 ```sql
 SELECT name, type, converted_type FROM parquet_schema('events.parquet');
@@ -183,7 +183,7 @@ Well, the way this is supposed to be read is as follows. `id` is of type `INT32`
 itself doesn't really have a type but it is comprised of three parts. `metadata`, `value` and
 `typed_value`. Of interest are `value` and `typed_value`. Each row with the `data` logical column is
 either going to have the (fallback) byte-array `value` representation set, or the shredded
-`typed_value` column. In this case, DuckDBs autoshredder apparently decided that row 1 with the
+`typed_value` column. In this case, DuckDB's autoshredder apparently decided that row 1 with the
 integer data variant deserves to have its representation shredded, but not the other rows.
 
 If instead we instruct DuckDB to shred data to a struct like so
@@ -415,8 +415,8 @@ Indeed we can see that it now materialized `age`, `name` and `message`. Neat!
 With my mental model starting to get less foggy, I think it's time to start digging into some real
 world data from my existing observability setup. Luckily ClickHouse makes it really easy to get my
 data out: `SELECT * FROM events.otel_traces INTO OUTFILE './otel_traces.parquet' FORMAT Parquet`.
-This dumps all of the data into a single Parquet file with just over 10 milion rows and weighing 800
-MB.
+This dumps all of the data into a single Parquet file with just over 10 million rows and weighing
+800 MB.
 
 The shape of this file is determined by the standard schema the OpenTelemetry collector created when
 I started ingesting data. In ClickHouse this looks like this:
@@ -492,7 +492,7 @@ DESCRIBE SELECT * FROM 'otel_traces.parquet';
 └───────────────────────────────────────────────┘
 ```
 
-You can see a clear correspondance between the Parquet and ClickHouse types. Notably, this file is
+You can see a clear correspondence between the Parquet and ClickHouse types. Notably, this file is
 not in the shape we want yet. For this we'll need to slice and dice it into different forms to
 benchmark how queries behave.
 
@@ -553,7 +553,7 @@ rather stay string values to the top-level properties. But as the DuckDB JSON ty
 backed by a VARCHAR, I don't expect too much impact for this.
 
 Now here is the query to list distinct days where I've visited a particular location. _Pasting these
-coordinates into a map and is left as an excercise to the reader._
+coordinates into a map and is left as an exercise to the reader._
 
 ```sql
 SELECT DISTINCT
@@ -598,7 +598,7 @@ ORDER BY hour;
 
 Note how in those two queries we use the nested `timestamp` from within the payload instead of the
 top level `Timestamp`. That's due to getting those proper timestamps messed up when migrating data
-from an even older system into the one I use currently. If want I'm trying here comes to fruition,
+from an even older system into the one I use currently. If what I'm trying here comes to fruition,
 I'm going to fix this up.
 
 The benchmark results will follow at the end.
@@ -681,7 +681,7 @@ ORDER BY hour;
 
 #### Variant
 
-Finally, let's get to real meat of the story. Here we store the gps location data into a Parquet
+Finally, let's get to the real meat of the story. Here we store the gps location data into a Parquet
 file where the relevant data is stored as a Variant.
 
 ```sql
@@ -1103,7 +1103,7 @@ ORDER BY day, requests DESC;
 <GPS_results />
 
 JSON, Map and materialized columns behave pretty much exactly like I would have expected. Only the
-one I actually cared about, Variant, is dissapointing. I might be hitting
+one I actually cared about, Variant, is disappointing. I might be hitting
 [this issue](https://github.com/duckdb/duckdb/issues/22024). Although at the time of writing, I get
 similar performance on a nightly build of DuckDB even though it's supposedly fixed on main. I think
 this must truly be a limitation that will be addressed at some point. Looking at the query plan with
@@ -1134,15 +1134,15 @@ querying my data from a Parquet file. But just to get a feel for the landscape o
 going to translate the 4 queries I used here to ClickHouse equivalents and run them against the live
 system. Note, that this is very much an apples to oranges comparison: The numbers thus far have been
 achieved on a M1 Macbook Air, the ClickHouse ones on a Hetzner CAX21. And the Parquet files have
-first been isolated to their respective datasets, ClickHouse has an asortment of data in its
+first been isolated to their respective datasets, ClickHouse has an assortment of data in its
 `otel_traces` table. Not to mention that the Hetzner server is a noisy shared VPS.
 
 <Clickhouse_results />
 
-The closest equivalent of the types we've looked at so far to the current ClickHouse schema would
-beny the `Map` flavour. Honestly quite surprised. Goes to show that while you want to get to those
-single-digit milisecond latencies, in real world usage these fractions of a second have been just
-fine. I would suspect we could go considerably faster by using ClickHouses own JSON type, which
+The closest equivalent of the types we've looked at so far to the current ClickHouse schema would be
+the `Map` flavour. Honestly quite surprised. Goes to show that while you want to get to those
+single-digit millisecond latencies, in real world usage these fractions of a second have been just
+fine. I would suspect we could go considerably faster by using ClickHouse's own JSON type, which
 behaves similarly to Variant in my understanding.
 
 ## Verdict
