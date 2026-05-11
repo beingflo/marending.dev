@@ -1155,7 +1155,7 @@ DuckDB and the Variant support is unfortunately too young for real-world use.
 But the bigger take-away is that the general pattern of writing and querying Parquet files could
 actually be quite elegant. While I would be very nervous trying to alter the `otel_traces` table in
 a running system right now, rewriting Parquet files to use Variant down the line should be a walk in
-the park (save rewriting queries of course). In a follow-up note I'll have to hone in on Parquet
+the park (save for rewriting queries of course). In a follow-up note I'll have to home in on Parquet
 file handling, e.g. is there an impact when I have a single file that mixes data sources? And how to
 simultaneously write files periodically and query across different files?
 
