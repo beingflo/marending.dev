@@ -7,7 +7,7 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: true
 ---
 
-import { Details } from 'src/components';
+import { Details, Warn } from 'src/components';
 import GPS_results from './GPS_results.astro';
 import Marending_results from './marending_results.astro';
 import Clickhouse_results from './clickhouse_results.astro';
@@ -516,6 +516,11 @@ the second query will get average speed and altitude hourly for the whole timesp
 
 For the access logs, the first query will count error responses per URI, and the second one will
 aggregate daily traffic per browser.
+
+<Warn>
+  Danger zone! The queries compared here were generated / translated by Claude and may not be the
+  pinnacle of optimization.
+</Warn>
 
 <Details title="GPS details">
 #### JSON
@@ -1101,8 +1106,8 @@ JSON, Map and materialized columns behave pretty much exactly like I would have 
 one I actually cared about, Variant, is dissapointing. I might be hitting
 [this issue](https://github.com/duckdb/duckdb/issues/22024). Although at the time of writing, I get
 similar performance on a nightly build of DuckDB even though it's supposedly fixed on main. I think
-this must truly be a limitation in that will be addressed at some point. Looking at the query plan
-with `EXPLAIN ANALYZE`, it's clear that a lot of variant extractions happen, even though in my
+this must truly be a limitation that will be addressed at some point. Looking at the query plan with
+`EXPLAIN ANALYZE`, it's clear that a lot of variant extractions happen, even though in my
 understanding it shouldn't have to do that.
 
 In general, I'm impressed with the performance of DuckDB here. There are just over 30'000 rows in
@@ -1136,6 +1141,23 @@ first been isolated to their respective datasets, ClickHouse has an asortment of
 
 The closest equivalent of the types we've looked at so far to the current ClickHouse schema would
 beny the `Map` flavour. Honestly quite surprised. Goes to show that while you want to get to those
-single-digit milisecond latencies, in real world usage these fractions of a second are still fine.
+single-digit milisecond latencies, in real world usage these fractions of a second have been just
+fine. I would suspect we could go considerably faster by using ClickHouses own JSON type, which
+behaves similarly to Variant in my understanding.
 
 ## Verdict
+
+I think I'm reaching a different conclusion than what I set out to see, but I'm still not
+complaining. I was expecting to see subpar performance on JSON strings, with Variant saving the day
+and making my undertaking feasible. But I got the opposite: JSON handling is surprisingly fast in
+DuckDB and the Variant support is unfortunately too young for real world use.
+
+But the bigger take-away is that the general pattern of writing and querying Parquet files could
+actually be quite elegant. While I would be very nervous trying to alter the `otel_traces` table in
+a running system right now, rewriting Parquet files to use Variant down the line should be a walk in
+the park (save rewriting queries of course). In a follow-up note I'll have to hone in on Parquet
+file handling, e.g. is there an impact when I have a single file that mixes data sources. And how to
+simultaneously write files periodically and query across different files.
+
+While I'm terrible at leaving my side-projects be, I do enjoy that the iteration tends to result in
+leaner and simpler systems.
