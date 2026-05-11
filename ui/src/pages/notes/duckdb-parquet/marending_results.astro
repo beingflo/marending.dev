@@ -10,17 +10,17 @@ let results = [
 	{ type: 'map', query: 'traffic', duration: 197 },
 	{ type: 'variant', query: 'errors', duration: 900 },
 	{ type: 'variant', query: 'traffic', duration: 950 },
-	{ type: 'materialized', query: 'errors', duration: 71 },
-	{ type: 'materialized', query: 'traffic', duration: 98 },
+	{ type: 'materialized', query: 'errors', duration: 10 },
+	{ type: 'materialized', query: 'traffic', duration: 77 },
 ];
 ---
 
-<Figure caption="Figure 2. Duration of queries against different Parquet files">
+<Figure caption="Figure 2. Duration of access log queries against different Parquet files">
 	<Chart
 		options={{
     		marginRight: 80,
     		marginLeft: 80,
-			x: { grid: true, label: '→ duration (ms)' },
+			x: { grid: true, label: '→ duration (ms)', domain: [0,1000] },
 			y: { inset: 2, label: null },
 			marks: [
 				Plot.frame(),
@@ -33,9 +33,9 @@ let results = [
 					text: (d) => `${Math.floor(d.duration)}`,
 					y: 'type',
 					x: 'duration',
-					textAnchor: 'end',
-					dx: -2,
-					fill: 'white',
+					textAnchor: 'start',
+					dx: 2,
+					fill: 'black',
 					fy: 'query',
 				}),
 			],

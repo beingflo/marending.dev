@@ -1,0 +1,38 @@
+---
+import Chart from 'src/components/Chart.astro';
+import { Figure } from 'src/components/Figure';
+import * as Plot from '@observablehq/plot';
+
+let results = [
+    { query: 'geofence', duration: 65 },
+	{ query: 'aggregation', duration: 220 },
+	{ query: 'errors', duration: 370 },
+	{ query: 'traffic', duration: 380 },
+];
+---
+
+<Figure caption="Figure 3. Duration of queries against ClickHouse">
+	<Chart
+		options={{
+    		marginRight: 80,
+    		marginLeft: 80,
+			x: { grid: true, label: '→ duration (ms)', domain: [0, 400] },
+			y: { inset: 2, label: null },
+			marks: [
+				Plot.frame(),
+				Plot.barX(results, {
+					x: 'duration',
+					y: 'query',
+				}),
+				Plot.text(results, {
+					text: (d) => `${Math.floor(d.duration)}`,
+					y: 'query',
+					x: 'duration',
+					textAnchor: 'start',
+					dx: 2,
+					fill: 'black',
+				}),
+			],
+		}}
+	/>
+</Figure>

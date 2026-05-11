@@ -7,8 +7,10 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: true
 ---
 
+import { Details } from 'src/components';
 import GPS_results from './GPS_results.astro';
 import Marending_results from './marending_results.astro';
+import Clickhouse_results from './clickhouse_results.astro';
 
 I've had observability on my mind for quite some time now. 2 years ago I was trying to expand my
 metrics setup with structured logs emitted by some services. The ensuing
@@ -223,6 +225,7 @@ INT32 respectively.
 To get an intuitive understanding, it is interesting to look at the output of
 `parquet-tools meta events.parquet` from [this tool](https://github.com/hangxie/parquet-tools):
 
+<Details title="Output">
 ```json
 {
   "NumRowGroups": 1,
@@ -311,6 +314,7 @@ To get an intuitive understanding, it is interesting to look at the output of
   ]
 }
 ```
+</Details>
 
 Let's take this line for example `["data", "typed_value", "name", "typed_value"]`. A row in our
 dataset is going to populate this logical column when the `name` property in the variant is a UTF8
@@ -513,8 +517,7 @@ the second query will get average speed and altitude hourly for the whole timesp
 For the access logs, the first query will count error responses per URI, and the second one will
 aggregate daily traffic per browser.
 
-### GPS location data
-
+<Details title="GPS details">
 #### JSON
 
 This nifty query gets the relevant data from my GPS entries and stores it into a new Parquet file
@@ -720,10 +723,7 @@ ORDER BY hour;
 
 The double casting to JSON and then Variant is apparently doing heavy lifting to ensure nested
 values are also properly typed. I can confirm that everything is nicely shredded after I save this
-file. But somehow I see worse performance here than with JSON, which doesn't make much sense. I
-might be hitting [this issue](https://github.com/duckdb/duckdb/issues/22024). Although at the time
-of writing, I get similar performance on a nightly build of DuckDB even though it's supposedly fixed
-on main.
+file.
 
 #### Materialized
 
@@ -808,29 +808,9 @@ GROUP BY hour
 ORDER BY hour;
 ```
 
-### Results
+</Details>
 
-<GPS_results />
-
-JSON, Map and materialized columns behave pretty much exactly like I would have expected. Only the
-one I actually cared about, Variant, is dissapointing. I think this must truly be a limitation in
-DuckDB that will be addressed at some point. Looking at the query plan with `EXPLAIN ANALYZE`, it's
-clear that a lot of variant extractions happen, even though in my understanding it shouldn't have to
-do that. In a follow-up note I'll have to see how different query engines handle this.
-
-In general, I'm impressed with the performance of DuckDB here. There are just over 30'000 rows in
-this data set and it churns through that in no time even with JSON types.
-
-Interesting are also the file sizes of the different parquet files, one can clearly see how the
-faster formats also compress the data better.
-
-- JSON: 2.2MB
-- Map: 1.3MB
-- Variant: 1.1MB
-- Materialized: 1.0MB
-
-### marending.dev access logs
-
+<Details title="Access logs details">
 Now let's look towards another dataset I have in my observability system: Access logs to this
 website. I build this page into a static bundle which I then serve using a Rust service. The only
 reason I have this service and reverse proxy via Caddy instead of just letting Caddy serve the
@@ -1006,6 +986,15 @@ COPY (
   FROM 'otel_traces.parquet'
   WHERE ServiceName = 'marending'
 ) TO 'marending_variant.parquet' (FORMAT PARQUET);
+
+DESCRIBE SELECT * FROM 'marending_variant.parquet';
+┌────────────────────────────────────┐
+│     marending_variant.parquet      │
+│                                    │
+│ Timestamp timestamp with time zone │
+│ service   varchar                  │
+│ data      variant                  │
+└────────────────────────────────────┘
 ```
 
 ```sql
@@ -1047,12 +1036,106 @@ ORDER BY day, requests DESC;
 
 ### Materialized
 
-### Results
+```sql
+COPY (
+  SELECT
+    Timestamp,
+    'marending' AS service,
+    -- Request event (index 1)
+    "Events.Attributes"[1]['code.filepath']  AS request_code_filepath,
+    "Events.Attributes"[1]['code.lineno']    AS request_code_lineno,
+    "Events.Attributes"[1]['code.namespace'] AS request_code_namespace,
+    "Events.Attributes"[1]['level']          AS request_level,
+    "Events.Attributes"[1]['referrer']       AS referrer,
+    "Events.Attributes"[1]['request']        AS request_method,
+    "Events.Attributes"[1]['target']         AS request_target,
+    "Events.Attributes"[1]['uri']            AS uri,
+    "Events.Attributes"[1]['user_agent']     AS user_agent,
+    -- Response event (index 2)
+    "Events.Attributes"[2]['code.filepath']            AS response_code_filepath,
+    "Events.Attributes"[2]['code.lineno']              AS response_code_lineno,
+    "Events.Attributes"[2]['code.namespace']           AS response_code_namespace,
+    CAST("Events.Attributes"[2]['latency'] AS BIGINT)  AS latency_us,
+    "Events.Attributes"[2]['level']                    AS response_level,
+    CAST("Events.Attributes"[2]['status']  AS SMALLINT) AS status,
+    "Events.Attributes"[2]['target']                   AS response_target
+  FROM 'otel_traces.parquet'
+  WHERE ServiceName = 'marending'
+) TO 'marending_materialized.parquet' (FORMAT PARQUET);
+```
+
+```sql
+SELECT uri, COUNT(*) AS error_count
+FROM 'marending_materialized.parquet'
+WHERE status >= 400
+GROUP BY uri
+ORDER BY error_count DESC
+LIMIT 50;
+```
+
+```sql
+SELECT
+  DATE_TRUNC('day', Timestamp) AS day,
+  CASE
+    WHEN user_agent LIKE '%Firefox%' THEN 'Firefox'
+    WHEN user_agent LIKE '%Edg%'     THEN 'Edge'
+    WHEN user_agent LIKE '%Chrome%'  THEN 'Chrome'
+    WHEN user_agent LIKE '%Safari%'  THEN 'Safari'
+    WHEN user_agent ILIKE '%bot%'    THEN 'Bot'
+    ELSE 'Other'
+  END AS browser,
+  COUNT(*) AS requests,
+  AVG(latency_us) AS avg_latency_us
+FROM 'marending_materialized.parquet'
+GROUP BY day, browser
+ORDER BY day, requests DESC;
+```
+
+</Details>
+
+## Results
+
+<GPS_results />
+
+JSON, Map and materialized columns behave pretty much exactly like I would have expected. Only the
+one I actually cared about, Variant, is dissapointing. I might be hitting
+[this issue](https://github.com/duckdb/duckdb/issues/22024). Although at the time of writing, I get
+similar performance on a nightly build of DuckDB even though it's supposedly fixed on main. I think
+this must truly be a limitation in that will be addressed at some point. Looking at the query plan
+with `EXPLAIN ANALYZE`, it's clear that a lot of variant extractions happen, even though in my
+understanding it shouldn't have to do that.
+
+In general, I'm impressed with the performance of DuckDB here. There are just over 30'000 rows in
+this data set and it churns through that in no time even with JSON types.
+
+Interesting are also the file sizes of the different parquet files, one can clearly see how the
+faster formats also compress the data better.
+
+- JSON: 2.2MB
+- Map: 1.3MB
+- Variant: 1.1MB
+- Materialized: 1.0MB
+
+For the access logs, it looks similar. Although here this DuckDB limitation around Variant hits even
+harder. We must be hitting a highly unoptimized code path here to be that much slower to even JSON
+handling.
 
 <Marending_results />
 
-## Index
-
-## Multiple small Parquet files
-
 ## ClickHouse comparison
+
+I don't want to get to deep into this, as the goal here is primarily to establish the feasibility of
+querying my data from a Parquet file. But just to get a feel for the landscape of query engines, I'm
+going to translate the 4 queries I used here to ClickHouse equivalents and run them against the live
+system. Note, that this is very much an apples to oranges comparison: The numbers thus far have been
+achieved on a M1 Macbook Air, the ClickHouse ones on a Hetzner CAX21. And the Parquet files have
+first been isolated to their respective datasets, ClickHouse has an asortment of data in its
+`otel_traces` table. Not to mention that the Hetzner server is a noisy shared VPS.
+
+<Clickhouse_results />
+
+The closest equivalent of the types we've looked at so far to the current ClickHouse schema would
+beny the `Map` flavour. Honestly quite surprised. Goes to show that while you want to get to those
+single-digit milisecond latencies, in real world usage these fractions of a second are still fine.
+
+## Verdict
