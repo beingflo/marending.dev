@@ -36,6 +36,8 @@ const notes = [
   "/notes/passkeys/",
   "/notes/keys-in-pm/",
   "/notes/extension/",
+  "/epaper-dashboard/",
+  "/duckdb-parquet/",
   "/feedback/",
 ];
 
