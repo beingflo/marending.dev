@@ -1135,11 +1135,16 @@ data in its `otel_traces` table. Not to mention that the Hetzner server is a noi
 
 <Clickhouse_results />
 
-The closest equivalent of the types we've looked at so far to the current ClickHouse schema would be
-the `Map` flavour. Honestly quite surprised. Goes to show that while you might want to get to those
-single-digit millisecond latencies, in real-world usage these fractions of a second have been just
-fine. I would suspect we could go considerably faster by using ClickHouse's own JSON type, which
-behaves similarly to Variant in my understanding.
+Still, I'm honestly a bit surprised. I was expecting ClickHouse to do better. Looking back to
+[this comparison](/notes/clickhouse/) where I looked at rather similar queries, ClickHouse was
+pulling way ahead of DuckDB. But there I was checking throughput rather than latency, maybe
+parallelism is where the client-server model shines. Either way, this only reinforces that DuckDB
+should be up to the task as I was satisfied with the performance of ClickHouse.
+
+For fairness it should be mentioned that the schema used in ClickHouse is quite a bit more
+complicated than our neat Parquet files and uses the `Map` type. I would suspect we could go
+considerably faster by using ClickHouse's own JSON type, which behaves similarly to Variant in my
+understanding.
 
 ## Verdict
 
@@ -1155,5 +1160,5 @@ the park (save for rewriting queries of course). In a follow-up note I'll have t
 file handling, e.g. is there an impact when I have a single file that mixes data sources? And how to
 simultaneously write files periodically and query across different files?
 
-While I'm terrible at leaving my side-projects be, I do enjoy that the iteration tends to result in
-leaner and simpler systems.
+Being terrible at leaving my side-projects be comes with plenty of downsides, but I do enjoy that
+the iteration tends to result in leaner and simpler systems.
