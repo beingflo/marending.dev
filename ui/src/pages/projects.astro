@@ -8,6 +8,7 @@ import Layout from '../layouts/MainLayout.astro';
 		<div class="flex flex-col pt-4 gap-x-16 gap-y-2 md:gap-y-24">
 			<ProjectEntry
 				name="events"
+				note="/notes/wide-events"
 				technologies="ClickHouse, OpenTelemetry, Tracing, Grafana, Rust, Docker">
 				Events is an observability and metrics stack built around ClickHouse. An OTel collector
 				ingests OpenTelemetry tracing data from multiple services and writes them to ClickHouse in
@@ -36,6 +37,7 @@ import Layout from '../layouts/MainLayout.astro';
 			</ProjectEntry>
 			<ProjectEntry
 				name="observatory"
+				note="/notes/wide-events"
 				technologies="Rust, DuckDB, SolidJS, Plot">
 				Observatory stores and visualizes metrics from various data sources, including IoT devices
 				and GPS trackers. The application is designed to be light weight to deploy and operate. The

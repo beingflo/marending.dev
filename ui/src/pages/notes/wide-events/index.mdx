@@ -51,6 +51,8 @@ solutions.
 
 ## Act 2: Metrics with DuckDB
 
+-> observatory
+
 At some point I got fed up by the limitations of Prometheus and Grafana and also the need to be to
 understand PromQL. I had these moments where I wanted to make a moderately sophisticated chart,
 let's say grouping, let's say averaging data into time buckets and then showing them, which I knew
@@ -90,6 +92,8 @@ towards the next iteration of observability.
 
 ## Act 3: Tracing with ClickHouse
 
+-> events
+
 After falling in love with the idea of having a consolidated system that simply treats traces and
 nothing else. I started looking around for the best technologies to handle this. And Clickhos showed
 up as a series contenter. So this is what I ended up doing. I instrument my service that is hosting
@@ -115,6 +119,8 @@ again looking towards a serverless model. An embedded system, an embedded databa
 load on the system when there are no queries sound very appealing.
 
 ## Act 4: Wide events with Parquet
+
+-> events v2
 
 So I have been doing some reading again. And this time I've stumbled across the next interesting
 concept. Just like I did with tracing in the last iteration, this time it is wide events. The idea

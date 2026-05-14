@@ -12,25 +12,21 @@ import GPS_results from './GPS_results.astro';
 import Marending_results from './marending_results.astro';
 import Clickhouse_results from './clickhouse_results.astro';
 
-I've had observability on my mind for quite some time now. Two years ago I was trying to expand my
-metrics setup with structured logs emitted by some services. The ensuing
-[exploration](/notes/unstructured-data/) only yielded the obvious: Storing and efficiently querying
-arbitrary data is hard. DuckDB was all the rage back then, so naturally I had to see
-[how it handles analytics workloads](/notes/sqlite-vs-duckdb/). Finally, a year later, I checked out
-ClickHouse and found it [amazingly fast for my purposes](/notes/clickhouse/).
+I've had observability on my mind again lately. I already considered how to
+[store unstructured data](/notes/unstructured-data/) a while ago. After a brief stint of building my
+own system based on DuckDB, I've been running an off-the-shelf combination of ClickHouse and Grafana
+to collect and visualize tracing data. It has served me well, but a planned move of my side projects
+to my own hardware has me re-evaluating my setup. And ClickHouse is by far the heaviest service I
+operate on my server. It randomly fills up my disk with logging tables, too. Look, ClickHouse is an
+engineering marvel, but it's not _my_ marvel. It's someone else's marvel. And I have a need to
+create my own. Thing, not marvel, I mean. So here we are.
 
-Ever since, I've run a ClickHouse instance to store arbitrary JSON payloads fed by GPS location
-data, sensor readings and tracing data. But a couple of days ago that nagging feeling came back:
-What if this can be simplified? ClickHouse is by far the heaviest service I operate on my server. It
-randomly fills up my disk with logging tables, too. Look, ClickHouse is an engineering marvel, but
-it's not _my_ marvel. It's someone else's marvel. And I have a need to create my own. Thing, not
-marvel, I mean. So here we are.
-
-The hard part is still how to store arbitrary JSON payloads in such a way that aggregations on
-fields are performant. My current solution heavily relies on the excellent `Map` type in ClickHouse.
-To replace it, some storage engine is going to have to do some heavy lifting. My hope is that DuckDB
-can take that role if we massage the data just a bit. Since I last used DuckDB, quite a bit has
-changed. Particularly interesting for me: Parquet got a Variant type and DuckDB supports it.
+Now, I stumbled across the Parquet file format and in particular its new data type that looks like
+it was custom-made to solve all my problems. Maybe not all of them. In this note I want to explore
+how DuckDB can write and query these files. If this works out, I may be tempted to build a new
+observability system based around
+[wide events](https://isburmistrov.substack.com/p/all-you-need-is-wide-events-not-metrics) on these
+technologies.
 
 But before we get into the weeds, let me set the scene. Let's say I have a service that sends
 structured logs (or wide events) to my observability system. Today they might look like this:
