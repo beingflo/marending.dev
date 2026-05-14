@@ -1,53 +1,37 @@
 ---
 title: 'Towards approachable observability with wide events'
 subtitle: 'A tragedy in four acts'
-date: '14 May 2026'
+date: '15 May 2026'
 link: '/notes/wide-events/'
 layout: 'src/layouts/NoteLayout.astro'
 draft: true
 ---
 
-For some reason, observability has been a constant topic on my mind. Since I started hosting my own
-applications, my own side projects, and making them available to the internet. I've wanted to have
-sophisticated introspection into those services. And what by the way, than to have another service
-which tells you meta information about the first service.
+I like to think about how to get operational insights into services I host. It's become kind of a
+hobby to be honest. Maybe this whole thing is just bike shedding. What better way to avoid the
+crushing reality that an actual project you had in mind doesn't live up to your expectations than by
+not even attempting it and instead building infrastructure around your existing applications. Maybe
+that's a topic for therapy.
 
-Maybe this whole thing is just bike shedding, solving problems auxiliary to what I'm actually trying
-to do in an effort to sharpen my axe. But honestly, it's such a satisfying topic to be thinking
-about that I am not complaining.
-
-In this note, I want to first give an outline of the history of metrics and observability systems I
-have operated and built. And at the end, I also want to make this a project report of the newest
-system I'm in in the progress of building. Hopefully, this one will be the end all be all, but the
-way I know myself, it probably will not be.
+Anyhow, I realized during my latest manic observability episode that I barely even remember how I
+got here. So for posterity, I'm outlining the history and motivations for all things metrics in this
+note.
 
 ## Act 1: Metrics and Prometheus
 
-My first use case for observability were metrics fed by IoT sensors around the house. At this point
-I had very little opinions on how to approach this, so I went the well-trodden path, which was to
-use Prometheus to store time series data. Since my IoT sensors were not internet accessible, I had
-to put Prometheus push gateway in front of it to allow pushing data to the system, which Prometheus
-would then scrape regularly from the push gateway. To visualize this data, I used grafana. Looking
-at those graphs was quite satisfying, so I quickly developed a taste for having more data in the
-system, in particular access logs to my website, which at this point was in its infancy.
+A couple of years ago I got the itch to play around with embedded devices. I got myself an ESP32 and
+a CO2 sensor and got to work. With a little ellbow grease, I had the current CO2 concentration
+displayed on a small seven segment display. Quickly, I graduated to wanting to store and chart this
+data.
 
-At this point it became clear that serving my website from Caddy as a static bundle was not going to
-suit my needs. The problem is that Caddy does not expose metrics per domain, but only combined
-metrics for all the sites that it is serving. So I quickly pivoted towards the idea of not serving
-my website as a static bundle directly, but instead use a Rust service to serve the bundle, and CADI
-would reverse proxy this service. The only purpose of the service was to collect metrics and expose
-them to my stack. [rust serving SPA](/notes/rust-spa/)
+At this point I had little knowledge on how to approach this, so I went the well-trodden path.
+Prometheus to store time series data and Grafana to visualize it. Since my microcontroller was not
+internet accessible, I had to put a [push gateway](https://github.com/prometheus/pushgateway) in
+front of Prometheus to allow pushing data to the system, instead of having Prometheus scrape the
+metrics off the device regularly.
 
-What I've almost forgotten by now is that there was even a chapter in the history of this website
-where the RAST service was collecting those metrics in a SQLite database, and it was going to be
-offering statistics to visitors directly. So visitors could visit a page on my on my website that
-would show the kind of traffic it receives.
-
-Ultimately, the limitation of only being able to handle time series data and not other kinds of
-data, in particular high dimensional or high cardinality data, caused me to look around for other
-solutions.
-
-// Add image
+Around this time I also built and deployed this website. Wanted to collect visitor statistics
+[here](/notes/performance/) thoughprocess to store it separately is what spawned the next iteration.
 
 ## Act 2: Metrics with DuckDB
 
@@ -94,6 +78,14 @@ towards the next iteration of observability.
 
 -> events
 
+Since I started hosting my own side projects and making them available to the internet, I've craved
+introspection into those services. Not logs for debugging errors, I rarely get those (my Rust
+evangelism compels me to mention that a strict language really helps in cutting down runtime
+errors). Instead I mean operational indicators: How many visitors do I get on my website, which
+notes are most accessed? Which endpoints have high latency, does a particular user cause a
+disproportionate load? And most importantly, which Wordpress vulnerability is all the rage with the
+crawlers right now?
+
 After falling in love with the idea of having a consolidated system that simply treats traces and
 nothing else. I started looking around for the best technologies to handle this. And Clickhos showed
 up as a series contenter. So this is what I ended up doing. I instrument my service that is hosting
@@ -121,6 +113,8 @@ load on the system when there are no queries sound very appealing.
 ## Act 4: Wide events with Parquet
 
 -> events v2
+
+[blog](https://jeremymorrell.dev/blog/a-practitioners-guide-to-wide-events/)
 
 So I have been doing some reading again. And this time I've stumbled across the next interesting
 concept. Just like I did with tracing in the last iteration, this time it is wide events. The idea
