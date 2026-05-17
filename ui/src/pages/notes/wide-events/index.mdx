@@ -85,7 +85,7 @@ spans mimick log lines, except they are naturally associated with a particular r
 correlation id needed (i.e. it's the span id and the tooling handles it for you). Metrics are just
 hardcoded aggregations you do in the application which lends itself to very space-efficient storage
 in exchange for limited flexibility. With traces, you can generate any metrics you might care about
-after the fact.
+after the fact. Tracing is kind of a one-stop-shop for observability.
 
 So I set up an OpenTelemetry collector that would receive traces and store them in a
 [ClickHouse](/notes/clickhouse/) database. That part made a lot of sense, and instrumenting my
@@ -102,45 +102,50 @@ together:
 ![grafana screenshot](./grafana.png) ![grafana screenshot](./access-logs.png)
 ![grafana screenshot](./location-grafana.jpg)
 
-So this is great. Just a couple of problems. I don't like OpenTelemetry because I don't understand
-it.
+So this is great. Just a couple of problems:
 
-If this sounds hacky, that's because it is. Even small sensor readings that could be stored in,
-let's say, eight bytes or 16 bytes, blow up to a full database row of a rather complicated database
-schema needed for open telemetry tracing. But the simplicity of it is undeniable.
+**I don't like OpenTelemetry because I don't understand it.** I would prefer simpler protocols,
+something I could build myself in a pinch. The docs are a mess, too.
 
-But now at the time of writing, here I am again looking to simplify. The motivating factor here is
-that I am about to migrate my virtual private server from a Headsner machine to a MacBook Air living
-in my closet. So I'm starting to be very energy conscious. Looking at my utilization on my Headsner
-server, click house is constantly pegging the CPU at 40%. This was the initial reason I was once
-again looking towards a serverless model. An embedded system, an embedded database that causes no
-load on the system when there are no queries sound very appealing.
+**I don't like operating ClickHouse and Grafana on my server.** It's great at what it does, but I
+have a need for simpler software. I suffer from not-invented-here syndrome, ok?
+
+**I don't like the way the data is laid out in the DB.** I can put any data into the DB just by
+annotating a function with a span, no problem. But it's very inefficient at storing, say, an 8 byte
+sensor value. The fact that each span is its own row also makes aggregating data in all spans
+belonging to one request quite tedious.
+
+I'm craving simplicity.
 
 ## Act 4: Wide events with Parquet
 
--> events v2
+To get more background on this, please read the
+[preceeding note on Parquet files](/notes/duckdb-parquet/).
 
-[blog](https://jeremymorrell.dev/blog/a-practitioners-guide-to-wide-events/)
+Apparently other people have had the same thoughts. Some call it Observability 2.0, others wide
+events. I'll give you a brief rundown, for more details and a good list of further reading, please
+consult this [blog post](https://jeremymorrell.dev/blog/a-practitioners-guide-to-wide-events/).
 
-So I have been doing some reading again. And this time I've stumbled across the next interesting
-concept. Just like I did with tracing in the last iteration, this time it is wide events. The idea
-is very simple. As a backend system is working towards responding to a request, you build up
-properties in a context that you can ultimately at the time you respond to the request collect into
-a wide event and send towards the observability system. One thing to note is that this is
-significantly simpler than tracing. There are no sophisticated protocols, nothing. It's a simple
-chase and blob. The second thing to note is that you can still use this to generate any metrics that
-you would like. You can count requests per second, you can aggregate errors per user agent, whatever
-you want. You have all the data you could possibly want in these events.
+The idea is simple: For a "unit of useful work", whatever that means for your system, collect an
+object with relevant properties that you send off to your observability system upon completion of
+the work. For a web backend, the unit of work you care about most definitely is the handling of a
+request. But it may also be the execution of a scheduled task. So for the request, you would be
+tracking url, method, response status, headers, and all the usual suspects. But if you go all the
+way, you may even add current memory utilisation and other environmental factors.
 
-If the query engine is performant enough to pull out arbitrary fields from these JSON objects, we
-can put whatever data we want into that system and get nice dashboards. For instance, the IoT data
-that I want to ingest will also be simple JSON blocks that I store. The GPS data from my phone, the
-same.
+Fundamentally, this is not that different from traces when applied to a monolith. The data is just
+more easily queryable. And what I particularly appreciate: No need for sophisticated machinery.
 
-If you haven't already, you should check out the last note where you can read a bunch of my thought
-process towards this new system. To summarize, the idea is to radically simplify from an active
-database down to simple parquet files. At this point, I'm planning to use DocDB as the writer as
-well as the query engine to read and write those files. But ultimately, the docdb could easily be
-switched out for a different query engine at any point. The simplicity of the system is that there
-would be a single Rost service that accepts arbitrary JSOS and writes this directly to a parquet
-file. [parquet](/notes/duckdb-parquet/)
+The plan is (once again) simple: Build a system that accepts arbitrary JSON payloads. Regularly
+write the buffered payloads into Parquet files. That's it. That's the write path. To visualize the
+data, I'll build custom dashboards just like in Act 2. The storage engine enabling fast queries will
+be DuckDB. Instrumentation on the services should be rather straight-forward as well. All I need to
+do is keep track of some context throughout the handling of a request to write properties into.
+
+What I'm hoping to achieve with this approach: A simpler wire protocol that any service and device
+can directly talk - just JSON. A simpler data model, plain files for easier backup. A simpler
+operating model, no queries, no load. More powerful and elegant visualizations. The simplicity I'll
+gain of course comes at the cost of significant effort to build this system. But I'm more than happy
+to pay for it.
+
+Watch out for a project report on `events-v2` to see how this turns out.
