@@ -4,6 +4,7 @@ const notes = [
   "/",
   "/projects/",
   "/about/",
+  "/feedback/",
   "/notes/launchd/",
   "/notes/jour/",
   "/notes/reflective/",
@@ -36,9 +37,8 @@ const notes = [
   "/notes/passkeys/",
   "/notes/keys-in-pm/",
   "/notes/extension/",
-  "/epaper-dashboard/",
-  "/duckdb-parquet/",
-  "/feedback/",
+  "/notes/epaper-dashboard/",
+  "/notes/duckdb-parquet/",
 ];
 
 test.describe("Visual regression", () => {
