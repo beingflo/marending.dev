@@ -1,7 +1,7 @@
 ---
 title: 'Towards approachable observability with wide events'
 subtitle: 'A tragedy in four acts'
-date: '15 May 2026'
+date: '17 May 2026'
 link: '/notes/wide-events/'
 layout: 'src/layouts/NoteLayout.astro'
 draft: true
@@ -79,36 +79,35 @@ more off-the-shelf stack to ingest tracing data.
 
 ## Act 3: Tracing with ClickHouse
 
--> events
+When I learned about tracing - not just in the context of distributed systems - but the general
+concept of spans and events, I felt like I had hit the jackpot. Clearly, events you emit within
+spans mimick log lines, except they are naturally associated with a particular request. No
+correlation id needed (i.e. it's the span id and the tooling handles it for you). Metrics are just
+hardcoded aggregations you do in the application which lends itself to very space-efficient storage
+in exchange for limited flexibility. With traces, you can generate any metrics you might care about
+after the fact.
 
-[todo](/notes/clickhouse/)
+So I set up an OpenTelemetry collector that would receive traces and store them in a
+[ClickHouse](/notes/clickhouse/) database. That part made a lot of sense, and instrumenting my
+services with the excellent `tracing` crate is a walk in the park. Getting that sent off
+[not so much](/notes/otel/), though. But now the sensor and GPS data didn't fit the bill so cleanly
+anymore. I didn't want to have to send that data in a format the collector would understand, so I
+just built a small service I called [events](https://github.com/beingflo/events), that accepts that
+data and then simply declares a span with the received attributes. This way, the tracing machinery
+in _that_ service makes sure to get that data into ClickHouse (via the collector).
 
-[todo](/notes/otel/)
+So with this, I finally realized the dream of having one central system where all my data flows
+together:
 
-Since I started hosting my own side projects and making them available to the internet, I've craved
-introspection into those services. Not logs for debugging errors, I rarely get those (my Rust
-evangelism compels me to mention that a strict language really helps in cutting down runtime
-errors). Instead I mean operational indicators: How many visitors do I get on my website, which
-notes are most accessed? Which endpoints have high latency, does a particular user cause a
-disproportionate load? And most importantly, which Wordpress vulnerability is all the rage with the
-crawlers right now?
+![grafana screenshot](./grafana.png) ![grafana screenshot](./access-logs.png)
+![grafana screenshot](./location-grafana.jpg)
 
-After falling in love with the idea of having a consolidated system that simply treats traces and
-nothing else. I started looking around for the best technologies to handle this. And Clickhos showed
-up as a series contenter. So this is what I ended up doing. I instrument my service that is hosting
-this website using the Rust tracing crate. Then I set up an open telemetry collector for Clickhalls.
-And then I had my Rust service simply dump all of this tracing data to this collector, and the
-collector in turn writes to Clickhauz. At no point do I need to touch any database SDK to directly
-write to the database. Even the endpoints I expose out of an additional Rust service that I use to
-ingest the IoT and the GPS data, this service does not actually write directly to Clickholds. It
-simply uses the tracing crate to generate spans that go via the collector into the database.
-[clickhouse](/notes/clickhouse/) [tracing annoyance](/notes/otel/)
+So this is great. Just a couple of problems. I don't like OpenTelemetry because I don't understand
+it.
 
 If this sounds hacky, that's because it is. Even small sensor readings that could be stored in,
 let's say, eight bytes or 16 bytes, blow up to a full database row of a rather complicated database
 schema needed for open telemetry tracing. But the simplicity of it is undeniable.
-
-// Add image
 
 But now at the time of writing, here I am again looking to simplify. The motivating factor here is
 that I am about to migrate my virtual private server from a Headsner machine to a MacBook Air living
