@@ -20,7 +20,7 @@ this note.
 ## Act 1: Metrics and Prometheus
 
 A couple of years ago I got the itch to play around with embedded devices. I got myself an ESP32 and
-a CO2 sensor and got to work. With a little ellbow grease, I had the current CO2 concentration
+a CO2 sensor and got to work. With a little elbow grease, I had the current CO2 concentration
 displayed on a small seven segment display. Quickly, I graduated to wanting to store and chart this
 data.
 
@@ -39,9 +39,9 @@ watch this unfold in [this old note](/notes/performance/).
 
 Now I could have used my existing Prometheus setup to scrape Caddy for access metrics, but that
 didn't give me all the data I would have liked. I would need to have
-[dedicated service serving the site](/notes/rust-spa/) and exposing metrics. So this kicked off the
-thought process that I need a broader observability system than what Prometheus can give me. What
-was always clear to me, by the way, is that I wanted one unified system for metrics and service
+[a dedicated service serving the site](/notes/rust-spa/) and exposing metrics. So this kicked off
+the thought process that I need a broader observability system than what Prometheus can give me.
+What was always clear to me, by the way, is that I wanted one unified system for metrics and service
 monitoring.
 
 Thinking about this in hindsight, I also realize that there was another push factor: PromQL. I got
@@ -51,7 +51,7 @@ annoyed with learning a language with such a narrow use case.
 
 With all this in place, the time was ripe to venture out. And boy did I. The requirements for my
 next system were clear: It should accept arbitrary JSON payloads (like sensor readings, or access
-logs), store them efficiently and allow querying them in an ergonomical fashion.
+logs), store them efficiently and allow querying them in an ergonomic fashion.
 
 Notice the shift away from time series data to something more general, something that could cover
 multiple use cases. You can follow the journey from
@@ -81,7 +81,7 @@ more off-the-shelf stack to ingest tracing data.
 
 When I learned about tracing - not just in the context of distributed systems - but the general
 concept of spans and events, I felt like I had hit the jackpot. Clearly, events you emit within
-spans mimick log lines, except they are naturally associated with a particular request. No
+spans mimic log lines, except they are naturally associated with a particular request. No
 correlation id needed (i.e. it's the span id and the tooling handles it for you). Metrics are just
 hardcoded aggregations you do in the application which lends itself to very space-efficient storage
 in exchange for limited flexibility. With traces, you can generate any metrics you might care about
@@ -120,7 +120,7 @@ I'm craving simplicity.
 ## Act 4: Wide events with Parquet
 
 To get more background on this, please read the
-[preceeding note on Parquet files](/notes/duckdb-parquet/).
+[preceding note on Parquet files](/notes/duckdb-parquet/).
 
 Apparently other people have had the same thoughts. Some call it Observability 2.0, others wide
 events. I'll give you a brief rundown, for more details and a good list of further reading, please
