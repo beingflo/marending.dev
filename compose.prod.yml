@@ -1,6 +1,6 @@
 services:
   marending-dev:
-    image: "ghcr.io/beingflo/marending-dev:0.2.63"
+    image: "ghcr.io/beingflo/marending-dev:0.2.64"
     container_name: marending.dev
     env_file: ".env"
     ports:
