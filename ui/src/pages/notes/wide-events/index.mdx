@@ -14,8 +14,8 @@ not even attempting it and instead building infrastructure around your existing 
 that's a topic for therapy.
 
 Anyhow, I realized during my latest manic observability episode that I barely even remember how I
-got here. So for posterity, I'm outlining the history and motivations for all things metrics in this
-note.
+got here. So for posterity, I'm outlining the history and motivations for all my different phases in
+this note.
 
 ## Act 1: Metrics and Prometheus
 
@@ -30,53 +30,60 @@ internet accessible, I had to put a [push gateway](https://github.com/prometheus
 front of Prometheus to allow pushing data to the system, instead of having Prometheus scrape the
 metrics off the device regularly.
 
-Around this time I also built and deployed this website. Wanted to collect visitor statistics
-[here](/notes/performance/) thoughprocess to store it separately is what spawned the next iteration.
+Around this time I also built and deployed this website. I had seen a cool statistics section on
+another blog, where one could view how many page views the blog was getting and which pages were
+popular. Wanting the same for this site, I initially transformed the static site into one with a
+NodeJS backend just for this specific feature. After a short while I realized that I'm not happy
+with that and ripped it out again, planning on tracking visitors in an external service. You can
+watch this unfold in [this old note](/notes/performance/).
+
+Now I could have used my existing Prometheus setup to scrape Caddy for access metrics, but that
+didn't give me all the data I would have liked. I would need to have
+[dedicated service serving the site](/notes/rust-spa/) and exposing metrics. So this kicked off the
+thought process that I need a broader observability system than what Prometheus can give me. What
+was always clear to me, by the way, is that I wanted one unified system for metrics and service
+monitoring.
+
+Thinking about this in hindsight, I also realize that there was another push factor: PromQL. I got
+annoyed with learning a language with such a narrow use case.
 
 ## Act 2: Metrics with DuckDB
 
--> observatory
+With all this in place, the time was ripe to venture out. And boy did I. The requirements for my
+next system were clear: It should accept arbitrary JSON payloads (like sensor readings, or access
+logs), store them efficiently and allow querying them in an ergonomical fashion.
 
-At some point I got fed up by the limitations of Prometheus and Grafana and also the need to be to
-understand PromQL. I had these moments where I wanted to make a moderately sophisticated chart,
-let's say grouping, let's say averaging data into time buckets and then showing them, which I knew
-how to do in just about every language under the sun, but I just could not bring myself to learn
-PromQL, such a domain specific language for such a small problem.
+Notice the shift away from time series data to something more general, something that could cover
+multiple use cases. You can follow the journey from
+[musing on how to store that data](/notes/unstructured-data/) to
+[benchmarking suitable databases](/notes/sqlite-vs-duckdb/) in my notes.
 
-It was also an interesting engineering question how one could rebuild such a stack like Prometheus
-and Grafona. Namely, how do you store data efficiently for such a purpose, and then how do you query
-it efficiently. Further, how would you allow an end user to specify queries in the front end and
-have them securely and efficiently executed on the back end.
-[unstructured data](/notes/unstructured-data/)
+Coming away from PromQL, I was craving more expressive power for querying and transforming data. So
+I started looking into building [a WebAssembly plugin system](/notes/wasm-benchmark/) to safely
+execute efficient transformations server-side. For visualization, I was not satisfied with Grafana
+anymore, I wanted to go custom as well. So I built a SolidJS frontend with
+[responsive plots](/notes/responsive-plots/) using Observable Plot. All this started taking shape
+under the name [observatory](https://github.com/beingflo/observatory).
 
-It was for this purpose that I started looking into WebAssembly as an isolation mechanism to run
-untrusted code from the user on the backend. [wasm](/notes/wasm-benchmark/)
+![charts](./charts.jpg)
 
-[duckdb](/notes/sqlite-vs-duckdb/) I quickly landed on DocDB as a storage engine as that proved to
-be significantly faster than SQLite, and I was really in a downsizing mood here as I tried to get
-away from the client server approach of Prometheus and Grafona. So ultimately I ended up building my
-own custom stack here that was accepting arbitrary JSON input from systems, and I was also building
-a custom frontend in Solid.js to show this data. The approach of using WebAssembly that the user
-could run inside the browser, or the user could write inside the browser and would get compiled and
-run on the server ultimately never took flight. But it was an interesting excursion, and I learned a
-bunch doing it.
+You might already be guessing that this would not go so well. Indeed, the sensor readings and also
+GPS location data from my phone were handled fine, but I was missing a puzzle piece on how access
+logs fit in. How would I instrument my services in such a way as to get the data into observatory in
+a queryable form? I found the answer to that question in the form of
+[traces](https://opentelemetry.io/docs/concepts/signals/traces/). At first I wanted to build a
+tracing collector into observatory, but that proved to be difficult. Instead, I turned towards a
+more off-the-shelf stack to ingest tracing data.
 
-// Add image
-
-At this point, I was still only using this application for storing metrics as well as GPS location
-data. I was still missing a comprehensive solution for access logs from my website. And in the
-process of reading into this and thinking about what kind of solution I could come up with here, I
-stumbled across tracing. Now at this point it was my belief that tracing could replace all three
-traditional pillars of observability, in particular logs are simply events emitted within some span,
-and metrics can be generated from attributes encompassed in tracing events. So at this point, I
-started looking into building my own open telemetry collector such that I could hook into the
-existing ecosystem around tracing. This proved to be rather difficult as the documentation around
-open telemetry is severely lacking in my opinion. This line of thinking ultimately led me down
-towards the next iteration of observability.
+![location](./location.jpg)
 
 ## Act 3: Tracing with ClickHouse
 
 -> events
+
+[todo](/notes/clickhouse/)
+
+[todo](/notes/otel/)
 
 Since I started hosting my own side projects and making them available to the internet, I've craved
 introspection into those services. Not logs for debugging errors, I rarely get those (my Rust
