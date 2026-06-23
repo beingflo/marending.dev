@@ -1,0 +1,56 @@
+---
+title: 'Asahi Linux on a Macbook Air M1'
+subtitle: 'Setting up a headless server'
+date: '23 Jun 2026'
+link: '/notes/asahi-setup/'
+layout: 'src/layouts/NoteLayout.astro'
+draft: false
+---
+
+I've been wanting to move my server from a VPS hosted at Hetzner to my own hardware for a while.
+After scouring the internet for suitable low-power devices, think Raspberry Pi but more powerful, I
+landed on a weird idea: What if I just repurpose my Macbook Air M1 as a server? It's still a super
+powerful machine and sips barely any power. After some research it seems like this should be well
+possible thanks to the Asahi Linux project. So here we go.
+
+I'll use this chance to revamp my [server setup](/notes/server-setup/) _again_, but that's not the
+focus of this note. Here I just want to run through the fundamental software tweaks necessary to
+make this device capable of acting as a server. All the other basic hardening etc. that should be
+applied to any server I leave out as that is better found in a serious server setup guide.
+
+<br />
+
+**Step 1**: Install Asahi from macOS as described in [their documentation](https://asahilinux.org/).
+
+**Step 2**: Ensure device doesn't sleep when lid is closed.
+
+```bash
+# /etc/systemd/logind.conf.d/lid-ignore.conf
+[Login]
+HandleLidSwitch=ignore
+HandleLidSwitchDocked=ignore
+HandleLidSwitchExternalPower=ignore
+```
+
+**Step 3**: Ensure screen goes off when lid is closed. Don't want to waste power.
+
+`sudo grubby --update-kernel=ALL --args="consoleblank=30"`
+
+**Step 4**: Set battery charge limit max 80%. Let's keep the battery healthy and avoid it exploding
+in my closet.
+
+`echo 'SUBSYSTEM=="power_supply", KERNEL=="macsmc-battery", ATTR{charge_control_end_threshold}="80"' | sudo tee /etc/udev/rules.d/10-battery.rules`
+
+## Voilà
+
+With those basic tweaks I can plug my Macbook into power and Ethernet and set it aside. It acts as a
+neat little arm64 server while sipping around 1.75 Watts at idle. _Great success_.
+
+## Known issues
+
+One issue I have is that my USB-C to Ethernet adapter doesn't get listed when the server reboots. I
+have to physically plug it in again for it to be picked up. None of the common workarounds work for
+me. I _have_ tried a different dongle, which seems to work. That one is however slower and seems to
+consume about 3 Watts just by itself. It also gets pretty warm just sitting there. So I'll just live
+with having to be home when I want to reboot the machine after updates. That'll do for my purposes.
+If it turns out to be annoying I may go hunting for other adapters.
