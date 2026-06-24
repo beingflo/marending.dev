@@ -4,19 +4,21 @@ import { Figure } from 'src/components/Figure';
 import * as Plot from '@observablehq/plot';
 
 let results = [
-	{ arch: 'x86', threads: 1, data: 55666885 },
-	{ arch: 'x86', threads: 4, data: 26593756 },
-	{ arch: 'x86', threads: 8, data: 27013207 },
-	{ arch: 'arm', threads: 1, data: 45703823 },
-	{ arch: 'arm', threads: 4, data: 61357548 },
-	{ arch: 'arm', threads: 8, data: 73445155 },
+	{ arch: 'M1', threads: 1, data: 7580 },
+	{ arch: 'M1', threads: 2, data: 12811 },
+	{ arch: 'M1', threads: 4, data: 21124 },
+	{ arch: 'M1', threads: 8, data: 7433 },
+	{ arch: 'CAX21', threads: 1, data: 4244 },
+	{ arch: 'CAX21', threads: 2, data: 3484 },
+	{ arch: 'CAX21', threads: 4, data: 5755 },
+	{ arch: 'CAX21', threads: 8, data: 5404 },
 ];
 ---
 
 <Figure caption="Figure 2. sysbench memory benchmark results">
 	<Chart
 		options={{
-			x: { grid: true, label: '→ events' },
+			x: { grid: true, label: '→ MiB/s' },
 			y: { inset: 2, label: null },
 			marks: [
 				Plot.frame(),
@@ -26,7 +28,7 @@ let results = [
 					fy: 'threads',
 				}),
 				Plot.text(results, {
-					text: (d) => `${Math.floor(d.data / 1000000)} M`,
+					text: (d) => `${d.data}`,
 					y: 'arch',
 					x: 'data',
 					textAnchor: 'end',

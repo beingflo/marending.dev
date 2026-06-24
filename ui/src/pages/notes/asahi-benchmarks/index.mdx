@@ -1,5 +1,5 @@
 ---
-title: 'Apple M1 vs Hetzner CPX31'
+title: 'Apple M1 vs Hetzner CAX21'
 subtitle: 'Benchmarking homeserver hardware'
 date: '24 Jun 2026'
 link: '/notes/asahi-benchmarks/'
@@ -7,4 +7,35 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: true
 ---
 
-test
+import CPUResults from './CPUResults.astro';
+import MemoryResults from './MemoryResults.astro';
+import FileIOResults from './FileIOResults.astro';
+import RustCompile from './RustCompile.astro';
+
+CAX21: 4 vCPU, 8 GB RAM
+
+M1: 4 perf cores, 4 efficiency cores, 16 GB RAM
+
+```
+sysbench cpu --threads=x run
+```
+
+<CPUResults />
+
+```
+sysbench memory --threads=x run
+```
+
+<MemoryResults />
+
+```
+sysbench fileio --threads=x --file-test-mode=seqwr run
+```
+
+<FileIOResults />
+
+```
+time cargo build --release
+```
+
+<RustCompile />

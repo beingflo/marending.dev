@@ -1,0 +1,34 @@
+---
+import Chart from 'src/components/Chart.astro';
+import { Figure } from 'src/components/Figure';
+import * as Plot from '@observablehq/plot';
+
+let results = [
+	{ arch: 'M1', data: 57 },
+	{ arch: 'CAX21', data: 190 },
+];
+---
+
+<Figure caption="Figure 4. Compilation time of rust application">
+	<Chart
+		options={{
+			x: { grid: true, label: '→ seconds' },
+			y: { inset: 2, label: null },
+			marks: [
+				Plot.frame(),
+				Plot.barX(results, {
+					x: 'data',
+					y: 'arch',
+				}),
+				Plot.text(results, {
+					text: (d) => `${d.data}`,
+					y: 'arch',
+					x: 'data',
+					textAnchor: 'end',
+					dx: -3,
+					fill: 'white',
+				}),
+			],
+		}}
+	/>
+</Figure>

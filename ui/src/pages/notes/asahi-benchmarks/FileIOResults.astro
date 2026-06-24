@@ -1,0 +1,42 @@
+---
+import Chart from 'src/components/Chart.astro';
+import { Figure } from 'src/components/Figure';
+import * as Plot from '@observablehq/plot';
+
+let results = [
+	{ arch: 'M1', threads: 1, data: 847 },
+	{ arch: 'M1', threads: 2, data: 1163 },
+	{ arch: 'M1', threads: 4, data: 1061 },
+	{ arch: 'M1', threads: 8, data: 1304 },
+	{ arch: 'CAX21', threads: 1, data: 114 },
+	{ arch: 'CAX21', threads: 2, data: 165 },
+	{ arch: 'CAX21', threads: 4, data: 236 },
+	{ arch: 'CAX21', threads: 8, data: 299 },
+];
+---
+
+<Figure caption="Figure 3. sysbench fileio benchmark results (--file-test-mode=seqwr)">
+	<Chart
+		options={{
+			x: { grid: true, label: '→ MiB/s written' },
+			y: { inset: 2, label: null },
+			marks: [
+				Plot.frame(),
+				Plot.barX(results, {
+					x: 'data',
+					y: 'arch',
+					fy: 'threads',
+				}),
+				Plot.text(results, {
+					text: (d) => `${Math.floor(d.data)}`,
+					y: 'arch',
+					x: 'data',
+					textAnchor: 'end',
+					dx: -3,
+					fill: 'white',
+					fy: 'threads',
+				}),
+			],
+		}}
+	/>
+</Figure>
