@@ -5,9 +5,13 @@ ENV TZ="Europe/Zurich"
 
 COPY ui/package.json ui/package-lock.json ./
 
-RUN npm install
+RUN --mount=type=cache,target=/root/.npm \
+    --mount=type=cache,target=/usr/src/marending-dev/ui/node_modules \
+    npm install
 COPY ./ui/ ./
-RUN npm run build
+RUN --mount=type=cache,target=/usr/src/marending-dev/ui/node_modules \
+    npm run build
+
 # Compress static assets
 RUN find dist -type f \( -name "*.html" -o -name "*.js" -o -name "*.css" -o -name "*.json" -o -name "*.svg" \) \
   -exec gzip -9 -k {} \; \
