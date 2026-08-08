@@ -12,14 +12,14 @@ import MemoryResults from './MemoryResults.astro';
 import FileIOResults from './FileIOResults.astro';
 import RustCompile from './RustCompile.astro';
 
-I'm in the process of migrating my VPS over to a [Macbook Air M1 running Asahi](/notes/asahi-setup/)
+I'm in the process of migrating my VPS over to a [MacBook Air M1 running Asahi](/notes/asahi-setup/)
 in my closet. Before I decommission the VPS though, I'm curious to see what the performance
-difference is. So here are a couple of non-representative benchmarks comparing the M1 to an Ampere
+difference is. So here are a couple of non-representative benchmarks comparing the M1 to an Ampere-
 based CAX21 at Hetzner.
 
 By the way, I've already benchmarked these Arm-based Hetzner machines before.
 [Last time](notes/vps-benchmarks/), I was in the process of migrating from an x86 machine to the
-CAX31. In the meantime I've downgraded to the CAX21, that's why these numbers don't exactly match
+CAX31. In the meantime, I've downgraded to the CAX21, that's why these numbers don't exactly match
 up.
 
 Anyway, here are the specs of the two machines:
@@ -29,7 +29,7 @@ CAX21: **4 vCPU, 8 GB RAM**
 M1: **4 performance cores, 4 efficiency cores, 16 GB RAM**
 
 Note that we're comparing a VPS with noisy neighbors and modest production load to an idle M1. Also,
-the tests are rather short, so the impact of thermal throttling on the passively cooled M1 are not
+the tests are rather short, so the impact of thermal throttling on the passively cooled M1 is not
 visible. I did say those will be non-representative benchmarks.
 
 ```
@@ -60,7 +60,7 @@ time cargo build --release
 
 ## Verdict
 
-It's simultaneously unsurpring that a dedicated M1 is more performance than a tiny slice of a server
-CPU, and yet I'm always blown away what this little 6 year old machine can do. Needless to say, this
+It's simultaneously unsurprising that a dedicated M1 is more performance than a tiny slice of a server
+CPU, and yet I'm always blown away by what this little 6-year-old machine can do. Needless to say, this
 migration will be a nice little upgrade. Although I'm more excited about the energy efficiency of
 the Air than the raw power.
