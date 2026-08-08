@@ -41,6 +41,7 @@ const notes = [
   "/notes/duckdb-parquet/",
   "/notes/wide-events/",
   "/notes/asahi-setup/",
+  "/notes/asahi-benchmarks/",
 ];
 
 test.describe("Visual regression", () => {
