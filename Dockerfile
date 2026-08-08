@@ -13,7 +13,7 @@ RUN --mount=type=cache,target=/usr/src/marending-dev/ui/node_modules \
     npm run build
 
 # Compress static assets
-RUN find dist -type f \( -name "*.html" -o -name "*.js" -o -name "*.css" -o -name "*.json" -o -name "*.svg" \) \
+RUN find dist -type f \( -name "*.html" -o -name "*.js" -o -name "*.css" -o -name "*.json" -o -name "*.svg" -o -name "*.xml" -o -name "*.txt" \) \
   -exec gzip -9 -k {} \; \
   -exec brotli -q 11 -k {} \;
 

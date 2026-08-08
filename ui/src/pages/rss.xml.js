@@ -20,6 +20,11 @@ function articleContent(post) {
 	return main[1]
 		.replace(/<a[^>]*href="\/"[^>]*>← back<\/a>/g, '')
 		.replace(/<script[\s\S]*?<\/script>/g, '')
+		.replace(/<svg[\s\S]*?<\/svg>/g, '<p><em>[chart — see article]</em></p>')
+		.replace(/<style[\s\S]*?<\/style>/g, '')
+		.replace(/<\/?span[^>]*>/g, '')
+		.replace(/ style="[^"]*"/g, '')
+		.replace(/ class="[^"]*"/g, '')
 		.trim();
 }
 

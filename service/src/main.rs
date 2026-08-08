@@ -2,7 +2,7 @@ use std::{env, time::Duration};
 
 use axum::{
     body::Body,
-    http::{Request, Response},
+    http::{header::CACHE_CONTROL, HeaderValue, Request, Response},
     Router,
 };
 use dotenv::dotenv;
@@ -12,6 +12,7 @@ use tokio::signal;
 use tower_http::{
     classify::ServerErrorsFailureClass,
     services::{ServeDir, ServeFile},
+    set_header::SetResponseHeaderLayer,
     trace::TraceLayer,
 };
 use tracing::{error, info, Span};
@@ -23,15 +24,13 @@ use uuid::Uuid;
 pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenv().ok();
 
-    let tracer = opentelemetry_otlp::SpanExporter::builder()
-        .with_http()
-        .build()?;
-
-    let provider = SdkTracerProvider::builder()
-        .with_batch_exporter(tracer)
-        .build();
-
-    global::set_tracer_provider(provider.clone());
+    let provider = match init_telemetry() {
+        Ok(provider) => Some(provider),
+        Err(error) => {
+            eprintln!("OpenTelemetry unavailable, continuing without it: {error}");
+            None
+        }
+    };
 
     // Set up tracing with both console output and OpenTelemetry
     tracing_subscriber::registry()
@@ -39,24 +38,47 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
             tracing_subscriber::fmt::layer()
                 .with_filter(tracing_subscriber::filter::LevelFilter::WARN),
         )
-        .with(
+        .with(provider.as_ref().map(|provider| {
             OpenTelemetryLayer::new(provider.tracer("marending-service"))
-                .with_filter(tracing_subscriber::filter::LevelFilter::INFO),
-        )
+                .with_filter(tracing_subscriber::filter::LevelFilter::INFO)
+        }))
         .init();
 
-    let Some((_, port)) = env::vars().find(|v| v.0.eq("SERVE_PORT")) else {
-        error!("Port not present in environment");
+    let Ok(port) = env::var("SERVE_PORT") else {
+        error!("SERVE_PORT not present in environment");
+        panic!()
+    };
+    let Ok(port) = port.parse::<u16>() else {
+        error!(message = "SERVE_PORT is not a valid port", port);
         panic!()
     };
 
-    let serve_dir = ServeDir::new("ui")
-        .precompressed_gzip()
-        .precompressed_br()
-        .not_found_service(ServeFile::new("ui/index.html"));
+    // Hashed asset names never change contents, everything else must revalidate.
+    let assets = Router::new()
+        .fallback_service(
+            ServeDir::new("ui/_astro")
+                .precompressed_gzip()
+                .precompressed_br(),
+        )
+        .layer(SetResponseHeaderLayer::overriding(
+            CACHE_CONTROL,
+            HeaderValue::from_static("public, max-age=31536000, immutable"),
+        ));
+    let pages = Router::new()
+        .fallback_service(
+            ServeDir::new("ui")
+                .precompressed_gzip()
+                .precompressed_br()
+                .not_found_service(ServeFile::new("ui/404.html")),
+        )
+        .layer(SetResponseHeaderLayer::overriding(
+            CACHE_CONTROL,
+            HeaderValue::from_static("public, max-age=0, must-revalidate"),
+        ));
+
     let app = Router::new()
-        .nest_service("/", serve_dir.clone())
-        .fallback_service(serve_dir)
+        .nest_service("/_astro", assets)
+        .fallback_service(pages)
         .layer(
             TraceLayer::new_for_http()
                 .make_span_with(|_request: &Request<Body>| {
@@ -106,7 +128,25 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .await
         .unwrap();
 
+    if let Some(provider) = provider {
+        provider.shutdown()?;
+    }
+
     Ok(())
+}
+
+fn init_telemetry() -> Result<SdkTracerProvider, Box<dyn std::error::Error>> {
+    let exporter = opentelemetry_otlp::SpanExporter::builder()
+        .with_http()
+        .build()?;
+
+    let provider = SdkTracerProvider::builder()
+        .with_batch_exporter(exporter)
+        .build();
+
+    global::set_tracer_provider(provider.clone());
+
+    Ok(provider)
 }
 
 async fn shutdown_signal() {
