@@ -9,7 +9,10 @@
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "@playwright/test": "^1.57.0",
+    "@playwright/test": "^1.62.1",
     "@types/node": "^25.0.3"
+  },
+  "allowScripts": {
+    "fsevents@2.3.2": true
   }
 }
