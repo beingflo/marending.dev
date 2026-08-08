@@ -1,19 +1,38 @@
 ---
-import { Page } from '../components';
-import Layout from '../layouts/MainLayout.astro';
+import Layout from '../layouts/BasicLayout.astro';
+import { Note } from 'src/components';
+import 'src/typography.css';
 ---
 
-<Layout>
-	<Page>
-		<div class="pt-4">
-			<h1 class="text-2xl pb-4">Not found</h1>
-			<p>There's nothing at this address.</p>
-			<p class="pt-4">
-				<a
-					class="underline"
-					href="/">← back to notes</a
-				>
-			</p>
-		</div>
-	</Page>
+<Layout
+	title="Not found"
+	description="Page not found">
+	<a
+		class="not-prose text-sm font-light md:text-md hidden xl:block absolute mt-8"
+		href="/"
+		>← back</a
+	>
+	<main>
+		<Note>
+			<a
+				class="not-prose text-sm font-light md:text-md xl:hidden block mb-8"
+				href="/"
+				>← back</a
+			>
+			<h1
+				class="not-prose text-4xl md:text-4xl mb-2 text-black dark:text-white font-semibold text-left">
+				Not found
+			</h1>
+			<h2 class="not-prose text-lg md:text-xl font-normal text-left">
+				There's nothing at this address.
+			</h2>
+		</Note>
+	</main>
+	<footer>
+		<a
+			class="fixed p-2 bottom-0 right-2 text-xs font-light text-gray-600 dark:text-gray-200"
+			href="/feedback/">
+			feedback
+		</a>
+	</footer>
 </Layout>

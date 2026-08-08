@@ -129,7 +129,9 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .unwrap();
 
     if let Some(provider) = provider {
-        provider.shutdown()?;
+        if let Err(error) = provider.shutdown() {
+            eprintln!("Failed to flush spans on shutdown: {error}");
+        }
     }
 
     Ok(())
