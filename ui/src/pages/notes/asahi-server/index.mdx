@@ -1,0 +1,26 @@
+---
+title: 'The new / old way of hosting software'
+subtitle: 'Further simplifying my setup'
+date: '02 Sep 2026'
+link: '/notes/asahi-server/'
+layout: 'src/layouts/NoteLayout.astro'
+draft: true
+---
+
+[previous docker remote setup](/notes/server-setup/)
+
+[asahi setup](/notes/asahi-setup/)
+
+## What I didn't like
+
+- dependency on github container registry
+- docker root containers
+- docker remotes are magic
+- containerized Caddy
+- secret management
+
+## Goals
+
+- simple to understand / debug
+- secure (non-root containers)
+- private network (wireguard)
