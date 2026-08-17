@@ -7,7 +7,7 @@ layout: 'src/layouts/NoteLayout.astro'
 draft: false
 ---
 
-import { Details, Warn } from 'src/components';
+import { Details, Warn, Hint } from 'src/components';
 import GPS_results from './GPS_results.astro';
 import Marending_results from './marending_results.astro';
 import Clickhouse_results from './clickhouse_results.astro';
@@ -1162,3 +1162,22 @@ simultaneously write files periodically and query across different files?
 
 Being terrible at leaving my side-projects be comes with plenty of downsides, but I do enjoy that
 the iteration tends to result in leaner and simpler systems.
+
+<Hint>
+    Update from August 2026:
+
+    I just read the [DuckDB 2.0 preview blog post](https://duckdb.org/2026/08/17/duckdb-20-highlights). In
+    there they mention that Parquet becomes a first class citizien, and excitedly, that JSON is going to be
+    backed by Variant some time after 2.0. So JSON is probably the way to go: At first with pretty good
+    performance, and then a sudden jump as it becomes backed by Variant.
+
+    I was reinvigorated to check if in the preview version of DuckDB 2.0, maybe my benchmark queries would now
+    be faster. But unfortunately it was not meant to be. Instead, I had Deepseek v4 flash experiment around
+    to find the issue, and find it did. Apparently projection pushdown in array types isn't implemented yet.
+    Those are anyway just an artifact from mapping the OpenTelemetry span attributes (an array) directly
+    to the variant type. After a quick cleanup of unifying the objects inside the array into one big object, I
+    was delighted to find performance within a factor of 2 of the "materialized" version. Great success.
+
+    So in my wide-event vision, this problem would not occur anyway.
+
+</Hint>
