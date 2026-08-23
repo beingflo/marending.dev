@@ -1,0 +1,101 @@
+---
+title: 'Self hosting maps'
+subtitle: 'PMTiles are delightfully boring'
+date: '23 Aug 2026'
+link: '/notes/pmtiles/'
+layout: 'src/layouts/NoteLayout.astro'
+draft: true
+---
+
+For an [upcoming project](/notes/wide-events/) of mine, I'm going to need a world map in a web app
+to display location data. I've done that before using [mapbox](https://www.mapbox.com/) as the tile
+server, however this time I want to serve the map data myself. A couple of years ago I stumbled
+across [PMTiles](https://github.com/protomaps/pmtiles), at the time a rather novel approach to
+simplify map serving. I didn't have a need for it, so it just sat there in the back of my mind as
+something to take a closer look at in the future. Now the time has come, so in this note I'm going
+to play around with PMTiles and see if they fit my needs.
+
+## Background
+
+First a short explainer: PMTiles is a file format that is specially crafted such that individual
+mapping tiles can be retrieved using HTTP Range requests. So such a file can be chucked onto S3 or
+served from an HTTP server like Caddy and a suitable JS library can immediately start retrieving the
+needed subset of data for the current map location and zoom level from that one file.
+
+Compare that to a tiling server that has mapping data on disk but needs a runtime component to serve
+that data in the appropriate format, and the advantage is clear. Mind you, that comes with some
+disadvantages. For example, PMTiles are read-only, so updating a part of the map in place is not
+possible. Protomaps has a good
+[article about the tradeoffs](https://protomaps.com/blog/you-might-not-want-pmtiles/) for further
+reading.
+
+## Boring technology
+
+For my usage, I'm going to prepare a map file of my liking manually and serve it from my server with
+Caddy. If I want to update my map with latest OpenStreetMap changes, I just manually recreate the
+map and that's it. It's delightful. No additional moving parts to manage and operate. More
+technologies should be like this.
+
+## Creating PMTiles
+
+With the musings out of the way, let's get practical. First, we need to find the latest _build_ at
+[this page on Protomaps](https://maps.protomaps.com/builds/). This is essentially a file that
+contains all OpenStreetMap data of the whole planet. We don't want to download that, just note the
+filename.
+
+Next, using the [PMTiles CLI](https://github.com/protomaps/go-pmtiles), we can generate our own
+PMTiles file of the world with a maximum zoom level. This limits the level of detail when zooming
+into the map too closely, at a much lower file size.
+
+```
+./pmtiles extract https://build.protomaps.com/20260823.pmtiles world.pmtiles --maxzoom=4
+```
+
+This gives us a file of 6 MB. Super small, but also not so detailed.
+
+Next, let's try to create a file with high fidelity but only of some region. For this we need to
+have a bounding box that encompasses a region we care about. To avoid manually juggling coordinates,
+[bbox finder](https://bboxfinder.com/) allows easy drawing of boxes.
+
+Then, we can generate a full-fidelity extract of data in this region like so:
+
+```
+./pmtiles extract https://build.protomaps.com/20260823.pmtiles zurich.pmtiles --bbox=8.497925,47.339055,8.588905,47.395444
+```
+
+This results in a 6.3 MB file. Viewing it on [pmtiles.io](https://pmtiles.io/) reveals all details
+in Zurich, but a complete lack of data outside the bounding box.
+
+What's really nice, is that we can now combine the two files into one that has the advantages of
+both. This only works for disjoint files though. So far, we have the whole world up to zoom level 4,
+but we have Zurich at all zoom levels. To make it work, we need to get Zurich only from zoom level 5
+and up:
+
+```
+./pmtiles extract zurich.pmtiles zurich-hi.pmtiles --minzoom=5
+```
+
+Resulting in a slightly smaller file at 5.8 MB. Now, the two files are non-overlapping and can be
+combined like so:
+
+```
+./pmtiles merge world.pmtiles zurich-hi.pmtiles combined.pmtiles
+```
+
+This results in a 12 MB file that contains a high level of detail around Zurich and a low fidelity
+basemap of the rest. Neat!
+
+There is one problem with this based on the renderer: In the `world.pmtiles` basemap file, I can zoom
+past the `maxzoom`, and I still see a low fidelity map. With the combined map however, past
+`maxzoom` the map turns black in places other than Zurich. This is due to the combined file
+declaring `maxzoom: 15` in the header, so the map renderer expects zoom level 15 everywhere, and if
+it can't find it, renders black.
+
+To fix this, you can point the JS rendering lib at two sources with different zoom levels, both
+pointing to the same file.
+
+## Verdict
+
+It's truly as simple and easy as it says on the box. Consider me impressed. For my purposes, I may
+explore automatically determining a set of high-fidelity bounding boxes to merge into the ultimate
+file based on location data. But that may well be overengineering.
