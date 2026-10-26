@@ -1,56 +1,39 @@
-use std::{env, time::Duration};
+mod wide;
+
+use std::env;
 
 use axum::{
-    body::Body,
-    http::{header::CACHE_CONTROL, HeaderValue, Request, Response},
-    Router,
+    http::{header::CACHE_CONTROL, HeaderValue},
+    middleware, Router,
 };
 use dotenv::dotenv;
-use opentelemetry::{global, trace::TracerProvider};
-use opentelemetry_sdk::trace::SdkTracerProvider;
 use tokio::signal;
 use tower_http::{
-    classify::ServerErrorsFailureClass,
+    catch_panic::CatchPanicLayer,
     services::{ServeDir, ServeFile},
     set_header::SetResponseHeaderLayer,
-    trace::TraceLayer,
 };
-use tracing::{error, info, Span};
-use tracing_opentelemetry::OpenTelemetryLayer;
-use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, Layer};
-use uuid::Uuid;
 
 #[tokio::main]
 pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenv().ok();
 
-    let provider = match init_telemetry() {
-        Ok(provider) => Some(provider),
-        Err(error) => {
-            eprintln!("OpenTelemetry unavailable, continuing without it: {error}");
-            None
-        }
-    };
-
-    // Set up tracing with both console output and OpenTelemetry
-    tracing_subscriber::registry()
-        .with(
-            tracing_subscriber::fmt::layer()
-                .with_filter(tracing_subscriber::filter::LevelFilter::WARN),
-        )
-        .with(provider.as_ref().map(|provider| {
-            OpenTelemetryLayer::new(provider.tracer("marending-service"))
-                .with_filter(tracing_subscriber::filter::LevelFilter::INFO)
-        }))
-        .init();
-
     let Ok(port) = env::var("SERVE_PORT") else {
-        error!("SERVE_PORT not present in environment");
-        panic!()
+        eprintln!("SERVE_PORT not present in environment");
+        std::process::exit(1);
     };
     let Ok(port) = port.parse::<u16>() else {
-        error!(message = "SERVE_PORT is not a valid port", port);
-        panic!()
+        eprintln!("SERVE_PORT is not a valid port: {port}");
+        std::process::exit(1);
+    };
+
+    let exporter = match wide::Exporter::from_env() {
+        Ok(exporter) => exporter,
+        Err(error) => {
+            eprintln!("wide: {error}");
+            eprintln!("wide: request event export is disabled");
+            None
+        }
     };
 
     // Hashed asset names never change contents, everything else must revalidate.
@@ -76,79 +59,34 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
             HeaderValue::from_static("public, max-age=0, must-revalidate"),
         ));
 
-    let app = Router::new()
+    let mut app = Router::new()
         .nest_service("/_astro", assets)
         .fallback_service(pages)
-        .layer(
-            TraceLayer::new_for_http()
-                .make_span_with(|_request: &Request<Body>| {
-                    let request_id = Uuid::new_v4().to_string();
-                    tracing::info_span!("http-request", %request_id)
-                })
-                .on_request(|request: &Request<Body>, _span: &Span| {
-                    info!(
-                        message = "request",
-                        request = request.method().as_str(),
-                        uri = request.uri().path().to_string(),
-                        referrer = request
-                            .headers()
-                            .get("referer")
-                            .and_then(|v| v.to_str().ok())
-                            .unwrap_or(""),
-                        user_agent = request
-                            .headers()
-                            .get("user-agent")
-                            .and_then(|v| v.to_str().ok())
-                            .unwrap_or("")
-                    )
-                })
-                .on_response(
-                    |response: &Response<Body>, latency: Duration, _span: &Span| {
-                        info!(
-                            message = "response_status",
-                            status = response.status().as_u16(),
-                            latency = latency.as_nanos()
-                        )
-                    },
-                )
-                .on_failure(
-                    |error: ServerErrorsFailureClass, _latency: Duration, _span: &Span| {
-                        error!(message = "error", error = error.to_string())
-                    },
-                ),
-        );
+        // Inside the wide-event layer: a panic is turned into a 500 while the
+        // request's event is still in scope, so the panic message can be added
+        // to it before the response is recorded.
+        .layer(CatchPanicLayer::custom(wide::panic_response));
 
-    let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", port))
-        .await
-        .unwrap();
-
-    info!(message = "Starting server", port);
-    axum::serve(listener, app)
-        .with_graceful_shutdown(shutdown_signal())
-        .await
-        .unwrap();
-
-    if let Some(provider) = provider {
-        if let Err(error) = provider.shutdown() {
-            eprintln!("Failed to flush spans on shutdown: {error}");
-        }
+    if let Some(exporter) = &exporter {
+        app = app.layer(middleware::from_fn_with_state(
+            exporter.sink(),
+            wide::middleware,
+        ));
     }
 
+    let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{port}")).await?;
+    eprintln!("marending-dev: listening on 0.0.0.0:{port}");
+    let served = axum::serve(listener, app)
+        .with_graceful_shutdown(shutdown_signal())
+        .await;
+
+    // Flush even if the server itself stopped with an error.
+    if let Some(exporter) = exporter {
+        exporter.shutdown().await;
+    }
+    served?;
+
     Ok(())
-}
-
-fn init_telemetry() -> Result<SdkTracerProvider, Box<dyn std::error::Error>> {
-    let exporter = opentelemetry_otlp::SpanExporter::builder()
-        .with_http()
-        .build()?;
-
-    let provider = SdkTracerProvider::builder()
-        .with_batch_exporter(exporter)
-        .build();
-
-    global::set_tracer_provider(provider.clone());
-
-    Ok(provider)
 }
 
 async fn shutdown_signal() {
@@ -166,12 +104,15 @@ async fn shutdown_signal() {
             .await;
     };
 
+    #[cfg(not(unix))]
+    let terminate = std::future::pending::<()>();
+
     tokio::select! {
         _ = ctrl_c => {
-            info!("Ctrl+C received, shutting down")
+            eprintln!("marending-dev: Ctrl+C received, shutting down")
         },
         _ = terminate => {
-            info!("SIGTERM received, shutting down")
+            eprintln!("marending-dev: SIGTERM received, shutting down")
         },
     }
 }
