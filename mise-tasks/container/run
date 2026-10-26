@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#MISE description="Run the locally built image on 127.0.0.1:3004"
+#MISE description="Run the locally built image on 127.0.0.1:3000"
 set -euo pipefail
 
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
@@ -8,12 +8,39 @@ cd "$root"
 source "$root/mise-tasks/lib/env.sh"
 
 image="${MARENDING_IMAGE:-localhost/marending:current}"
+host_port="${MARENDING_LOCAL_PORT:-3000}"
+# Local-only endpoint: the Acta dev server runs on the host without auth. This
+# is deliberately not read from .deploy.env, which holds the production name
+# `acta` (resolvable only on acta-net). Override with MARENDING_ACTA_URL or with
+# an extra podman argument after `--`, e.g. `-- -e ACTA_URL=http://...`.
+acta_url="${MARENDING_ACTA_URL:-http://host.containers.internal:8080}"
 
 command -v podman >/dev/null || die "podman not found"
 podman image exists "$image" || die "image ${image} not found; run: mise run deploy:build"
 
-# Extra arguments go before the image, so callers can pass e.g.
-#   mise run container:run -- -e ACTA_URL=http://host.containers.internal:8080
+args=(
+    -e "ACTA_URL=${acta_url}"
+    -e ACTA_INGEST_AUTH=off
+)
+
+# Forward exporter overrides that are explicitly set in the environment. The
+# service defaults are used otherwise.
+for name in \
+    ACTA_SOURCE \
+    ACTA_FLUSH_MS \
+    ACTA_MAX_BATCH \
+    ACTA_MAX_BYTES \
+    ACTA_QUEUE_CAPACITY \
+    ACTA_REQUEST_TIMEOUT_MS \
+    ACTA_SHUTDOWN_TIMEOUT_MS; do
+    value="${!name-}"
+    if [[ -n "$value" ]]; then
+        args+=(-e "${name}=${value}")
+    fi
+done
+
+note "using unauthenticated Acta at ${acta_url}"
+note "serving at http://localhost:${host_port}"
 exec podman run --rm --name marending-local \
-    -p 127.0.0.1:3004:3000 \
-    "$@" "$image"
+    -p "127.0.0.1:${host_port}:3000" \
+    "${args[@]}" "$@" "$image"

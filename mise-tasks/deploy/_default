@@ -48,6 +48,7 @@ tunables=(
     "SERVE_PORT=3000"
     "ACTA_URL=http://acta:8080"
     "ACTA_SOURCE=marending"
+    "ACTA_INGEST_AUTH=on"
     "ACTA_FLUSH_MS=1000"
     "ACTA_MAX_BATCH=1000"
     "ACTA_MAX_BYTES=1048576"

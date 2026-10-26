@@ -47,8 +47,9 @@ pub struct Config {
 impl Config {
     /// Read the configuration from the environment.
     ///
-    /// `Ok(None)` means export is disabled: `ACTA_URL` is unset, or the Acta
-    /// sensor credentials are not available. The site still serves either way.
+    /// `Ok(None)` means export is disabled: `ACTA_URL` is unset, or `ACTA_INGEST_AUTH`
+    /// is on and the Acta sensor credentials are not available. The site still
+    /// serves either way.
     pub fn from_env() -> Result<Option<Self>, String> {
         let Some(host) = env::var("ACTA_URL")
             .ok()
@@ -65,31 +66,39 @@ impl Config {
         }
 
         let endpoint = ingest_endpoint(&host);
-        let user = env::var("ACTA_INGEST_USER")
-            .ok()
-            .filter(|value| !value.is_empty());
-        let password = env::var("ACTA_INGEST_PASSWORD")
-            .ok()
-            .filter(|value| !value.is_empty());
-        // The site must keep serving when Acta's sensor credential is not
-        // installed (for example before Acta's deploy:secrets has run). Without
-        // both halves there is nothing to authenticate with, so turn export off
-        // and say so instead of sending requests Acta will reject.
-        match (&user, &password) {
-            (Some(_), Some(_)) => {}
-            (None, None) => {
-                eprintln!(
-                    "wide: ACTA_INGEST_USER/ACTA_INGEST_PASSWORD are not set; request event export is disabled"
-                );
-                return Ok(None);
+        // `ACTA_INGEST_AUTH=off` is for a local Acta whose authentication is
+        // disabled. It is deliberately explicit: with auth on (the default), a
+        // missing credential disables export rather than sending requests Acta
+        // would reject.
+        let auth = env_flag("ACTA_INGEST_AUTH", true)?;
+        let (user, password) = if auth {
+            let user = env::var("ACTA_INGEST_USER")
+                .ok()
+                .filter(|value| !value.is_empty());
+            let password = env::var("ACTA_INGEST_PASSWORD")
+                .ok()
+                .filter(|value| !value.is_empty());
+            // The site must keep serving when Acta's sensor credential is not
+            // installed (for example before Acta's deploy:secrets has run).
+            match (user, password) {
+                (Some(user), Some(password)) => (Some(user), Some(password)),
+                (None, None) => {
+                    eprintln!(
+                        "wide: ACTA_INGEST_USER/ACTA_INGEST_PASSWORD are not set; request event export is disabled"
+                    );
+                    return Ok(None);
+                }
+                _ => {
+                    eprintln!(
+                        "wide: only one of ACTA_INGEST_USER/ACTA_INGEST_PASSWORD is set; request event export is disabled"
+                    );
+                    return Ok(None);
+                }
             }
-            _ => {
-                eprintln!(
-                    "wide: only one of ACTA_INGEST_USER/ACTA_INGEST_PASSWORD is set; request event export is disabled"
-                );
-                return Ok(None);
-            }
-        }
+        } else {
+            // Ignore any credentials that happened to be in the environment.
+            (None, None)
+        };
 
         let source = env::var("ACTA_SOURCE")
             .ok()
@@ -473,6 +482,17 @@ fn env_u64(name: &str, default: u64) -> Result<u64, String> {
 fn env_usize(name: &str, default: usize) -> Result<usize, String> {
     let value = env_u64(name, default as u64)?;
     usize::try_from(value).map_err(|_| format!("{name} is too large"))
+}
+
+fn env_flag(name: &str, default: bool) -> Result<bool, String> {
+    match env::var(name) {
+        Ok(value) if !value.trim().is_empty() => match value.trim().to_ascii_lowercase().as_str() {
+            "on" | "true" | "1" => Ok(true),
+            "off" | "false" | "0" => Ok(false),
+            other => Err(format!("{name} must be on or off, got {other:?}")),
+        },
+        _ => Ok(default),
+    }
 }
 
 #[cfg(test)]
