@@ -47,20 +47,20 @@ pub struct Config {
 impl Config {
     /// Read the configuration from the environment.
     ///
-    /// `Ok(None)` means `ACTA_HOST` is unset, which is the normal local
-    /// development case: the site still serves, it just does not export events.
+    /// `Ok(None)` means export is disabled: `ACTA_URL` is unset, or the Acta
+    /// sensor credentials are not available. The site still serves either way.
     pub fn from_env() -> Result<Option<Self>, String> {
-        let Some(host) = env::var("ACTA_HOST")
+        let Some(host) = env::var("ACTA_URL")
             .ok()
             .map(|host| host.trim().to_string())
             .filter(|host| !host.is_empty())
         else {
-            eprintln!("wide: ACTA_HOST is not set; request event export is disabled");
+            eprintln!("wide: ACTA_URL is not set; request event export is disabled");
             return Ok(None);
         };
         if !host.starts_with("http://") {
             return Err(format!(
-                "ACTA_HOST must be an http:// URL (this build has no TLS client): {host}"
+                "ACTA_URL must be an http:// URL (this build has no TLS client): {host}"
             ));
         }
 
@@ -71,8 +71,24 @@ impl Config {
         let password = env::var("ACTA_INGEST_PASSWORD")
             .ok()
             .filter(|value| !value.is_empty());
-        if user.is_some() != password.is_some() {
-            return Err("ACTA_INGEST_USER and ACTA_INGEST_PASSWORD must be set together".into());
+        // The site must keep serving when Acta's sensor credential is not
+        // installed (for example before Acta's deploy:secrets has run). Without
+        // both halves there is nothing to authenticate with, so turn export off
+        // and say so instead of sending requests Acta will reject.
+        match (&user, &password) {
+            (Some(_), Some(_)) => {}
+            (None, None) => {
+                eprintln!(
+                    "wide: ACTA_INGEST_USER/ACTA_INGEST_PASSWORD are not set; request event export is disabled"
+                );
+                return Ok(None);
+            }
+            _ => {
+                eprintln!(
+                    "wide: only one of ACTA_INGEST_USER/ACTA_INGEST_PASSWORD is set; request event export is disabled"
+                );
+                return Ok(None);
+            }
         }
 
         let source = env::var("ACTA_SOURCE")

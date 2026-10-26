@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+#MISE description="Run the locally built image on 127.0.0.1:3004"
+set -euo pipefail
+
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "$root"
+# shellcheck source=/dev/null
+source "$root/mise-tasks/lib/env.sh"
+
+image="${MARENDING_IMAGE:-localhost/marending:current}"
+
+command -v podman >/dev/null || die "podman not found"
+podman image exists "$image" || die "image ${image} not found; run: mise run deploy:build"
+
+# Extra arguments go before the image, so callers can pass e.g.
+#   mise run container:run -- -e ACTA_URL=http://host.containers.internal:8080
+exec podman run --rm --name marending-local \
+    -p 127.0.0.1:3004:3000 \
+    "$@" "$image"

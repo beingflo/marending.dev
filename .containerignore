@@ -1,0 +1,20 @@
+# Keep generated and machine-local files out of the build context. Without
+# this the context includes the 2.3 GB cargo target directory and the UI's
+# node_modules.
+.git
+.jj
+.DS_Store
+
+# Build output and dependencies
+service/target/
+ui/node_modules/
+ui/dist/
+**/.astro/
+
+# Tests and screenshots are not part of the image
+test/
+
+# Deployment configuration. The image gets all of its configuration from the
+# quadlet at runtime.
+.env
+.deploy.env

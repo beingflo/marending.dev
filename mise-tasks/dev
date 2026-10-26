@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#MISE description="Run the Astro dev server (the container build is the only way to run the service)"
+set -euo pipefail
+
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$root/ui"
+exec npm run dev

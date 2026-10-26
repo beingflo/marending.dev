@@ -1,0 +1,40 @@
+[Unit]
+Description=marending.dev static site and wide-event exporter
+Wants=network-online.target
+After=network-online.target
+
+[Container]
+Image=localhost/marending:__TAG__
+# Caddy runs natively on the host and proxies marending.dev to this loopback
+# port. Host 3004 because 3000-3003 are already taken by rest.quest, go, jour
+# and mariotto on eos. Acta is reached by name over the shared acta-net; its
+# deploy installs acta-net.network and adds the `acta` alias.
+PublishPort=127.0.0.1:3004:3000
+Network=acta-net.network
+NetworkAlias=marending
+
+# The site is stateless: the binary and the built UI live in the image; there
+# are no volumes. Run as the deploying user and as nobody else, exactly like
+# Acta. `keep-id` maps host uid 1000 onto the image's uid 1000, so nothing on
+# disk changes owner, and the process needs no capability at all.
+User=1000:1000
+UserNS=keep-id:uid=1000,gid=1000
+NoNewPrivileges=true
+DropCapability=all
+__CONFIG__
+
+# Reuse Acta's sensor credential from the podman secret store. `mise run deploy`
+# drops these two lines when the secrets are not installed, so the service still
+# starts, logs that event reporting is disabled, and serves the site.
+Secret=acta-auth-sensor-user,type=env,target=ACTA_INGEST_USER
+Secret=acta-auth-sensor-password,type=env,target=ACTA_INGEST_PASSWORD
+
+[Service]
+Restart=on-failure
+RestartSec=5
+# The exporter flushes its buffer on SIGTERM; give it more than its 10 s budget.
+TimeoutStopSec=30
+MemoryMax=512M
+
+[Install]
+WantedBy=default.target
