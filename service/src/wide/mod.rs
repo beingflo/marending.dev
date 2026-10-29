@@ -24,6 +24,23 @@
 //! This is the same model `tracing` uses for spans: the context follows the
 //! instrumented future, not the thread.
 //!
+//! # What a request event contains
+//!
+//! Request side: `method`, `uri` (path, without the query string), `host`,
+//! `referrer` and `referrer_host`, `user_agent`, `accept_language` (first tag,
+//! e.g. `de-ch`), `conditional_request` (an `If-None-Match` or
+//! `If-Modified-Since` was offered).
+//!
+//! Response side: `status`, `route_class` (`asset` for `/_astro`, `page` for
+//! documents, `file` for images and feeds, `missing` for 404s), `content_type`,
+//! `content_encoding` (empty when the body was sent uncompressed, so this is
+//! the field that shows the precompressed variants are used), `content_length`
+//! (as sent, i.e. compressed) and `latency_ns` until the headers were ready.
+//!
+//! A 304 has no `content_type` or `content_length`: there is no body. The 304
+//! rate is a query, not a field: `count(*) FILTER (WHERE status = 304)` over
+//! `count(*)`, optionally restricted to `conditional_request`.
+//!
 //! The event is closed when the response headers are ready. Work that has to be
 //! part of the event must therefore finish before the handler returns; a
 //! detached task that writes later is ignored.
