@@ -1,5 +1,8 @@
 # --- frontend ---------------------------------------------------------------
-FROM node:23-bookworm AS ui-builder
+# Node 26 is the current LTS. Odd-numbered releases (23, 25) reach end of life
+# within months and their image tags stop moving, so they never pick up fixes for
+# e.g. the brotli decoder bundled in Node.
+FROM node:26-bookworm AS ui-builder
 WORKDIR /usr/src/marending-dev/ui
 
 RUN apt-get update \
