@@ -21,32 +21,32 @@ to outline how it works exactly, what it can do and what's the philosophy behind
 
 ## Features
 
-There are two ways to look at Acta: The emitter side and the visualization side. Any device or
-service that wants to send data to Acta has one unified API: Post a JSON object with a `source`,
-`timestamp` and a `data` property. No custom tracing instrumentation or otherwise complicated
-plumbing, just send arbitrary `data` and be done with it.
+There are two sides to Acta: The emitter side and the visualization side. Any device or service that
+wants to send data to Acta has one unified API: Post a JSON object with a `source`, `timestamp` and
+a `data` property. No custom tracing instrumentation or otherwise complicated plumbing, just send
+arbitrary `data` and be done with it.
 
 On the visualization side we can now query this data and build custom dashboards. Here's a selection
 to illustrate what's possible:
 
-`Home`: This dashboard shows sensor data round the house. Every chart can be fullscreened with a
+`Home` This dashboard shows sensor data round the house. Every chart can be fullscreened with a
 shortcut and is fully interactive with zooming / brushing.
 
 ![home](./home-acta.png)
 
-`Acta`: Sort of a self-introspection dashboard that is useful to look at the all the data in the
+`Acta` Sort of a self-introspection dashboard that is useful to look at the all the data in the
 system. Filter by data source, watch new data stream in etc.
 
 ![acta](./acta-acta.png)
 
-`Location`: My GPS tracks visualized on a [self-hosted map](/notes/pmtiles). The gutter at the
-bottom can be used to quickly hone in on a date-range of interest, a multitude of shortcuts are
-available to zoom in on a bounding-box of visible tracks etc. Hovering a path segment indicates the
-date of its recording in a tooltip.
+`Location` My GPS tracks visualized on a [self-hosted map](/notes/pmtiles). The gutter at the bottom
+can be used to quickly hone in on a date-range of interest, a multitude of shortcuts are available
+to zoom in on a bounding-box of visible tracks etc. Hovering a path segment indicates the date of
+its recording in a tooltip.
 
 ![location](./location-acta.png)
 
-`Marending`: This dashboard queries the wide-events that the backend serving this website emits. I
+`Marending` This dashboard queries the wide-events that the backend serving this website emits. I
 can track how many page views I'm getting, which php vulnerability is currently popular with the
 crawlers and much more.
 
@@ -63,12 +63,28 @@ dashboard selector.
 
 ![palette](./palette-acta.png)
 
-## Architecture
+## Implementation & Architecture
+
+First I have to admit the uncomfortable: This is entirely vibe-coded.
+
+### Data storage
+
+Parquet
+
+### Migration
 
 1.2 GB -> 65 MB
 
-## Philosophy
+### Auth
 
-## Deployment
+### API
+
+### Map
+
+### Deployment
+
+### Backup
+
+## Philosophy
 
 ## Learnings
