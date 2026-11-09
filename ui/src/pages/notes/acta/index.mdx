@@ -1,7 +1,7 @@
 ---
 title: 'Acta: A personal data lakehouse'
 subtitle: 'A project report'
-date: '06 Nov 2026'
+date: '09 Nov 2026'
 link: '/notes/acta/'
 layout: 'src/layouts/NoteLayout.astro'
 draft: true
@@ -15,9 +15,9 @@ regularly as well as backend services that emit wide-events to describe requests
 being handled. I want to collect this diverse data in an simple system that allows efficient
 querying despite having no static schema. It turns out this is harder than it sounds.
 
-So after years of pondering and experimenting I happy to say that
-[Acta](https://github.com/beingflo/acta) meets all my requirements. In the following sections I want
-to outline how it works exactly, what it can do and what's the philosophy behind the approach.
+So after years of pondering and experimenting, and a week or so of implementation, I happy to say
+that [Acta](https://github.com/beingflo/acta) meets all my requirements. In the following sections I
+want to outline how it works exactly, what it can do and what's the philosophy behind the approach.
 
 ## Features
 
@@ -65,11 +65,47 @@ dashboard selector.
 
 ## Implementation & Architecture
 
-First I have to admit the uncomfortable: This is entirely vibe-coded.
+First I have to state the uncomfortable: Acta is entirely vibe-coded. I was planning to use this
+project to test a spec-driven workflow, but I quickly found that discussing architecture with an LLM
+and having it update the specs was a faster way of going about it than writing everything myself
+from scratch. The workflow went something like this:
+
+- Formulate desired target / feature / mechanism
+- Challenge it with the LLM
+- Have the LLM implement it
+- Quickly glance over the shape of the code and steer it if I disagree
+- Test it interactively
+- Repeat
+
+But as mentioned, I've been thinking about this space for years and had a very clear vision going
+into this. Still, it was useful to challenge my assumptions and plans against an LLM. So ultimately
+it took about a week of evenings and a Saturday to build Acta. I used DeepSeek v4.1 Flash 1017
+exclusively, tallying about 8 dollars worth of tokens for the whole thing.
 
 ### Data storage
 
-Parquet
+The switch away from a ClickHouse DB to a simpler data storage model has been a primary driver to
+for this whole undertaking. I greatly enjoy the idea of separating data format from query engine.
+For this reason I went with Apache Parquet here. Especially the `Variant` type is phenomenal in
+allowing me to combine the flexibility of a schemaless payload with efficient storage and fast query
+performance.
+
+So the way Acta stores data on disk is simple. The schema of an individual Parquet file look like
+this:
+
+```
+timestamp: TimestampTZ
+source: Varchar
+data: Variant
+```
+
+The service buffers data points it receives for 10 seconds, then writes them to a Parquet file.
+Every 5 minutes, all small files are combined and written to a larger file. The same happens every
+hour, day and month.
+
+To run queries against this data I use glob imports in DuckDB to read from multiple files at once.
+Parquet contains a metadata footer that includes min / max of every suitable column, this allows
+DuckDB to skip reading entire files that are irrelevant to a given query.
 
 ### Migration
 
