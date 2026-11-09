@@ -84,11 +84,10 @@ exclusively, tallying about 8 dollars worth of tokens for the whole thing.
 
 ### Data storage
 
-The switch away from a ClickHouse DB to a simpler data storage model has been a primary driver to
-for this whole undertaking. I greatly enjoy the idea of separating data format from query engine.
-For this reason I went with Apache Parquet here. Especially the `Variant` type is phenomenal in
-allowing me to combine the flexibility of a schemaless payload with efficient storage and fast query
-performance.
+Choosing a simple data storage model has been a primary driver to for this whole undertaking. I
+greatly enjoy the idea of separating data format from query engine. For this reason I went with
+Apache Parquet here. Especially the `Variant` type is phenomenal in allowing me to combine the
+flexibility of a schemaless payload with efficient storage and fast query performance.
 
 So the way Acta stores data on disk is simple. The schema of an individual Parquet file look like
 this:
@@ -101,15 +100,28 @@ data: Variant
 
 The service buffers data points it receives for 10 seconds, then writes them to a Parquet file.
 Every 5 minutes, all small files are combined and written to a larger file. The same happens every
-hour, day and month.
+hour, day and month. So at any given time, there are a number of month files, at most 30 day files,
+23 hour files, 11 5-minute files and 29 10-second files.
 
 To run queries against this data I use glob imports in DuckDB to read from multiple files at once.
 Parquet contains a metadata footer that includes min / max of every suitable column, this allows
 DuckDB to skip reading entire files that are irrelevant to a given query.
 
-### Migration
+On the read side, if there are no queries against the system, it just sits there idling. On the
+write side, Acta writes small files regularily and compacts the smaller files into larger ones
+spanning wider time ranges. The larger the files, the more compact the data gets for two reasons:
+First, compression has a fixed overhead per file that gets more amortized in a larger file. Second,
+DuckDB _shreds_ the `data` column into a binary representation when writing a file. The larger the
+file (or rather row group), the more information is available to make good decisions here.
 
-1.2 GB -> 65 MB
+Ultimately, this leads to a very simple system. Instead of centering an application like this around
+a particular database technology, it now builds on a standardized file format. One could imagine
+switching out writer or reader without a fuss here. This sparks joy.
+
+A small side note regarding the previous ClickHouse based system that Acta replaces: A straight
+Parquet export of the OTel traces data set weighed in at 1.2 GB. After cleaning up the data (and
+dropping some to be fair), the data had shrunk to a set of Parquet files of 65 MB. Have I mentioned
+how much I like the `Variant` type yet?
 
 ### Auth
 
