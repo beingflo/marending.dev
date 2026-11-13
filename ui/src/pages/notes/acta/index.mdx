@@ -182,10 +182,24 @@ decent in giving me good detail in places I've visited. The only problem is that
 backwards-looking, if I were on a longer vacation to a new place, I wouldn't see high resolution
 there until I get back home and run a manual script.
 
-Alas, this is one of the things I would never have done if I had to build that script myself, but
-with clanker that's easy enough.
+Alas, this "dynamic resolution" thing is one of the things I would never have done if I had to build
+that script myself, but with a clanker it's easy enough.
 
 ### Deployment
+
+I don't want to get ahead of myself here, I'll write a more comprehensive note on my new hosting
+setup. But to keep it short: The backend service serves the API, the frontend bundle and the PMTiles
+archive. The service and the frontend are built into one container image, the tiles and the Parquet
+data come in as mounts. That image runs under podman on an Asahi Linux box and is supervised by
+systemd.
+
+A deployment is handled via a script I run locally on my laptop. This builds the podman image and
+then transfers it straight to the server, where it's installed and started.
+
+For secrets management, I have a SOPS-encrypted file checked into the repo. On first installation,
+another scripts first gets the decryption key out of 1Password programmatically, then installs the
+secrets on the server in the form of podman secrets. Then the container declares it needs access to
+them and sees them injected as environment variables.
 
 ### Backup
 
