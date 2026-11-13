@@ -63,6 +63,13 @@ dashboard selector.
 
 ![palette](./palette-acta.png)
 
+Notably, there is no Grafana-like dashboard builder here. These dashboards are hardcoded. I realized
+that especially with an LLM by your side, building a new dashboard and deploying the application is
+just a matter of minutes. Maintaining a builder UI and giving it enough expressive power would be an
+order of magnitude more effort for very little benefit. Natuarally, this makes Acta a highly
+personal application. Anyone else wanting to use it could only use it as a base to fork away from.
+But this is probably where such software is headed in the age of AI anyway.
+
 ## Implementation & Architecture
 
 First I have to state the uncomfortable: Acta is entirely vibe-coded. I was planning to use this
@@ -214,7 +221,5 @@ I chose this built-in mechanism over an external one to simplify operation. I th
 general-purpose application it makes sense to not include bells and whistels, but to let the user
 plug together the components of their choosing. Since this is very explicitly designed for my
 personal use, I may aswell build in my preferred way of backing up the data.
-
-## Philosophy
 
 ## Learnings
