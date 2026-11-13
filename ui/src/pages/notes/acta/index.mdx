@@ -203,6 +203,18 @@ them and sees them injected as environment variables.
 
 ### Backup
 
+In previous systems, I would deploy side-car containers that regularly dump the database and upload
+backups somewhere. Here, I went a different route. To simplify the deployment, the backup process is
+built into the server process itself. A tokio task is spawned and scheduled to upload the latest
+Parquet files to an S3 object storage once an hour. To ensure that the backup is running smoothly, I
+also added a ping to my monitoring tool of choice [updown.io](/notes/monitoring/). Now if the backup
+failed, say, due to expired S3 credentials, I would get alerted.
+
+I chose this built-in mechanism over an external one to simplify operation. I think for
+general-purpose application it makes sense to not include bells and whistels, but to let the user
+plug together the components of their choosing. Since this is very explicitly designed for my
+personal use, I may aswell build in my preferred way of backing up the data.
+
 ## Philosophy
 
 ## Learnings
