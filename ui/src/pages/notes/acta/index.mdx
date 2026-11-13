@@ -96,6 +96,7 @@ this:
 timestamp: TimestampTZ
 source: Varchar
 data: Variant
+// TODO make this nicer
 ```
 
 The service buffers data points it receives for 10 seconds, then writes them to a Parquet file.
@@ -125,7 +126,36 @@ how much I like the `Variant` type yet?
 
 ### Auth
 
+On the ingestion side, Acta accepts basic auth from sensors that want to publish data. The password
+is just a fixed secret supplied to the service. For the visualization frontend, there are are
+actually two sets of credentials, my own with complete access and one for my girlfriend to view the
+`home` dashboard. I figured it was weird for her to be able to see my real-time location. So here,
+Acta concatenates both passwords and uses that as a seed to dervice a signing key. When a user logs
+in, the system uses the key to mint a new token and return it as a cookie. Later, the token can be
+cryptographically verified to have been signed with the same key.
+
+This way I don't need to maintain a stateful session store, at the cost of invalidating any session
+when either of the credentials were to change (which would require a redeployment).
+
 ### API
+
+To push data into the system there is an endpoint like so
+
+```
+TODO
+```
+
+// TODO do we have additional endpoints?
+
+Then on the visualization side there was initially just a single endpoint that takes raw SQL and
+responds with the data DuckDB produces upon running that query. However, after adding the second
+user that has restricted access to only the home sensor dashboard, I needed a structured API that
+would only allow fetching those data series. For this reason there are is now an endpoint like this
+for just this data:
+
+```
+// TODO
+```
 
 ### Map
 
