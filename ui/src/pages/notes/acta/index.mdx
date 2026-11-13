@@ -92,11 +92,10 @@ flexibility of a schemaless payload with efficient storage and fast query perfor
 So the way Acta stores data on disk is simple. The schema of an individual Parquet file look like
 this:
 
-```
-timestamp: TimestampTZ
-source: Varchar
-data: Variant
-// TODO make this nicer
+```sql
+timestamp  TIMESTAMPTZ  -- event time, or receive time
+source     VARCHAR      -- e.g. 'co2-sensor-living-room'
+data       VARIANT      -- arbitrary JSON payload
 ```
 
 The service buffers data points it receives for 10 seconds, then writes them to a Parquet file.
@@ -139,23 +138,36 @@ when either of the credentials were to change (which would require a redeploymen
 
 ### API
 
-To push data into the system there is an endpoint like so
+To push data into the system there is an endpoint of this shape:
 
-```
-TODO
+```http
+POST /api/ingest
+[{ "source": "co2-sensor-living-room", "timestamp": "2026-11-09T20:11:00Z", "data": { "co2": 812 } }]
+→ 202 { "accepted": 1 }
 ```
 
-// TODO do we have additional endpoints?
+`timestamp` is optional and defaults to the server's receive time. The GPS tracker app has its own
+endpoint/ `POST /api/gps/{source}`, which takes a GeoJSON body and stores one row per GPS fix.
 
-Then on the visualization side there was initially just a single endpoint that takes raw SQL and
-responds with the data DuckDB produces upon running that query. However, after adding the second
-user that has restricted access to only the home sensor dashboard, I needed a structured API that
-would only allow fetching those data series. For this reason there are is now an endpoint like this
-for just this data:
+The visualization side started with a single endpoint that takes raw SQL:
 
+```http
+POST /api/data
+{ "sql": "SELECT to_json(…)::VARCHAR FROM events WHERE …" }
 ```
-// TODO
+
+However, after adding the second user that has restricted access to only the home sensor dashboard,
+I needed a structured API that would only allow fetching those data series. For this reason there is
+now an endpoint like this for just this data:
+
+```http
+POST /api/series
+{ "metrics": ["co2_ppm", "living_temp_c"], "from": "…", "to": "…", "bucket_ms": 60000 }
+→ [{ "t": 1762646400, "s0": 812.3, "s1": 21.4 }, …]
 ```
+
+This way it's easy to restrict which series a user can ask for. It didn't fully migrate all API
+usages to this, just the ones that were needed.
 
 ### Map
 
