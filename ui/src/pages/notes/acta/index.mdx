@@ -171,6 +171,20 @@ usages to this, just the ones that were needed.
 
 ### Map
 
+The Map on the `location` dashboard is integrated using `maplibre-gl`, the vector tiles are served
+by the service itself using PMTiles. Read [this past note](/notes/pmtiles/) to learn more details.
+
+To keep the size of the tile archive reasonable I didn't want to download the entire world in high
+resolution. Instead, I opted to building a script which identifies locations that I've visited
+(using an up-to-date Acta export) and pulls only those regions in high resolution. The rest of the
+world is merged into the archive as a low-resolution basemap. The resulting ~200MB file is quite
+decent in giving me good detail in places I've visited. The only problem is that it's always
+backwards-looking, if I were on a longer vacation to a new place, I wouldn't see high resolution
+there until I get back home and run a manual script.
+
+Alas, this is one of the things I would never have done if I had to build that script myself, but
+with clanker that's easy enough.
+
 ### Deployment
 
 ### Backup
