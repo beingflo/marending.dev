@@ -43,6 +43,7 @@ const notes = [
   "/notes/asahi-setup/",
   "/notes/asahi-benchmarks/",
   "/notes/pmtiles/",
+  "/notes/acta/",
 ];
 
 test.describe("Visual regression", () => {
