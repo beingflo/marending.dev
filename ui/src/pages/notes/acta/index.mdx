@@ -12,10 +12,10 @@ and metric systems. I'm not going to recap everything, if you care about that go
 [this note](/notes/wide-events/). Just know this: I have home-made sensors around the house that
 collect CO2, temperature, humidity etc., a GPS tracker app on my phone that records my location
 regularly as well as backend services that emit wide-events to describe requests and other events
-being handled. I want to collect this diverse data in an simple system that allows efficient
+being handled. I want to collect this diverse data in a simple system that allows efficient
 querying despite having no static schema. It turns out this is harder than it sounds.
 
-So after years of pondering and experimenting, and a week or so of implementation, I happy to say
+So after years of pondering and experimenting, and a week or so of implementation, I'm happy to say
 that [Acta](https://github.com/beingflo/acta) meets all my requirements. In the following sections I
 want to outline how it works exactly, what it can do and what's the philosophy behind the approach.
 
@@ -34,7 +34,7 @@ shortcut and is fully interactive with zooming / brushing.
 
 ![home](./home-acta.png)
 
-`Acta` Sort of a self-introspection dashboard that is useful to look at the all the data in the
+`Acta` Sort of a self-introspection dashboard that is useful to look at all the data in the
 system. Filter by data source, watch new data stream in etc.
 
 ![acta](./acta-acta.png)
@@ -47,12 +47,12 @@ its recording in a tooltip.
 ![location](./location-acta.png)
 
 `Marending` This dashboard queries the wide-events that the backend serving this website emits. I
-can track how many page views I'm getting, which php vulnerability is currently popular with the
+can track how many page views I'm getting, which PHP vulnerability is currently popular with the
 crawlers and much more.
 
 ![marending](./marending-acta.png)
 
-For data tables, I have a bunch of niceities like highlighting the previously newest entry when the
+For data tables, I have a bunch of niceties like highlighting the previously newest entry when the
 data updates to quickly gauge how fast new data is streaming in. Clicking on a row opens a detail
 view:
 
@@ -66,7 +66,7 @@ dashboard selector.
 Notably, there is no Grafana-like dashboard builder here. These dashboards are hardcoded. I realized
 that especially with an LLM by your side, building a new dashboard and deploying the application is
 just a matter of minutes. Maintaining a builder UI and giving it enough expressive power would be an
-order of magnitude more effort for very little benefit. Natuarally, this makes Acta a highly
+order of magnitude more effort for very little benefit. Naturally, this makes Acta a highly
 personal application. Anyone else wanting to use it could only use it as a base to fork away from.
 But this is probably where such software is headed in the age of AI anyway.
 
@@ -91,12 +91,12 @@ exclusively, tallying about 8 dollars worth of tokens for the whole thing.
 
 ### Data storage
 
-Choosing a simple data storage model has been a primary driver to for this whole undertaking. I
+Choosing a simple data storage model has been a primary driver for this whole undertaking. I
 greatly enjoy the idea of separating data format from query engine. For this reason I went with
 Apache Parquet here. Especially the `Variant` type is phenomenal in allowing me to combine the
 flexibility of a schemaless payload with efficient storage and fast query performance.
 
-So the way Acta stores data on disk is simple. The schema of an individual Parquet file look like
+So the way Acta stores data on disk is simple. The schema of an individual Parquet file looks like
 this:
 
 ```sql
@@ -115,7 +115,7 @@ Parquet contains a metadata footer that includes min / max of every suitable col
 DuckDB to skip reading entire files that are irrelevant to a given query.
 
 On the read side, if there are no queries against the system, it just sits there idling. On the
-write side, Acta writes small files regularily and compacts the smaller files into larger ones
+write side, Acta writes small files regularly and compacts the smaller files into larger ones
 spanning wider time ranges. The larger the files, the more compact the data gets for two reasons:
 First, compression has a fixed overhead per file that gets more amortized in a larger file. Second,
 DuckDB _shreds_ the `data` column into a binary representation when writing a file. The larger the
@@ -125,7 +125,7 @@ Ultimately, this leads to a very simple system. Instead of centering an applicat
 a particular database technology, it now builds on a standardized file format. One could imagine
 switching out writer or reader without a fuss here. This sparks joy.
 
-A small side note regarding the previous ClickHouse based system that Acta replaces: A straight
+A small side note regarding the previous ClickHouse-based system that Acta replaces: A straight
 Parquet export of the OTel traces data set weighed in at 1.2 GB. After cleaning up the data (and
 dropping some to be fair), the data had shrunk to a set of Parquet files of 65 MB. Have I mentioned
 how much I like the `Variant` type yet?
@@ -133,15 +133,15 @@ how much I like the `Variant` type yet?
 ### Auth
 
 On the ingestion side, Acta accepts basic auth from sensors that want to publish data. The password
-is just a fixed secret supplied to the service. For the visualization frontend, there are are
+is just a fixed secret supplied to the service. For the visualization frontend, there are
 actually two sets of credentials, my own with complete access and one for my girlfriend to view the
 `home` dashboard. I figured it was weird for her to be able to see my real-time location. So here,
-Acta concatenates both passwords and uses that as a seed to dervice a signing key. When a user logs
+Acta concatenates both passwords and uses that as a seed to derive a signing key. When a user logs
 in, the system uses the key to mint a new token and return it as a cookie. Later, the token can be
 cryptographically verified to have been signed with the same key.
 
 This way I don't need to maintain a stateful session store, at the cost of invalidating any session
-when either of the credentials were to change (which would require a redeployment).
+when either of the credentials was to change (which would require a redeployment).
 
 ### API
 
@@ -154,7 +154,7 @@ POST /api/ingest
 ```
 
 `timestamp` is optional and defaults to the server's receive time. The GPS tracker app has its own
-endpoint/ `POST /api/gps/{source}`, which takes a GeoJSON body and stores one row per GPS fix.
+endpoint, `POST /api/gps/{source}`, which takes a GeoJSON body and stores one row per GPS fix.
 
 The visualization side started with a single endpoint that takes raw SQL:
 
@@ -173,20 +173,20 @@ POST /api/series
 → [{ "t": 1762646400, "s0": 812.3, "s1": 21.4 }, …]
 ```
 
-This way it's easy to restrict which series a user can ask for. It didn't fully migrate all API
+This way it's easy to restrict which series a user can ask for. I didn't fully migrate all API
 usages to this, just the ones that were needed.
 
 ### Map
 
-The Map on the `location` dashboard is integrated using `maplibre-gl`, the vector tiles are served
+The map on the `location` dashboard is integrated using `maplibre-gl`, the vector tiles are served
 by the service itself using PMTiles. Read [this past note](/notes/pmtiles/) to learn more details.
 
 To keep the size of the tile archive reasonable I didn't want to download the entire world in high
-resolution. Instead, I opted to building a script which identifies locations that I've visited
+resolution. Instead, I opted to build a script which identifies locations that I've visited
 (using an up-to-date Acta export) and pulls only those regions in high resolution. The rest of the
 world is merged into the archive as a low-resolution basemap. The resulting ~200MB file is quite
 decent in giving me good detail in places I've visited. The only problem is that it's always
-backwards-looking, if I were on a longer vacation to a new place, I wouldn't see high resolution
+backwards-looking: if I were on a longer vacation to a new place, I wouldn't see high resolution
 there until I get back home and run a manual script.
 
 Alas, this "dynamic resolution" thing is one of the things I would never have done if I had to build
@@ -204,7 +204,7 @@ A deployment is handled via a script I run locally on my laptop. This builds the
 then transfers it straight to the server, where it's installed and started.
 
 For secrets management, I have a SOPS-encrypted file checked into the repo. On first installation,
-another scripts first gets the decryption key out of 1Password programmatically, then installs the
+another script first gets the decryption key out of 1Password programmatically, then installs the
 secrets on the server in the form of podman secrets. Then the container declares it needs access to
 them and sees them injected as environment variables.
 
@@ -218,14 +218,14 @@ also added a ping to my monitoring tool of choice [updown.io](/notes/monitoring/
 failed, say, due to expired S3 credentials, I would get alerted.
 
 I chose this built-in mechanism over an external one to simplify operation. I think for
-general-purpose application it makes sense to not include bells and whistels, but to let the user
+a general-purpose application it makes sense to not include bells and whistles, but to let the user
 plug together the components of their choosing. Since this is very explicitly designed for my
-personal use, I may aswell build in my preferred way of backing up the data.
+personal use, I may as well build in my preferred way of backing up the data.
 
 ## Learnings
 
-Acta is my first bigger application I built entirely using AI. Before I tried the spec-driven
-workflow I figured it makes very little sense to have AI write specs and then also implement them,
+Acta is the first bigger application I built entirely using AI. Before I tried the spec-driven
+workflow I figured it made very little sense to have AI write specs and then also implement them,
 after all, somewhere the human preference has to come in. But it quickly became clear that writing a
 complete spec up front is tedious and also very "waterfally" in that you have to make up your mind
 on a lot of topics before any work can begin.
@@ -234,7 +234,7 @@ I have found a planning phase where I discuss architecture with an LLM and it wr
 work quite well. It's still important to instruct the LLM to keep the prose concise, after all you
 don't want to just dump the full context of your discussions into files.
 
-I belive the one thing I would do differently if this were a professional application would be to
+I believe the one thing I would do differently if this were a professional application would be to
 invest a good amount of time into good test harnesses and make sure they are ultimately owned by a
 human. That would be the way to encode the specs into executable tests that can pin correct
 behaviour in place and allow rapid iteration. That would likely include a whole bunch of unit tests,
