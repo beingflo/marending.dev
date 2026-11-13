@@ -223,3 +223,20 @@ plug together the components of their choosing. Since this is very explicitly de
 personal use, I may aswell build in my preferred way of backing up the data.
 
 ## Learnings
+
+Acta is my first bigger application I built entirely using AI. Before I tried the spec-driven
+workflow I figured it makes very little sense to have AI write specs and then also implement them,
+after all, somewhere the human preference has to come in. But it quickly became clear that writing a
+complete spec up front is tedious and also very "waterfally" in that you have to make up your mind
+on a lot of topics before any work can begin.
+
+I have found a planning phase where I discuss architecture with an LLM and it writes design docs to
+work quite well. It's still important to instruct the LLM to keep the prose concise, after all you
+don't want to just dump the full context of your discussions into files.
+
+I belive the one thing I would do differently if this were a professional application would be to
+invest a good amount of time into good test harnesses and make sure they are ultimately owned by a
+human. That would be the way to encode the specs into executable tests that can pin correct
+behaviour in place and allow rapid iteration. That would likely include a whole bunch of unit tests,
+API tests (I do have a couple of hurl files in Acta), UI component tests as well as end-to-end
+browser tests.
