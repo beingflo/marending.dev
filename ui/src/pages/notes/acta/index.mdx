@@ -19,7 +19,7 @@ than it sounds.
 
 So after years of pondering and experimenting, and a week or so of implementation, I'm happy to say
 that [Acta](https://github.com/beingflo/acta) lives up to my vision. In the following sections I
-want to outline exactly how it works and what the my thinking behind the approach is.
+want to outline exactly how it works and what my thinking behind the approach is.
 
 ## Features
 
@@ -61,7 +61,7 @@ crawlers, and much more.
 ![marending](./marending-acta.png)
 
 In general the whole visualization frontend is highly keyboard-driven, including a palette-style
-dashboard selector, shortcuts to navigate time ranges etc.
+dashboard selector, shortcuts to navigate time ranges, etc.
 
 ![palette](./palette-acta.png)
 
@@ -109,8 +109,8 @@ data       VARIANT      -- arbitrary JSON payload
 The service buffers data points it receives for 10 seconds, then writes them to a Parquet file. The
 files of every finished 5-minute window are combined into a larger one, and the same happens every
 hour, every day and every month. So at any given time there are a number of month files, at most 30
-day files, 23 hour files, 11 5-minute files and 29 10-second files. This hierachical compacting is
-important for performance. I've found that querying across thousands of small files make per-file
+day files, 23 hour files, 11 5-minute files and 29 10-second files. This hierarchical compacting is
+important for performance. I've found that querying across thousands of small files makes per-file
 overheads dominate the query time.
 
 To run queries against this data I use glob imports in DuckDB to read from multiple files at once.
