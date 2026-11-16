@@ -11,45 +11,36 @@ By my counting, this will be the 10th note on this blog that touches on observab
 systems. I'm not going to recap everything, if you care about that, go read
 [this note](/notes/wide-events/). Just know this: I have home-made sensors around the house
 collecting CO2, temperature, humidity etc., a GPS tracker app on my phone that records my location
-regularly, and backend services emitting wide-events that describe the requests and other events
-they handle. I want to collect all this diverse data in one simple system that allows efficient
-querying despite having no static schema. It turns out this is harder than it sounds.
+regularly, and backend services emitting
+[wide-events](https://jeremymorrell.dev/blog/a-practitioners-guide-to-wide-events/) that describe
+the requests and other events they handle. I want to collect all this diverse data in one simple
+system that allows efficient querying despite having no static schema. It turns out this is harder
+than it sounds.
 
 So after years of pondering and experimenting, and a week or so of implementation, I'm happy to say
-that [Acta](https://github.com/beingflo/acta) meets all my requirements. In the following sections I
-want to outline exactly how it works, what it can do and what the philosophy behind the approach is.
+that [Acta](https://github.com/beingflo/acta) lives up to my vision. In the following sections I
+want to outline exactly how it works and what the my thinking behind the approach is.
 
 ## Features
 
-There are two sides to Acta: the emitter side and the visualization side. Any device or service that
-wants to send data to Acta has one unified API: post a batch of JSON objects with `source`,
+There are two sides to Acta: the emitter side and the visualization side. Most devices or services
+that want to send data to Acta talk to one unified API: post a batch of JSON objects with `source`,
 `timestamp` and `data` properties. No custom tracing instrumentation, no otherwise complicated
-plumbing, just send arbitrary `data` and be done with it.
+plumbing, just send arbitrary `data` and be done with it. Only my GPS tracker app has a specialized
+endpoint for technical reasons.
 
 On the visualization side I can now query this data and build custom dashboards. Here's a selection
 to illustrate what's possible:
 
-`Home` This dashboard shows sensor data from around the house. Every chart can be fullscreened with
+`home` This dashboard shows sensor data from around the house. Every chart can be fullscreened with
 a shortcut and is fully interactive, with zooming and brushing.
 
 ![home](./home-acta.png)
 
-`Acta` Sort of a self-introspection dashboard, useful for looking at all the data in the system.
+`acta` Sort of a self-introspection dashboard, useful for looking at all the data in the system.
 Filter by data source, watch new data stream in, and so on.
 
 ![acta](./acta-acta.png)
-
-`Location` My GPS tracks, visualized on a [self-hosted map](/notes/pmtiles). Use the gutter at the
-bottom to quickly hone in on a date range of interest, and the shortcuts to zoom in on the bounding
-box of the visible tracks. Hovering a path segment shows when it was recorded in a tooltip.
-
-![location](./location-acta.png)
-
-`Marending` This dashboard queries the wide-events that the backend serving this website emits. I
-can track how many page views I'm getting, which PHP vulnerability is currently popular with the
-crawlers, and much more.
-
-![marending](./marending-acta.png)
 
 For data tables I have a bunch of niceties, like highlighting the previously newest entry when the
 data updates so I can quickly gauge how fast new data is streaming in. Clicking a row opens a detail
@@ -57,8 +48,20 @@ view:
 
 ![detail](./detail-acta.png)
 
+`location` My GPS tracks, visualized on a [self-hosted map](/notes/pmtiles). Use the gutter at the
+bottom to quickly hone in on a date range of interest, and the shortcuts to zoom in on the bounding
+box of the visible tracks. Hovering a path segment shows when it was recorded in a tooltip.
+
+![location](./location-acta.png)
+
+`marending` This dashboard queries the wide-events that the backend serving this website emits. I
+can track how many page views I'm getting, which PHP vulnerability is currently popular with the
+crawlers, and much more.
+
+![marending](./marending-acta.png)
+
 In general the whole visualization frontend is highly keyboard-driven, including a palette-style
-dashboard selector.
+dashboard selector, shortcuts to navigate time ranges etc.
 
 ![palette](./palette-acta.png)
 
@@ -106,7 +109,9 @@ data       VARIANT      -- arbitrary JSON payload
 The service buffers data points it receives for 10 seconds, then writes them to a Parquet file. The
 files of every finished 5-minute window are combined into a larger one, and the same happens every
 hour, every day and every month. So at any given time there are a number of month files, at most 30
-day files, 23 hour files, 11 5-minute files and 29 10-second files.
+day files, 23 hour files, 11 5-minute files and 29 10-second files. This hierachical compacting is
+important for performance. I've found that querying across thousands of small files make per-file
+overheads dominate the query time.
 
 To run queries against this data I use glob imports in DuckDB to read from multiple files at once.
 Parquet files carry a metadata footer with min / max values for every suitable column, which lets
@@ -125,8 +130,10 @@ swapping out writer or reader without much fuss. This sparks joy.
 
 A small side note regarding the previous ClickHouse-based system that Acta replaces: a straight
 Parquet export of the OTel traces data set weighed in at 1.2 GB. After cleanup (and dropping some of
-it, to be fair), the data had shrunk to a set of Parquet files totaling 65 MB. Have I mentioned how
-much I like the `Variant` type yet?
+it, to be fair), the data had shrunk to a set of Parquet files totaling 65 MB. Naturally this does
+not reflect a general difference between ClickHouse and DuckDB, but rather illustrates just how much
+more compact this specialized schema with a suitable format is over the general tracing approach I
+was using previously.
 
 ### Auth
 
