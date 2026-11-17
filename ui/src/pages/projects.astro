@@ -6,6 +6,15 @@ import Layout from '../layouts/MainLayout.astro';
 <Layout>
 	<Page>
 		<div class="flex flex-col pt-4 gap-x-16 gap-y-2 md:gap-y-24">
+    		<ProjectEntry
+    			name="acta"
+    			note="/notes/acta"
+    			technologies="DuckDB, Parquet, PMTiles, Rust, Podman, systemd">
+                Acta is a personal data lakehouse. It stores schemaless data in Parquet files and enables
+                efficient querying. Dashboards like a self-hosted map with location data or rich data tables
+                for website access logs are implemented. Acta improves on `events` in query performance,
+                ease of operation and data compression.
+    		</ProjectEntry>
 			<ProjectEntry
 				name="events"
 				note="/notes/wide-events"
