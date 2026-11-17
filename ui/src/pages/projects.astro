@@ -10,10 +10,10 @@ import Layout from '../layouts/MainLayout.astro';
     			name="acta"
     			note="/notes/acta"
     			technologies="DuckDB, Parquet, PMTiles, Rust, Podman, systemd">
-                Acta is a personal data lakehouse. It stores schemaless data in Parquet files and enables
-                efficient querying. Dashboards like a self-hosted map with location data or rich data tables
-                for website access logs are implemented. Acta improves on `events` in query performance,
-                ease of operation and data compression.
+                Acta is a personal data lakehouse. It stores schemaless data in Parquet files, enabling
+                efficient querying. Dashboards built on it include a self-hosted map visualizing location
+                data and rich data tables for website access logs. Compared to <code>events</code>, Acta
+                improves query performance, ease of operation, and data compression.
     		</ProjectEntry>
 			<ProjectEntry
 				name="events"
@@ -49,16 +49,16 @@ import Layout from '../layouts/MainLayout.astro';
 				note="/notes/wide-events"
 				technologies="Rust, DuckDB, SolidJS, Plot">
 				Observatory stores and visualizes metrics from various data sources, including IoT devices
-				and GPS trackers. The application is designed to be light weight to deploy and operate. The
+				and GPS trackers. The application is designed to be lightweight to deploy and operate. The
 				backend is implemented in Rust and uses DuckDB for data storage. The frontend uses SolidJS
 				and <A href="https://observablehq.com/plot/">Plot</A>.
 			</ProjectEntry>
 			<ProjectEntry
 				name="ledger"
 				link="https://github.com/beingflo/ledger"
-				technologies="Typescript, SolidJS, S3, Caddy">
+				technologies="TypeScript, SolidJS, S3, Caddy">
 				Ledger is a small transaction analysis tool. The user can import bank transaction dumps in
-				csv format from <A href="https://www.neon-free.ch/en/">Neon</A>. A small query language
+				CSV format from <A href="https://www.neon-free.ch/en/">Neon</A>. A small query language
 				allows quickly searching for transactions and getting aggregations at a glance. Automated
 				filters categorize transactions for analysis. Charts give insight into spending or income by
 				category and over time. As with other applications in this series, ledger runs locally in
@@ -68,7 +68,7 @@ import Layout from '../layouts/MainLayout.astro';
 				name="jour"
 				link="https://jour.rest.quest"
 				note="/notes/jour"
-				technologies="Typescript, SolidJS, S3, Caddy">
+				technologies="TypeScript, SolidJS, S3, Caddy">
 				The latest app implementing the local-first concepts originally developed
 				for <A href="https://rest.quest">rest.quest</A>: Jour is a minimalistic journaling app that
 				stores data locally in the browser, optionally synchronizing it to an S3-compatible bucket.
@@ -79,7 +79,7 @@ import Layout from '../layouts/MainLayout.astro';
 			<ProjectEntry
 				name="dd"
 				link="https://github.com/beingflo/dd"
-				technologies="Typescript, SolidJS, S3, Caddy">
+				technologies="TypeScript, SolidJS, S3, Caddy">
 				A very minimalistic snippet management web app. This app is another iteration on the
 				concepts developed
 				for <A href="https://rest.quest">rest.quest</A> and <A href="https://go.rest.quest">go</A>:
@@ -91,7 +91,7 @@ import Layout from '../layouts/MainLayout.astro';
 				name="go"
 				link="https://go.rest.quest"
 				note="/notes/go-rest-quest"
-				technologies="Typescript, SolidJS, S3, Caddy">
+				technologies="TypeScript, SolidJS, S3, Caddy">
 				A tiny and opinionated bookmark management web application. This app is leaning strongly on
 				concepts developed for <A href="https://rest.quest">rest.quest</A>: State is kept on the
 				local device, but can be synchronized optionally using an object storage bucket. The single
@@ -102,7 +102,7 @@ import Layout from '../layouts/MainLayout.astro';
 				name="marending.dev"
 				link="https://marending.dev"
 				note="/notes/website"
-				technologies="Typescript, SolidJS, Astro, Caddy">
+				technologies="TypeScript, SolidJS, Astro, Caddy">
 				My personal website. Custom designed and built with SolidJS and Astro. It's deployed on a
 				small VPS using Caddy as a web server.
 			</ProjectEntry>
@@ -110,7 +110,7 @@ import Layout from '../layouts/MainLayout.astro';
 				name="rest.quest"
 				link="https://rest.quest"
 				note="/notes/rest-quest"
-				technologies="Typescript, SolidJS, S3, Caddy">
+				technologies="TypeScript, SolidJS, S3, Caddy">
 				A minimal and opinionated todo web application. The user interface is designed to remove
 				friction when adding projects or tasks. The state is primarily stored locally in the
 				browser. Optionally, the user can supply object storage credentials to synchronize the state
@@ -121,8 +121,8 @@ import Layout from '../layouts/MainLayout.astro';
 				name="fieldnotes"
 				link="https://write.fieldnotes.land"
 				note="/notes/fieldnotes"
-				technologies="Rust, Typescript, React, Jotai, PostgreSQL, Web Crypto API, AES, Caddy, Docker">
-				An end-to-end encrypted note taking application. The web application features
+				technologies="Rust, TypeScript, React, Jotai, PostgreSQL, Web Crypto API, AES, Caddy, Docker">
+				An end-to-end encrypted note-taking application. The web application features
 				a <em>wysiwyg</em> markdown editor and advanced formatting including tables. Content is encrypted
 				using a private key that is only stored in the browser. By encoding the decryption key in the
 				hash of the URL, it's possible to share notes without the server ever seeing the data in plain
