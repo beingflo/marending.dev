@@ -32,8 +32,17 @@ WORKDIR /usr/src/marending-dev/service
 COPY service/Cargo.toml service/Cargo.lock ./
 # Prime the dependency cache with a throwaway binary, so a source-only change
 # does not invalidate the dependency layer.
-RUN --mount=type=cache,target=/usr/local/cargo/registry \
-    --mount=type=cache,target=/usr/local/cargo/git \
+#
+# `sharing=locked` on the two cargo caches is load-bearing: a cache mount's id
+# defaults to its target path, so this registry cache is shared with the other
+# Rust projects on this machine, while cargo's cross-process lock
+# (`$CARGO_HOME/.package-cache`) sits outside the mounted subdirectory and is
+# private to each container. Two overlapping builds could then unpack the same
+# crate into one directory and leave it half-written with its `.cargo-ok`
+# marker in place — an unparsable manifest, or a build from missing files.
+# `sharing=locked` makes the second build wait at the mount instead.
+RUN --mount=type=cache,target=/usr/local/cargo/registry,sharing=locked \
+    --mount=type=cache,target=/usr/local/cargo/git,sharing=locked \
     --mount=type=cache,target=/usr/src/marending-dev/service/target \
     mkdir -p src && echo 'fn main() {}' > src/main.rs \
     && cargo build --release \
@@ -44,8 +53,8 @@ COPY service/src ./src
 # recorded by the priming build. Touch the sources so cargo rebuilds the real
 # binary instead of leaving the throwaway one in place. The size check fails
 # loudly if that ever happens.
-RUN --mount=type=cache,target=/usr/local/cargo/registry \
-    --mount=type=cache,target=/usr/local/cargo/git \
+RUN --mount=type=cache,target=/usr/local/cargo/registry,sharing=locked \
+    --mount=type=cache,target=/usr/local/cargo/git,sharing=locked \
     --mount=type=cache,target=/usr/src/marending-dev/service/target \
     find src -exec touch {} + \
     && cargo build --release \
